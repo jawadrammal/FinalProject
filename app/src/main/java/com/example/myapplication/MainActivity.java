@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
+    ConstraintLayout rl;
     ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
     int CargoListIndex=0;
     Intent myFileIntent;
@@ -76,12 +78,60 @@ public class MainActivity extends AppCompatActivity {
                 selected = CargoList.get(i);
                 break;
             }
-        setContentView(R.layout.layout);
-        final Button selectedCargoButton;
+
+
+      //  setContentView (rl);
+
+        final CargoButton selectedCargoButton;
         selectedCargoButton = new CargoButton(this,selected.objectid,975,1375);
        // selectedCargoButton.setX(975);
        // selectedCargoButton.setY(1375);
+        selectedCargoButton.setVisibility(View.VISIBLE);
+        selectedCargoButton.setText("new");
+        selectedCargoButton.setBackgroundColor(Color.parseColor("green"));
+        selectedCargoButton.setOnTouchListener(new View.OnTouchListener() {
 
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+
+                final int x = (int) event.getRawX();
+                final int y = (int) event.getRawY();
+
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+
+
+                        xDelta = (int) (x - view.getX());
+                        yDelta = (int) (y - view.getY());
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        Toast.makeText(MainActivity.this,
+                                "thanks for new location!", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+
+                        view.setX(x - xDelta);
+                        view.setY(y - yDelta);
+                        selectedCargoButton.setXvalue(x);
+                        selectedCargoButton.setYvalue(y);
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+        CargoTablePage.buttons.add(selectedCargoButton);
+        Intent i = new Intent(getApplicationContext(), CargoInContainer.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+      //  i.putExtra("objectId",selected.objectid.toString());
+        startActivity(i);
+        /*
         final ConstraintLayout cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
 
         //  layout.addView(btnTag);
@@ -126,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
 
                         view.setX(x - xDelta);
                         view.setY(y - yDelta);
+                        selectedCargoButton.setXvalue(x);
+                        selectedCargoButton.setYvalue(y);
                         break;
                 }
 
@@ -221,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             }
-        });
+        });*/
     }
 
 
@@ -245,6 +297,9 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user touches the button */
     public void OpenCargoPage(View view) {
+
+       rl = (ConstraintLayout) getLayoutInflater().inflate(R.layout.layout, null);
+
 
         setContentView(R.layout.cargotable);
         RebuildTable(view);
@@ -349,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
     }
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
