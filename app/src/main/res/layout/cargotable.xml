@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        tools:layout_editor_absoluteX="-189dp"
+        tools:layout_editor_absoluteY="16dp">
+
+        <ImageButton
+            android:id="@+id/AddCargoBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="113dp"
+            android:layout_marginRight="113dp"
+            android:onClick="OpenAddcargoPage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.458"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.055"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="50dp"
+            android:layout_height="57dp"
+            android:layout_marginBottom="63dp"
+            android:onClick="uploadDataFile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.062"
+            app:srcCompat="@android:drawable/ic_menu_upload" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="260dp"
+            android:layout_marginLeft="260dp"
+            android:text="Upload file"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.137" />
+
+        <ScrollView
+            android:id="@+id/scrollView3"
+            android:layout_width="417dp"
+            android:layout_height="459dp"
+            android:layout_weight="1"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TableLayout
+            android:id="@+id/maintable"
+            android:layout_width="426dp"
+            android:layout_height="417dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TableRow
+                android:id="@+id/MainTableRow"
+                android:layout_width="wrap_content"
+                android:layout_height="304dp"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/textView41"
+                    android:layout_width="70dp"
+                    android:layout_height="41dp"
+                    android:paddingRight="5dp"
+                    android:text="Object ID"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="11dp"
+                    tools:layout_editor_absoluteY="83dp" />
+
+                <TextView
+                    android:id="@+id/textView51"
+                    android:layout_width="70dp"
+                    android:layout_height="41dp"
+                    android:paddingRight="5dp"
+                    android:text="Height"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="11dp"
+                    tools:layout_editor_absoluteY="83dp" />
+
+                <TextView
+                    android:id="@+id/textView61"
+                    android:layout_width="70dp"
+                    android:layout_height="41dp"
+                    android:paddingRight="5dp"
+                    android:text="Width"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="11dp"
+                    tools:layout_editor_absoluteY="83dp" />
+
+                <TextView
+                    android:id="@+id/textView71"
+                    android:layout_width="70dp"
+                    android:layout_height="41dp"
+                    android:paddingRight="5dp"
+                    android:text="Weight"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="11dp"
+                    tools:layout_editor_absoluteY="83dp" />
+
+                <TextView
+                    android:id="@+id/textView81"
+                    android:layout_width="70dp"
+                    android:layout_height="41dp"
+                    android:paddingRight="5dp"
+                    android:text="Length"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="11dp"
+                    tools:layout_editor_absoluteY="83dp" />
+
+                <TextView
+                    android:id="@+id/textView91"
+                    android:layout_width="65dp"
+                    android:layout_height="41dp"
+                    android:text="Fragile"
+                    android:textSize="16sp"
+                    tools:layout_editor_absoluteX="11dp"
+                    tools:layout_editor_absoluteY="83dp" />
+            </TableRow>
+
+        </TableLayout>
+        </ScrollView>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="129dp"
+            android:layout_height="42dp"
+            android:text="Add cargo"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.198"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.137" />
+
+        <ImageButton
+            android:id="@+id/imageButton5"
+            android:layout_width="88dp"
+            android:layout_height="79dp"
+            android:clickable="false"
+            android:onClick="DeleteRows"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.894"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.975"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <ImageButton
+            android:id="@+id/imageButton6"
+            android:layout_width="89dp"
+            android:layout_height="76dp"
+            android:layout_marginTop="18dp"
+            android:clickable="false"
+            android:onClick="OpenEditcargoPage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.552"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.963"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/GoBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="23dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginBottom="43dp"
+            android:onClick="OpenFirstlayoutPage"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/AddCargoBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="?attr/homeAsUpIndicator" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="132dp"
+            android:layout_height="78dp"
+            android:onClick="DrawObject"
+            android:text="Add to container"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.967" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
