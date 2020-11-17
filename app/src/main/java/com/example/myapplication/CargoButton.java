@@ -9,18 +9,25 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.util.Random;
+
 public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
     static int r=0,g=0,b=0;
     float x,y;
     String objectId;
-
+    Cargo cargo;
+    Random rand;
     public CargoButton(Context context) {
         super(context);
       setTouchListener();
     }
     public CargoButton(Context context,String objectId,float x,float y) {
         super(context);
-        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(100,100);
+        for (int i=0;i<MainActivity.CargoList.size();i++)
+            if (MainActivity.CargoList.get(i).objectid==objectId)
+               cargo = MainActivity.CargoList.get(i);
+
+        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(cargo.width.intValue(),cargo.length.intValue());
         this.setLayoutParams(lp);
         setTouchListener();
         this.objectId = objectId;
@@ -29,11 +36,19 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         this.setX(x);
         this.setY(y);
         this.setBackgroundColor(Color.rgb(r,g,b));
-        r+=10;
-        b+=10;
-        g+=10;
+        this.setText(objectId);
+
+        r= getrandomNum(255);
+        b= getrandomNum(255);
+        g= getrandomNum(255);
+       // this.setTextColor(Color.rgb((255 - r),(255-g),(255-b)));
         //this.setWidth(20);
         //this.setHeight(20);
+    }
+    int getrandomNum(int num)
+    {
+      rand=new Random();
+        return rand.nextInt(num);
     }
 
     public void setXvalue(float x)
