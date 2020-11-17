@@ -8,4 +8,5 @@ public class Cargo
     boolean fragile;
     Double WeightThreshold;
     boolean Selected;
+
 }

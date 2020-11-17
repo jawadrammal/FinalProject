@@ -39,7 +39,7 @@ import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
     ConstraintLayout rl;
-    ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
+    public static ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
     int CargoListIndex=0;
     Intent myFileIntent;
     String ExcelFilePath;
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         CargoTablePage.buttons.add(selectedCargoButton);
         Intent i = new Intent(getApplicationContext(), CargoInContainer.class);
         i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-      //  i.putExtra("objectId",selected.objectid.toString());
+        i.putExtra("AddToContainer?",true);
         startActivity(i);
         /*
         final ConstraintLayout cL = (ConstraintLayout) findViewById(R.id.constraintLayout);

@@ -18,12 +18,21 @@ public class CargoInContainer extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         Intent intent = getIntent();
-     //   String id = intent.getStringExtra("objectId");
-        cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
-        cL.addView(new CargoButton(this,"",975,1375));
+        boolean addButton = intent.getBooleanExtra("AddToContainer?",false);
+        if (addButton==true)
+        {
+            cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
+            for (int i=0;i<MainActivity.CargoList.size();i++)
+            {
+                Cargo tempCr = MainActivity.CargoList.get(i);
+                if (tempCr.Selected==true)
+                cL.addView(new CargoButton(this,tempCr.objectid , 975, 1375));
+            }
+        }
     }
 
     public void OpenCargoPage(View view)
