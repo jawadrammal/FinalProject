@@ -94,27 +94,32 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-
+                boolean moved = false;
                 final int x = (int) event.getRawX();
                 final int y = (int) event.getRawY();
 
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                     case MotionEvent.ACTION_DOWN:
-
-
                         xDelta = (int) (x - view.getX());
                         yDelta = (int) (y - view.getY());
                         break;
 
                     case MotionEvent.ACTION_UP:
+                        if (moved==true){
                         Toast.makeText(MainActivity.this,
                                 "thanks for new location!", Toast.LENGTH_SHORT)
                                 .show();
-                        break;
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this,
+                                    "didn't move!", Toast.LENGTH_SHORT)
+                                    .show();
+                }
+                            break;
 
                     case MotionEvent.ACTION_MOVE:
-
+                        moved=true;
                         view.setX(x - xDelta);
                         view.setY(y - yDelta);
                         selectedCargoButton.setXvalue(x);
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        CargoTablePage.buttons.add(selectedCargoButton);
+        //CargoTablePage.buttons.add(selectedCargoButton);
         Intent i = new Intent(getApplicationContext(), CargoInContainer.class);
         i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         i.putExtra("AddToContainer?",true);

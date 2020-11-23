@@ -24,7 +24,6 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="248dp"
-            android:layout_marginLeft="248dp"
             android:text="Produce Report"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,7 +48,6 @@
             android:layout_width="126dp"
             android:layout_height="65dp"
             android:layout_marginStart="260dp"
-            android:layout_marginLeft="260dp"
             android:layout_marginTop="332dp"
             android:text="Cargo List"
             android:textSize="24sp"
@@ -61,7 +59,6 @@
             android:layout_width="73dp"
             android:layout_height="51dp"
             android:layout_marginStart="284dp"
-            android:layout_marginLeft="284dp"
             android:layout_marginTop="276dp"
             android:onClick="OpenCargoPage"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,10 +67,12 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="220dp"
+            android:layout_width="0dp"
             android:layout_height="456dp"
+            android:layout_marginEnd="49dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/deletebutton"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -111,11 +110,13 @@
         <EditText
             android:id="@+id/editText9"
             android:layout_width="285dp"
-            android:layout_height="58dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="363dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Optimal workers amount: 0"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/deletebutton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,10 +143,23 @@
             android:layout_height="71dp"
             android:layout_marginTop="492dp"
             android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/reportbtn" />
+
+        <Button
+            android:id="@+id/deletebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="54dp"
+            android:layout_marginBottom="246dp"
+            android:onClick="deleteCargoButton"
+            android:text="delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/editText9"
+            tools:visibility="invisible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
