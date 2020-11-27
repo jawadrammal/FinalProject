@@ -64,4 +64,33 @@ public class CargoInContainer extends AppCompatActivity {
         }
         deleteButton.setVisibility(View.INVISIBLE);
     }
+    
+    public void rotate(View view)
+    {
+        boolean flag=false;
+        CargoButton cargoButton = null;
+        Cargo tempCr = null;
+        for (int i=0;i<MainActivity.CargoList.size();i++) {
+            tempCr = MainActivity.CargoList.get(i);
+            if (tempCr.Selected == true) {
+                for (int j=0;j<CargoTablePage.buttons.size();j++)
+                {
+                    if (CargoTablePage.buttons.get(i).objectId.equals(tempCr.objectid))
+                    {
+                        cargoButton= CargoTablePage.buttons.get(i);
+                        flag=true;
+                        break;
+                    }
+                }
+            }
+            if (flag==true)
+                break;
+        }
+
+
+        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams( cargoButton.getLayoutParams().height,cargoButton.getLayoutParams().width);
+        //this.setpa
+        lp.setMargins(10, 10, 10, 10);
+        cargoButton.setLayoutParams(lp);
+    }
 }

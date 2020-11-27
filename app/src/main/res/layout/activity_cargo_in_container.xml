@@ -56,11 +56,14 @@
 
         <ImageButton
             android:id="@+id/CargoList"
-            android:layout_width="73dp"
+            android:layout_width="0dp"
             android:layout_height="51dp"
             android:layout_marginStart="284dp"
             android:layout_marginTop="276dp"
+            android:layout_marginEnd="54dp"
             android:onClick="OpenCargoPage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_dialog_dialer" />
@@ -112,11 +115,11 @@
             android:layout_width="285dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="363dp"
+            android:layout_marginBottom="166dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Optimal workers amount: 0"
-            app:layout_constraintBottom_toTopOf="@+id/deletebutton"
+            app:layout_constraintBottom_toTopOf="@+id/button5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -160,6 +163,20 @@
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/editText9"
             tools:visibility="invisible" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="98dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="443dp"
+            android:onClick="rotate"
+            android:text="rotate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/CargoList"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText9" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

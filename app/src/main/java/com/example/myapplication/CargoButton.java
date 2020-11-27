@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         b = getrandomNum(255);
         g = getrandomNum(255);
         this.setBackgroundColor(Color.rgb(r,g,b));
+       /* GradientDrawable drawable = new GradientDrawable();
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setStroke(0,Color.GREEN);
+        drawable.setColor(Color.rgb(r,g,b));
+        this.setBackgroundDrawable(drawable);*/
         up = new ArrayList<>();
         down = new ArrayList<>();
        // this.setTextColor(Color.rgb((255 - r),(255-g),(255-b)));
@@ -58,6 +64,30 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
     {
       rand=new Random();
         return rand.nextInt(num);
+    }
+
+    private boolean checkHoffemAxis(float a,float b, float c , float d)
+    {
+        boolean flag= false;
+
+        if((a-c)<0) {
+            if (b > c) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+        }
+            else {
+                if (a<d)
+                {
+                    flag=true;
+                }
+                else {
+                    flag= false;
+                }
+            }
+
+        return flag;
     }
 
     public void setXvalue(float x)
@@ -89,7 +119,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                         break;
 
                     case MotionEvent.ACTION_UP:
-
+                        boolean hoffemX=false;
+                        boolean hoffemY = false;
                         if (moved==true) {
                             Toast.makeText(getContext(),
                                     "thanks for new location!", Toast.LENGTH_SHORT)
@@ -98,8 +129,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                                 float xright, xleft, viewXright, viewXLeft;
                                 xleft = CargoTablePage.buttons.get(i).getX();
                                 viewXLeft = view.getX();
-                                xright =xleft  + CargoTablePage.buttons.get(i).cargo.width.intValue();
-                                viewXright =viewXLeft  + cargo.width.intValue();
+                                xright =xleft  + CargoTablePage.buttons.get(i).getLayoutParams().width;
+                                viewXright =viewXLeft  + view.getLayoutParams().width;
+                                float yUp, yDown, viewYup, viewYDown;
+                                yUp = CargoTablePage.buttons.get(i).getY();
+                                viewYup = view.getY();
+                                yDown =yUp  + CargoTablePage.buttons.get(i).getLayoutParams().height;
+                                viewYDown =viewYup  + view.getLayoutParams().height;
 
                                 if (CargoTablePage.buttons.get(i).objectId.equals(selected))
                                 {
@@ -108,33 +144,55 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                                     if((viewXLeft-xleft)<0) {
                                         if (viewXright>xleft) {
                                             Toast.makeText(getContext(),
-                                                    "hofifeem", Toast.LENGTH_SHORT)
+                                                    "hofifeemX", Toast.LENGTH_SHORT)
                                                     .show();
+                                            hoffemX=true;
                                         }
                                         else {
                                             Toast.makeText(getContext(),
-                                                    "not hofifeem", Toast.LENGTH_SHORT)
+                                                    "not hofifeemX", Toast.LENGTH_SHORT)
                                                     .show();
+                                                    hoffemX=false;
                                         }
                                     }
                                     else {
                                         if (viewXLeft<xright) {
                                             Toast.makeText(getContext(),
-                                                    "hofifeem", Toast.LENGTH_SHORT)
+                                                    "hofifeemX", Toast.LENGTH_SHORT)
                                                     .show();
+                                            hoffemX=true;
                                         }
                                         else {
                                             Toast.makeText(getContext(),
-                                                    "not hofifeem", Toast.LENGTH_SHORT)
+                                                    "not hofifeemX", Toast.LENGTH_SHORT)
                                                     .show();
+                                            hoffemX=false;
                                         }
 
+                                    }
+                                    hoffemX= checkHoffemAxis(viewXLeft,viewXright,xleft,xright);
+                                    hoffemY = checkHoffemAxis(viewYup,viewYDown,yUp,yDown);
+                                    if(hoffemX==true&&hoffemY==true)
+                                    {
+                                        Toast.makeText(getContext(),
+                                                "hoffeem X and Y", Toast.LENGTH_SHORT)
+                                                .show();
                                     }
                                     Toast.makeText(getContext(),
                                             "test1", Toast.LENGTH_SHORT)
                                             .show();
                                 }
                             }
+
+
+                           /* GradientDrawable drawable = new GradientDrawable();
+                            drawable.setShape(GradientDrawable.RECTANGLE);
+                            drawable.setStroke(0,Color.rgb(r,g,b));
+                            drawable.setColor(Color.rgb(r,g,b));
+                            view.setBackgroundDrawable(drawable);*/
+
+
+
                         }
                         else{
                             Toast.makeText(getContext(),
@@ -152,6 +210,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                         view.setY(y - yDelta);
                         setXvalue(x);
                         setYvalue(y);
+                        /*GradientDrawable drawable = new GradientDrawable();
+                        drawable.setShape(GradientDrawable.RECTANGLE);
+                        drawable.setStroke(5,Color.GREEN);
+                        drawable.setColor(Color.rgb(r,g,b));
+                        view.setBackgroundDrawable(drawable);*/
                         break;
                 }
 
