@@ -3,24 +3,26 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 
 public class CargoInContainer extends AppCompatActivity {
     ConstraintLayout cL;
-    public static Button deleteButton;
+    public static ImageButton deleteButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cargo_in_container);
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
-        deleteButton = (Button) findViewById(R.id.deletebutton);
+        deleteButton = (ImageButton) findViewById(R.id.deletebutton);
         deleteButton.setVisibility(View.INVISIBLE);
     }
 
@@ -38,7 +40,7 @@ public class CargoInContainer extends AppCompatActivity {
             {
                 Cargo tempCr = MainActivity.CargoList.get(i);
                 if (tempCr.Selected==true) {
-                    CargoButton newButton = new CargoButton(this, tempCr.objectid, 975, 1375);
+                    CargoButton newButton = new CargoButton(this, tempCr.objectid, MainActivity.MainInfo.screenWidth*MainActivity.MainInfo.buttonWidthPercentage, MainActivity.MainInfo.screenHeight*MainActivity.MainInfo.buttonHeightPercentage);
                     CargoTablePage.buttons.add(newButton);
                     cL.addView(newButton);
                     MainActivity.MainInfo.totalWeight+=MainActivity.CargoList.get(i).weight;
@@ -102,7 +104,7 @@ public class CargoInContainer extends AppCompatActivity {
 
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams( cargoButton.getLayoutParams().height,cargoButton.getLayoutParams().width);
         //this.setpa
-        lp.setMargins(10, 10, 10, 10);
+        //lp.setMargins(10, 10, 10, 10);
         cargoButton.setLayoutParams(lp);
         int temp=cargoButton.width1;
         cargoButton.setWidth(cargoButton.length1);
@@ -118,12 +120,15 @@ public class CargoInContainer extends AppCompatActivity {
     public ArrayList<CargoButton> AutoInitialSolution( )
     {
        //ConstraintLayout cL2 = (ConstraintLayout) findViewById(R.id.layoutIn);
-        int x = 975, y = 1375;
+        float x1,y1;
+        float x,y;
+       x1= ((View)findViewById(R.id.Container)).getX(); //44
+       y1= ((View)findViewById(R.id.Container)).getY();//517
         ArrayList<CargoButton> cargoButtonArrayList =new ArrayList<CargoButton>();
         for (int i=0;i<MainActivity.CargoList.size();i++) {
             Cargo tempCr = MainActivity.CargoList.get(i);
 
-            CargoButton newButton =new CargoButton(this, tempCr.objectid, 0,0);
+            CargoButton newButton =new CargoButton(this, tempCr.objectid, x1,y1);
             Pair<Integer,Integer> coordinates = getSpaceCoordinates(newButton);
             if (coordinates!= null) {
                 x = coordinates.first;
@@ -139,12 +144,13 @@ public class CargoInContainer extends AppCompatActivity {
     }
   Pair<Integer, Integer> getSpaceCoordinates(CargoButton newButton)
     {
-        float x = 0,y = 0;
+        float x = 0,y = 0,x1,y1;
         boolean hooffem=false;
         x=newButton.getX();
         y=newButton.getY();
         CargoButton cargoButton1 = null;
-
+        x1= ((View)findViewById(R.id.Container)).getX(); //44
+        y1= ((View)findViewById(R.id.Container)).getY();//517
         //check space algorithm
         int size=autoButtons.size();
         if (size==0)
@@ -155,9 +161,11 @@ public class CargoInContainer extends AppCompatActivity {
      //  hooffem = cargoButton1.checkhooffeem(newButton);
        //while (hooffem==true) {
         //for on y
-        for (int j=0; j< 456 ; j++) { //for on x
-            for (int i = 0; i < 234; i++) {
-                if (i+newButton.width1>234)
+        for (float j=y1; j< dpToPx(502,this.getApplicationContext())+y1 ; j++) { //for on x
+            for (float i = x1; i < dpToPx(200,this.getApplicationContext())+x1; i++) {
+                if (i+newButton.width1>dpToPx(200,this.getApplicationContext())+x1)
+                    break;
+                if (j+newButton.length1>dpToPx(502,this.getApplicationContext())+y1)
                     break;
                 newButton.setX(i);
                 newButton.setY(j);
@@ -186,5 +194,8 @@ public class CargoInContainer extends AppCompatActivity {
 
 
         return new Pair<>(1,1);
+    }
+    public static int dpToPx(float dp, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 }

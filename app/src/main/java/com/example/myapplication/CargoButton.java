@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -32,11 +33,10 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         for (int i=0;i<MainActivity.CargoList.size();i++)
             if (MainActivity.CargoList.get(i).objectid==objectId)
                cargo = MainActivity.CargoList.get(i);
-            width1=cargo.width.intValue();
-            length1=cargo.length.intValue();
+        //dpToPx(cargo.width.floatValue(),this.getContext());
+            width1= (int) Math.ceil(dpToPx(cargo.width.floatValue(),this.getContext())*MainActivity.MainInfo.CargoPercentage);
+            length1=(int) Math.ceil(dpToPx(cargo.length.floatValue(),this.getContext())*MainActivity.MainInfo.CargoPercentage);
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(width1,length1);
-        //this.setpa
-        lp.setMargins(10, 10, 10, 10);
         this.setLayoutParams(lp);
         setTouchListener();
         this.objectId = objectId;
@@ -269,7 +269,9 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         });
     }
 
-
+    public static int dpToPx(float dp, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
     public void setWidth1(int width) {
         this.width1 = width;
     }

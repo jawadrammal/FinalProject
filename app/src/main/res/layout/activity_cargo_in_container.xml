@@ -20,17 +20,20 @@
         tools:context=".MainActivity">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/deletebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
+            android:onClick="deleteCargoButton"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.09"
+            app:layout_constraintHorizontal_bias="0.921"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.303"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
+            app:layout_constraintVertical_bias="0.265"
+            app:srcCompat="@android:drawable/ic_menu_delete"
+            tools:visibility="invisible" />
 
         <TextView
             android:id="@+id/textView5"
@@ -42,7 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.855" />
+            app:layout_constraintVertical_bias="0.888" />
 
         <Button
             android:id="@+id/ArrangementPlan"
@@ -60,8 +63,8 @@
             android:id="@+id/textView2"
             android:layout_width="126dp"
             android:layout_height="65dp"
-            android:layout_marginStart="260dp"
-            android:layout_marginTop="332dp"
+            android:layout_marginStart="268dp"
+            android:layout_marginTop="324dp"
             android:text="Cargo List"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +79,7 @@
             android:layout_marginEnd="54dp"
             android:onClick="OpenCargoPage"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.892"
             app:layout_constraintStart_toEndOf="@+id/button5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -83,8 +87,8 @@
 
         <EditText
             android:id="@+id/TotalTime"
-            android:layout_width="246dp"
-            android:layout_height="55dp"
+            android:layout_width="355dp"
+            android:layout_height="58dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Approximate total time: 0"
@@ -93,26 +97,26 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.196" />
+            app:layout_constraintVertical_bias="0.139" />
 
         <EditText
             android:id="@+id/TotalCost"
-            android:layout_width="246dp"
-            android:layout_height="52dp"
+            android:layout_width="342dp"
+            android:layout_height="39dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Approximate total cost: 0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.012"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.288" />
+            app:layout_constraintVertical_bias="0.231" />
 
         <EditText
             android:id="@+id/TotalWorkers"
-            android:layout_width="285dp"
-            android:layout_height="0dp"
+            android:layout_width="359dp"
+            android:layout_height="54dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="166dp"
             android:ems="10"
@@ -127,8 +131,8 @@
 
         <EditText
             android:id="@+id/TotalWeight"
-            android:layout_width="294dp"
-            android:layout_height="49dp"
+            android:layout_width="362dp"
+            android:layout_height="54dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Approximate container weight: 0"
@@ -137,56 +141,56 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.123" />
+            app:layout_constraintVertical_bias="0.084" />
 
         <ImageButton
             android:id="@+id/imageButton9"
             android:layout_width="122dp"
             android:layout_height="71dp"
-            android:layout_marginTop="492dp"
-            android:layout_marginEnd="28dp"
+            android:layout_marginTop="516dp"
+            android:layout_marginEnd="36dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/reportbtn" />
 
         <Button
-            android:id="@+id/deletebutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="54dp"
-            android:layout_marginBottom="246dp"
-            android:onClick="deleteCargoButton"
-            android:text="delete"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TotalWorkers"
-            tools:visibility="invisible" />
-
-        <Button
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="98dp"
-            android:layout_marginEnd="93dp"
-            android:layout_marginBottom="443dp"
             android:onClick="rotate"
             android:text="rotate"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/CargoList"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.697"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TotalWorkers" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.303" />
 
         <Button
             android:id="@+id/button6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="83dp"
-            android:layout_marginEnd="82dp"
             android:onClick="automaticSolution"
             android:text="automatic"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button5"
-            app:layout_constraintEnd_toEndOf="@+id/textView2"
-            app:layout_constraintStart_toStartOf="@+id/button5" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.562"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.404" />
+
+        <View
+            android:id="@+id/Container"
+            android:layout_width="200dp"
+            android:layout_height="502.333901188dp"
+            android:background="#AC8A8A"
+            android:backgroundTint="#BF9F9F"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.075"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.886" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);
         MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);
         MainInfo.CargoPercentage = (float) (200.0/234.8);
-
+        MainInfo.ContainerStartX = (float) (44/1080.0);
+        MainInfo.ContainerStartY = (float) (517/2040.0);
         setContentView(R.layout.managerpage);
 
     }
