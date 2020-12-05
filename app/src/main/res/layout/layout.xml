@@ -81,7 +81,7 @@
             app:srcCompat="@drawable/guicontainer" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/TotalTime"
             android:layout_width="246dp"
             android:layout_height="55dp"
             android:ems="10"
@@ -95,7 +95,7 @@
             app:layout_constraintVertical_bias="0.196" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/TotalCost"
             android:layout_width="246dp"
             android:layout_height="52dp"
             android:ems="10"
@@ -109,7 +109,7 @@
             app:layout_constraintVertical_bias="0.288" />
 
         <EditText
-            android:id="@+id/editText9"
+            android:id="@+id/TotalWorkers"
             android:layout_width="285dp"
             android:layout_height="58dp"
             android:ems="10"
@@ -123,7 +123,7 @@
             app:layout_constraintVertical_bias="0.023" />
 
         <EditText
-            android:id="@+id/editText12"
+            android:id="@+id/TotalWeight"
             android:layout_width="294dp"
             android:layout_height="49dp"
             android:ems="10"

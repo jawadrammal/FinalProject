@@ -27,10 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="376dp"
             android:layout_marginEnd="52dp"
-            android:layout_marginRight="52dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0"
+            android:text="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,10 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="284dp"
             android:layout_marginEnd="48dp"
-            android:layout_marginRight="48dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0"
+            android:text="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,10 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="508dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0"
+            android:text="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -171,10 +168,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="204dp"
             android:layout_marginEnd="44dp"
-            android:layout_marginRight="44dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0"
+            android:text="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -184,10 +180,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="128dp"
             android:layout_marginEnd="44dp"
-            android:layout_marginRight="44dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0"
+            android:text="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -197,10 +192,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="452dp"
             android:layout_marginEnd="48dp"
-            android:layout_marginRight="48dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="0"
+            android:text="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

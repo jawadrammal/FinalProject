@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +41,7 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
     ConstraintLayout rl;
     public static ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
+    public static InfoHolder MainInfo = new InfoHolder();
     int CargoListIndex=0;
     Intent myFileIntent;
     String ExcelFilePath;
@@ -62,8 +64,15 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
-
-
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        MainInfo.screenHeight = displayMetrics.heightPixels;
+        MainInfo.screenWidth = displayMetrics.widthPixels;
+        MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);
+        MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);
+        MainInfo.CargoPercentage = (float) (200.0/234.8);
+        MainInfo.ContainerStartX = (float) (44/1080.0);
+        MainInfo.ContainerStartY = (float) (517/2040.0);
         setContentView(R.layout.managerpage);
 
     }
