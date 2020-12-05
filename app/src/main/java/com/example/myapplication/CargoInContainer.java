@@ -5,8 +5,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+
+import java.util.ArrayList;
 
 public class CargoInContainer extends AppCompatActivity {
     ConstraintLayout cL;
@@ -92,5 +95,87 @@ public class CargoInContainer extends AppCompatActivity {
         //this.setpa
         lp.setMargins(10, 10, 10, 10);
         cargoButton.setLayoutParams(lp);
+        int temp=cargoButton.width1;
+        cargoButton.setWidth(cargoButton.length1);
+        cargoButton.setLength1(temp);
+    }
+
+    public void automaticSolution(View view)
+    {
+       CargoTablePage.buttons = AutoInitialSolution();
+    }
+
+    public ArrayList<CargoButton> autoButtons = new ArrayList<>();
+    public ArrayList<CargoButton> AutoInitialSolution( )
+    {
+       //ConstraintLayout cL2 = (ConstraintLayout) findViewById(R.id.layoutIn);
+        int x = 975, y = 1375;
+        ArrayList<CargoButton> cargoButtonArrayList =new ArrayList<CargoButton>();
+        for (int i=0;i<MainActivity.CargoList.size();i++) {
+            Cargo tempCr = MainActivity.CargoList.get(i);
+
+            CargoButton newButton =new CargoButton(this, tempCr.objectid, 0,0);
+            Pair<Integer,Integer> coordinates = getSpaceCoordinates(newButton);
+            if (coordinates!= null) {
+                x = coordinates.first;
+                y = coordinates.second;
+
+
+                autoButtons.add(newButton);
+                cL.addView(newButton);
+            }
+
+        }
+        return autoButtons;
+    }
+  Pair<Integer, Integer> getSpaceCoordinates(CargoButton newButton)
+    {
+        float x = 0,y = 0;
+        boolean hooffem=false;
+        x=newButton.getX();
+        y=newButton.getY();
+        CargoButton cargoButton1 = null;
+
+        //check space algorithm
+        int size=autoButtons.size();
+        if (size==0)
+            return  new Pair<>(0,0);
+       // for (int i=0;i<size;i++)
+       //     cargoButton1=autoButtons.get(i);
+
+     //  hooffem = cargoButton1.checkhooffeem(newButton);
+       //while (hooffem==true) {
+        //for on y
+        for (int j=0; j< 456 ; j++) { //for on x
+            for (int i = 0; i < 234; i++) {
+                if (i+newButton.width1>234)
+                    break;
+                newButton.setX(i);
+                newButton.setY(j);
+                for (int k=0;k<size;k++) {
+                    cargoButton1=autoButtons.get(k);
+                    hooffem = cargoButton1.checkhooffeem(newButton);
+                    if (hooffem == true)
+                        break;
+                }
+                if (hooffem == false)
+                    break;
+            }
+
+            if (hooffem == false)
+                break;
+        }
+           /*if (cargoButton1.getLayoutParams().width + cargoButton1.getX() + 1 < 234) {
+               x = newButton.getX() + cargoButton1.getX();
+               newButton.setX(x);
+           } else {
+               newButton.setX(0);
+               x = 0;
+               y= cargoButton1.getY();
+           }*/
+
+
+
+        return new Pair<>(1,1);
     }
 }

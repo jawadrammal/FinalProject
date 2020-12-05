@@ -19,6 +19,16 @@
         app:layout_constraintVertical_bias="0.0"
         tools:context=".MainActivity">
 
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="44dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText2"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
         <TextView
             android:id="@+id/textView5"
             android:layout_width="0dp"
@@ -67,20 +77,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_dialog_dialer" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="456dp"
-            android:layout_marginEnd="49dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/deletebutton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/guicontainer" />
 
         <EditText
             android:id="@+id/editText"
@@ -177,6 +173,38 @@
             app:layout_constraintEnd_toStartOf="@+id/CargoList"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText9" />
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="83dp"
+            android:layout_marginEnd="82dp"
+            android:onClick="automaticSolution"
+            android:text="automatic"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button5"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="@+id/button5" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutIn"
+            android:layout_width="235dp"
+            android:layout_height="456dp"
+            android:layout_marginTop="280dp"
+            android:layout_marginEnd="160dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/guicontainer" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
