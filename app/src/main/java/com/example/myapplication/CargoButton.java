@@ -16,6 +16,7 @@ import java.util.Random;
 public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
     int r=0,g=0,b=0;
     float x,y;
+    int width1,length1;
     String objectId;
     Cargo cargo;
     Random rand;
@@ -31,8 +32,9 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         for (int i=0;i<MainActivity.CargoList.size();i++)
             if (MainActivity.CargoList.get(i).objectid==objectId)
                cargo = MainActivity.CargoList.get(i);
-
-        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(cargo.width.intValue(),cargo.length.intValue());
+            width1=cargo.width.intValue();
+            length1=cargo.length.intValue();
+        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(width1,length1);
         //this.setpa
         lp.setMargins(10, 10, 10, 10);
         this.setLayoutParams(lp);
@@ -66,7 +68,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         return rand.nextInt(num);
     }
 
-    private boolean checkHoffemAxis(float a,float b, float c , float d)
+    public static boolean checkHoffemAxis(float a,float b, float c , float d)
     {
         boolean flag= false;
 
@@ -90,6 +92,48 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         return flag;
     }
 
+    public boolean checkhooffeem(CargoButton other)
+    {    boolean hoffemY, hoffemX;
+        float xright, xleft, viewXright, viewXLeft;
+        xleft = other.getX();
+        viewXLeft = this.getX();
+        xright =xleft  + other.getLayoutParams().width;
+        viewXright =viewXLeft  + this.getLayoutParams().width;
+        float yUp, yDown, viewYup, viewYDown;
+        yUp = other.getY();
+        viewYup = this.getY();
+        yDown =yUp  + other.getLayoutParams().height;
+        viewYDown =viewYup  + this.getLayoutParams().height;
+
+          // if ((view.getX() - CargoTablePage.buttons.get(i).getX()))) < (Math.max(CargoTablePage.buttons.get(i).cargo.width.intValue(), cargo.width.intValue())))
+            //||(Math.abs((CargoTablePage.buttons.get(i).getX()+CargoTablePage.buttons.get(i).cargo.width.intValue()) - (view.getX() + cargo.width.intValue()))< CargoTablePage.buttons.get(i).cargo.width.intValue())) {
+
+            if((viewXLeft-xleft)<0) {
+                if (viewXright>xleft) {
+                    hoffemX=true;
+                }
+                else {
+                    hoffemX=false;
+                }
+            }
+            else {
+                if (viewXLeft<xright) {
+                    hoffemX=true;
+                }
+                else {
+                    hoffemX=false;
+                }
+
+            }
+            hoffemX= checkHoffemAxis(viewXLeft,viewXright,xleft,xright);
+            hoffemY = checkHoffemAxis(viewYup, viewYDown, yUp, yDown);
+            if(hoffemX==true&&hoffemY==true)
+            {
+                return true;
+            }
+            return false;
+        }
+
     public void setXvalue(float x)
     {
         this.x = x;
@@ -98,6 +142,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
     {
         this.y=y;
     }
+
+
     public void setTouchListener() {
         this.setOnTouchListener(new View.OnTouchListener() {
             int xDelta;
@@ -221,5 +267,14 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                 return true;
             }
         });
+    }
+
+
+    public void setWidth1(int width) {
+        this.width1 = width;
+    }
+
+    public void setLength1(int length1) {
+        this.length1 = length1;
     }
 }
