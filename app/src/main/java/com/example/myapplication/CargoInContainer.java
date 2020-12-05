@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,8 @@ public class CargoInContainer extends AppCompatActivity {
                     CargoButton newButton = new CargoButton(this, tempCr.objectid, 975, 1375);
                     CargoTablePage.buttons.add(newButton);
                     cL.addView(newButton);
+                    MainActivity.MainInfo.totalWeight+=MainActivity.CargoList.get(i).weight;
+                    ((EditText)findViewById((R.id.TotalWeight))).setText("Approximate container weight: " + (int)MainActivity.MainInfo.totalWeight);
                 }
             }
         }
@@ -58,11 +61,17 @@ public class CargoInContainer extends AppCompatActivity {
         for (i=0;i<CargoTablePage.buttons.size();i++)
         {
             if(CargoTablePage.buttons.get(i).objectId.equals(CargoButton.selected))
-            {
-                cL.removeView(CargoTablePage.buttons.get(i));
-                CargoTablePage.buttons.remove(i);
-                i=i-1;
-            }
+                for (int j = 0; j < MainActivity.CargoList.size(); j++) {
+                    Cargo tempCr = MainActivity.CargoList.get(j);
+                    if (tempCr.objectid == CargoTablePage.buttons.get(i).objectId) {
+                        MainActivity.MainInfo.totalWeight -= MainActivity.CargoList.get(j).weight;
+                        ((EditText) findViewById((R.id.TotalWeight))).setText("Approximate container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                    }
+                    cL.removeView(CargoTablePage.buttons.get(i));
+                    CargoTablePage.buttons.remove(i);
+                    i = i - 1;
+                }
+
 
         }
         deleteButton.setVisibility(View.INVISIBLE);

@@ -23,10 +23,13 @@
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="44dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.09"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.303"
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
         <TextView
@@ -79,7 +82,7 @@
             app:srcCompat="@android:drawable/ic_dialog_dialer" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/TotalTime"
             android:layout_width="246dp"
             android:layout_height="55dp"
             android:ems="10"
@@ -93,7 +96,7 @@
             app:layout_constraintVertical_bias="0.196" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/TotalCost"
             android:layout_width="246dp"
             android:layout_height="52dp"
             android:ems="10"
@@ -107,7 +110,7 @@
             app:layout_constraintVertical_bias="0.288" />
 
         <EditText
-            android:id="@+id/editText9"
+            android:id="@+id/TotalWorkers"
             android:layout_width="285dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
@@ -123,7 +126,7 @@
             app:layout_constraintVertical_bias="0.023" />
 
         <EditText
-            android:id="@+id/editText12"
+            android:id="@+id/TotalWeight"
             android:layout_width="294dp"
             android:layout_height="49dp"
             android:ems="10"
@@ -156,8 +159,7 @@
             android:text="delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/editText9"
+            app:layout_constraintTop_toBottomOf="@+id/TotalWorkers"
             tools:visibility="invisible" />
 
         <Button
@@ -172,7 +174,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/CargoList"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText9" />
+            app:layout_constraintTop_toBottomOf="@+id/TotalWorkers" />
 
         <Button
             android:id="@+id/button6"
@@ -185,26 +187,6 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/button5"
             app:layout_constraintEnd_toEndOf="@+id/textView2"
             app:layout_constraintStart_toStartOf="@+id/button5" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutIn"
-            android:layout_width="235dp"
-            android:layout_height="456dp"
-            android:layout_marginTop="280dp"
-            android:layout_marginEnd="160dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/guicontainer" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
