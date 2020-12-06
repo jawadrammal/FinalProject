@@ -144,13 +144,15 @@ public class CargoInContainer extends AppCompatActivity {
     }
   Pair<Integer, Integer> getSpaceCoordinates(CargoButton newButton)
     {
+        float minY=0;
         float x = 0,y = 0,x1,y1;
-        boolean hooffem=false;
+        boolean hooffem=false,first=true;
         x=newButton.getX();
         y=newButton.getY();
         CargoButton cargoButton1 = null;
         x1= ((View)findViewById(R.id.Container)).getX(); //44
         y1= ((View)findViewById(R.id.Container)).getY();//517
+        minY=y1;
         //check space algorithm
         int size=autoButtons.size();
         if (size==0)
@@ -163,8 +165,12 @@ public class CargoInContainer extends AppCompatActivity {
         //for on y
         for (float j=y1; j< dpToPx(502,this.getApplicationContext())+y1 ; j++) { //for on x
             for (float i = x1; i < dpToPx(200,this.getApplicationContext())+x1; i++) {
-                if (i+newButton.width1>dpToPx(200,this.getApplicationContext())+x1)
+                if (i+newButton.width1>dpToPx(200,this.getApplicationContext())+x1) {
+                 j=minY+1;
+                 first= true;
                     break;
+
+                }
                 if (j+newButton.length1>dpToPx(502,this.getApplicationContext())+y1)
                     break;
                 newButton.setX(i);
@@ -173,10 +179,22 @@ public class CargoInContainer extends AppCompatActivity {
                     cargoButton1=autoButtons.get(k);
                     hooffem = cargoButton1.checkhooffeem(newButton);
                     if (hooffem == true)
+                    {
+                        i=cargoButton1.getX()+ cargoButton1.width1;
+                        if (first==true) {
+                            minY = cargoButton1.getY()+cargoButton1.length1;
+                            first=false;
+                        }
+                        else {
+                            if (cargoButton1.getY()+cargoButton1.length1<minY)
+                                minY= (cargoButton1.getY()+cargoButton1.length1);
+                        }
                         break;
+                    }
                 }
                 if (hooffem == false)
                     break;
+
             }
 
             if (hooffem == false)
