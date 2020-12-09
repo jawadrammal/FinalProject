@@ -12,4 +12,5 @@ public class InfoHolder {
     float buttonWidthPercentage;
     float buttonHeightPercentage;
     float CargoPercentage;
+    static double containerHeight= 238.44;
 }
