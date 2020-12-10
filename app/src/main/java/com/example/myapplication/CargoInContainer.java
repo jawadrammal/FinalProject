@@ -117,11 +117,11 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void automaticSolution(View view)
     {
-       CargoTablePage.buttons = AutoInitialSolution();
+      AutoInitialSolution();
     }
 
-    public ArrayList<CargoButton> autoButtons = new ArrayList<>();
-    public ArrayList<CargoButton> AutoInitialSolution( )
+    //public ArrayList<CargoButton> autoButtons = new ArrayList<>();
+    public void AutoInitialSolution( )
     {
        //ConstraintLayout cL2 = (ConstraintLayout) findViewById(R.id.layoutIn);
         float x1,y1;
@@ -129,7 +129,6 @@ public class CargoInContainer extends AppCompatActivity {
        x1= ((View)findViewById(R.id.Container)).getX(); //44
        y1= ((View)findViewById(R.id.Container)).getY();//517
 
-        ArrayList<CargoButton> cargoButtonArrayList =new ArrayList<CargoButton>();
         for (int i=0;i<MainActivity.CargoList.size();i++) {
             Cargo tempCr = MainActivity.CargoList.get(i);
 
@@ -140,12 +139,11 @@ public class CargoInContainer extends AppCompatActivity {
                 y = coordinates.second;
 
 
-                autoButtons.add(newButton);
+                CargoTablePage.buttons.add(newButton);
                 cL.addView(newButton);
             }
 
         }
-        return autoButtons;
     }
   Pair<Integer, Integer> getSpaceCoordinates(CargoButton newButton) {
       float minY = 0;
@@ -160,9 +158,9 @@ public class CargoInContainer extends AppCompatActivity {
       CargoTablePage.containerY = ((View) findViewById(R.id.Container)).getY();//517
       minY = y1;
       //check space algorithm
-      int size = autoButtons.size();
-      if (size == 0)
-          return new Pair<>(0, 0);
+      int size = CargoTablePage.buttons.size();
+     // if (size == 0)
+       //   return new Pair<>(0, 0);
       // for (int i=0;i<size;i++)
       //     cargoButton1=autoButtons.get(i);
 
@@ -195,27 +193,29 @@ public class CargoInContainer extends AppCompatActivity {
               newButton.setX(i);
               newButton.setY(j);
               for (int k = 0; k < size; k++) {
-                  cargoButton1 = autoButtons.get(k);
-                  hooffem = cargoButton1.checkhooffeem(newButton);
-                  if (hooffem == true) {
-                      i = cargoButton1.getX() + cargoButton1.width1;
-                      if (first == true) {
-                          minY = cargoButton1.getY() + cargoButton1.length1;
-                          first = false;
-                      } else {
-                          if (cargoButton1.getY() + cargoButton1.length1 < minY)
-                              minY = (cargoButton1.getY() + cargoButton1.length1);
-                      }
+                  cargoButton1 = CargoTablePage.buttons.get(k);
+                //  if (cargoButton1.objectId.equals(newButton.objectId)==false) {
+                    //  if (cargoButton1.objectId!=newButton.objectId){
+                      hooffem = cargoButton1.checkhooffeem(newButton);
+                      if (hooffem == true) {
+                          i = cargoButton1.getX() + cargoButton1.width1;
+                          if (first == true) {
+                              minY = cargoButton1.getY() + cargoButton1.length1;
+                              first = false;
+                          } else {
+                              if (cargoButton1.getY() + cargoButton1.length1 < minY)
+                                  minY = (cargoButton1.getY() + cargoButton1.length1);
+                          }
 
+                          break;
+                      }
+                  //}
+                  if (hooffem == false) {
+                      inOkPlace = true;
                       break;
                   }
               }
-              if (hooffem == false) {
-                  inOkPlace = true;
-                  break;
-              }
           }
-
           if (hooffem == false) {
               inOkPlace = true;
               break;
@@ -235,18 +235,21 @@ public class CargoInContainer extends AppCompatActivity {
           newButton.setX(x1);
           newButton.setY(y1);
           CargoButton other;
-          size = autoButtons.size();
+          size = CargoTablePage.buttons.size();
           for (int k1 = 0; k1 < size; k1++) {
-              other = autoButtons.get(k1);
-              if (newButton.checkhooffeem(other) == true) {
-                  //check if we can put it above this cargo
-                  if (newButton.canPutOnOther(other) == true) {
-                      newButton.putItOnOther(other);
-                      inOkPlace = true;
-                      break;
+              other = CargoTablePage.buttons.get(k1);
+              //if (newButton.objectId.equals(other.objectId)==false) {
+             // if (cargoButton1.objectId!=newButton.objectId){
+                  if (newButton.checkhooffeem(other) == true) {
+                      //check if we can put it above this cargo
+                      if (newButton.canPutOnOther(other) == true) {
+                          newButton.putItOnOther(other);
+                          inOkPlace = true;
+                          break;
+                      }
                   }
               }
-          }
+          //}
 
       }
       if (inOkPlace == false) {

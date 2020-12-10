@@ -21,7 +21,7 @@ import java.util.Random;
 public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
     int r = 0, g = 0, b = 0;
     float x, y;
-    double z;
+    double z=0;
     int width1, length1;
     PopupWindow popUp;
     boolean click=true;
@@ -128,7 +128,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
             }
             down = other;
             down.up.add(this);
-            z+=(down.z+down.cargo.height);
+            z=(down.z+down.cargo.height);
             return true;
         }
         else
@@ -136,8 +136,10 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
             for (int i=0;i<other.up.size();i++)
             {
                 if (checkhooffeem(other.up.get(i))) {
-                    if(canPutOnOther(other.up.get(i)))
+                    if(canPutOnOther(other.up.get(i))) {
                         putItOnOther(other.up.get(i));
+                        break;
+                    }
                 }
             }
         }
@@ -313,13 +315,14 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                                                 for(int i=0;i<down.up.size();i++)
                                                     if (down.up.get(i).objectId.equals(v.objectId))
                                                     {
-                                                        z-=down.up.get(i).cargo.height;
+                                                        z-=down.cargo.height;
                                                         down.up.remove(i);
 
                                                         break;
                                                     }
                                             }
                                         down = null;
+                                            z=0;
                                     }
                                 }
                             }
@@ -340,14 +343,16 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                                             for(int i=0;i<down.up.size();i++)
                                                 if (down.up.get(i).objectId.equals(((CargoButton)view).objectId))
                                                 {
-                                                    z-=down.up.get(i).cargo.height;
+                                                    z-=down.cargo.height;
                                                     down.up.remove(i);
 
                                                     break;
                                                 }
                                         }
                                     down = null;
+
                                 }
+                                z=0;
                             }
 
                         } else {
