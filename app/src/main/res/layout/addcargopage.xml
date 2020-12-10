@@ -29,7 +29,7 @@
             android:layout_marginEnd="52dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="300"
+            android:text="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,7 @@
             android:layout_marginEnd="48dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="300"
+            android:text="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,7 +53,7 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="300"
+            android:text="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -170,7 +170,7 @@
             android:layout_marginEnd="44dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="300"
+            android:text="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -182,7 +182,7 @@
             android:layout_marginEnd="44dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="300"
+            android:text="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -194,7 +194,7 @@
             android:layout_marginEnd="48dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="300"
+            android:text="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

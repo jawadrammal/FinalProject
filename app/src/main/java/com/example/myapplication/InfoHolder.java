@@ -7,9 +7,15 @@ public class InfoHolder {
     int totalWorkers;
     float screenWidth;
     float screenHeight;
+    float alertWidthPerc;
+    float alertHeightPerc;
+    float containerViewWidth;
+    float containerViewLength;
+    float alertXPerc;
+    float alertYPerc;
     float ContainerStartX;
     float ContainerStartY;
     float buttonWidthPercentage;
     float buttonHeightPercentage;
-    float CargoPercentage;
+    float CargoPercentagecontainer;
 }
