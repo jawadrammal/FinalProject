@@ -44,7 +44,7 @@ public class CargoInContainer extends AppCompatActivity {
                     CargoTablePage.buttons.add(newButton);
                     cL.addView(newButton);
                     MainActivity.MainInfo.totalWeight+=MainActivity.CargoList.get(i).weight;
-                    ((EditText)findViewById((R.id.TotalWeight))).setText("Approximate container weight: " + (int)MainActivity.MainInfo.totalWeight);
+                    ((EditText)findViewById((R.id.TotalWeight))).setText("container weight: " + (int)MainActivity.MainInfo.totalWeight);
                 }
             }
         }
@@ -67,7 +67,7 @@ public class CargoInContainer extends AppCompatActivity {
                     Cargo tempCr = MainActivity.CargoList.get(j);
                     if (tempCr.objectid == CargoTablePage.buttons.get(i).objectId) {
                         MainActivity.MainInfo.totalWeight -= MainActivity.CargoList.get(j).weight;
-                        ((EditText) findViewById((R.id.TotalWeight))).setText("Approximate container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                        ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
                     }
                     cL.removeView(CargoTablePage.buttons.get(i));
                     CargoTablePage.buttons.remove(i);

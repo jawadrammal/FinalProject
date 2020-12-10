@@ -1,12 +1,15 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,7 +20,10 @@ import java.util.Random;
 public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
     int r=0,g=0,b=0;
     float x,y;
+    PopupWindow popUp;
     int width1,length1;
+    boolean click=true;
+
     String objectId;
     Cargo cargo;
     Random rand;
@@ -34,8 +40,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
             if (MainActivity.CargoList.get(i).objectid==objectId)
                cargo = MainActivity.CargoList.get(i);
         //dpToPx(cargo.width.floatValue(),this.getContext());
-            width1= (int) Math.ceil(dpToPx(cargo.width.floatValue(),this.getContext())*MainActivity.MainInfo.CargoPercentage);
-            length1=(int) Math.ceil(dpToPx(cargo.length.floatValue(),this.getContext())*MainActivity.MainInfo.CargoPercentage);
+            width1= (int) Math.ceil(dpToPx(cargo.width.floatValue(),this.getContext())*MainActivity.MainInfo.CargoPercentagecontainer);
+            length1=(int) Math.ceil(dpToPx(cargo.length.floatValue(),this.getContext())*MainActivity.MainInfo.CargoPercentagecontainer);
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(width1,length1);
         this.setLayoutParams(lp);
         setTouchListener();
@@ -44,7 +50,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         this.y=y;
         this.setX(x);
         this.setY(y);
-
+        popUp = new PopupWindow();
         this.setText(objectId);
 
         r = getrandomNum(255);
@@ -245,17 +251,32 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                                     "didn't move!", Toast.LENGTH_SHORT)
                                     .show();
                             selected=objectId;
-                           CargoInContainer.deleteButton.setVisibility(VISIBLE);
-
+                            CargoInContainer.deleteButton.setVisibility(VISIBLE);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            //builder.setTitle("id:" + cargo.objectid);
+                            int z=5;
+                            builder.setMessage("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + view.getX() + "\n" + "y:" + view.getY() + "\n" + "z:" + z + "\n" );
+                            AlertDialog dialog = builder.create();
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+                            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                            wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+                            wmlp.x =  (int) Math.ceil(MainActivity.MainInfo.screenWidth*MainActivity.MainInfo.alertXPerc);   //x position
+                            wmlp.y = (int) Math.ceil(MainActivity.MainInfo.screenHeight*MainActivity.MainInfo.alertYPerc); ;   //y position
+                            dialog.show();
+                            dialog.getWindow().setLayout((int) Math.ceil(MainActivity.MainInfo.screenWidth*MainActivity.MainInfo.alertWidthPerc),(int) Math.ceil(MainActivity.MainInfo.screenHeight*MainActivity.MainInfo.alertHeightPerc));
                         }
                         break;
 
                     case MotionEvent.ACTION_MOVE:
                         moved=true;
-                        view.setX(x - xDelta);
-                        view.setY(y - yDelta);
-                        setXvalue(x);
-                        setYvalue(y);
+                        if(y-yDelta>MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight)
+                        {
+                            view.setX(x - xDelta);
+                            view.setY(y - yDelta);
+                            setXvalue(x);
+                            setYvalue(y);
+                        }
                         /*GradientDrawable drawable = new GradientDrawable();
                         drawable.setShape(GradientDrawable.RECTANGLE);
                         drawable.setStroke(5,Color.GREEN);
@@ -280,3 +301,4 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         this.length1 = length1;
     }
 }
+
