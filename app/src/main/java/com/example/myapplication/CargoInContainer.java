@@ -111,7 +111,7 @@ public class CargoInContainer extends AppCompatActivity {
                 //lp.setMargins(10, 10, 10, 10);
                 cargoButton.setLayoutParams(lp);
                 int temp = cargoButton.width1;
-                cargoButton.setWidth(cargoButton.length1);
+                cargoButton.setWidth1(cargoButton.length1);
                 cargoButton.setLength1(temp);
                // break;
             }
@@ -175,19 +175,24 @@ public class CargoInContainer extends AppCompatActivity {
          rotated = false;
          for (float i = x1; i < dpToPx(200, this.getApplicationContext()) + x1; i++) {
              if (i + newButton.width1 > dpToPx(200, this.getApplicationContext()) + x1) {
-                   /* if (rotated==false) {
-                        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(newButton.getLayoutParams().height, newButton.getLayoutParams().width);
+                    if (rotated==false) {
+                       /* ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(newButton.getLayoutParams().height, newButton.getLayoutParams().width);
                         //this.setpa
                         //lp.setMargins(10, 10, 10, 10);
                         newButton.setLayoutParams(lp);
                         int temp = newButton.width1;
-                        newButton.setWidth(newButton.length1);
-                        newButton.setLength1(temp);
+                        newButton.setWidth1(newButton.length1);
+                        newButton.setLength1(temp);*/
+                        newButton.rotate();
                         i=x1;
                         rotated=true;
                         
-                    }*/
-                 j = minY + 1;
+                    }
+                    else
+                    {
+                        j = minY + 1;
+                    }
+
                  first = true;
                  break;
 

@@ -443,7 +443,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         //lp.setMargins(10, 10, 10, 10);
         this.setLayoutParams(lp);
         int temp = this.width1;
-        this.setWidth(this.length1);
+        this.setWidth1(this.length1);
         this.setLength1(temp);
     }
 
