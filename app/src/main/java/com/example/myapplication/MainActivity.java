@@ -55,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
     View addcargototableview;
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.putExtra("AddToContainer?",false);
+        startActivity(intent);
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -80,17 +89,27 @@ public class MainActivity extends AppCompatActivity {
         MainInfo.containerViewLength = (float) (1559/2040.0);
         MainInfo.containerViewWidth = (float) (331/1080.0);
 
-        setContentView(R.layout.activity_cargo_in_container);
+        setContentView(R.layout.cargotable);
 
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
     int xDelta;
     int yDelta;
     @SuppressLint("ClickableViewAccessibility")
     public void DrawObject(View view) {
-        Intent i = new Intent(getApplicationContext(), CargoInContainer.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        i.putExtra("AddToContainer?",true);
-        startActivity(i);
+        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.putExtra("AddToContainer?",true);
+        startActivity(intent);
+
     }
 
     /** Called when the user touches the button */
@@ -109,7 +128,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.addcargopage);
     }
     public void OpenFirstlayoutPage(View view) {
-        setContentView(R.layout.layout);
+       // setContentView(R.layout.layout);
+        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.putExtra("AddToContainer?",false);
+        startActivity(intent);
+
     }
     public void OpenEditcargoPage(View view)
     {
@@ -152,9 +178,12 @@ public class MainActivity extends AppCompatActivity {
         RebuildTable(view);
         //updateClickableButtons();
     }
+  //  int i=0;
     public void AddCargo(View view) {
         Cargo newCargo = new Cargo();
         newCargo.objectid=((EditText)findViewById(R.id.ObjectIDTxt)).getText().toString();
+       // ((EditText)findViewById(R.id.ObjectIDTxt)).setText(newCargo.objectid+""+i);
+      //  i++;
         newCargo.height=Double.parseDouble(((EditText)findViewById(R.id.HeightTxt)).getText().toString());
         newCargo.width=Double.parseDouble(((EditText)findViewById(R.id.WidthTxt)).getText().toString());
         newCargo.weight=Double.parseDouble(((EditText)findViewById(R.id.WeightTxt)).getText().toString());
@@ -416,9 +445,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (Cargo.selectedCnt==0){
             findViewById(R.id.imageButton5).setClickable(false);
+            findViewById(R.id.button3).setClickable(false);
         }
         else{
             findViewById(R.id.imageButton5).setClickable(true);
+            findViewById(R.id.button3).setClickable(true);
         }
     }
 
