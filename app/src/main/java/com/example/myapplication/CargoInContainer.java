@@ -21,8 +21,10 @@ public class CargoInContainer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_cargo_in_container);
-        cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
+
+        cL = (ConstraintLayout)  findViewById(R.id.constraintLayout);
         deleteButton = (ImageButton) findViewById(R.id.deletebutton);
         deleteButton.setVisibility(View.INVISIBLE);
         CargoTablePage.containerWidth = dpToPx(200, this.getApplicationContext());
@@ -36,23 +38,26 @@ public class CargoInContainer extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
+
         Intent intent = getIntent();
         boolean addButton = intent.getBooleanExtra("AddToContainer?", false);
-        if (addButton == true) {
+
+        if (addButton == true)
+        {
             deleteButton.setVisibility(View.INVISIBLE);
+
             cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
-            for (int i = 0; i < MainActivity.CargoList.size(); i++) {
+
+            for (int i = 0; i < MainActivity.CargoList.size(); i++)
+            {
                 Cargo tempCr = MainActivity.CargoList.get(i);
-                if (tempCr.Selected == true) {
-                    if (!(tempCr.isInCargoPage())) {
+                if (tempCr.Selected == true)
+                {
+                    if (!(tempCr.isInCargoPage()))
+                    {
                         CargoButton newButton = new CargoButton(this, tempCr.objectid, MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage, MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
                         CargoTablePage.buttons.add(newButton);
                         cL.addView(newButton);
@@ -63,19 +68,23 @@ public class CargoInContainer extends AppCompatActivity {
                 }
             }
         }
+
         CargoTablePage.containerX = ((View) findViewById(R.id.Container)).getX(); //44 //44
         CargoTablePage.containerY = ((View) findViewById(R.id.Container)).getY();//517
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(Intent intent)
+    {
         super.onNewIntent(intent);
         setIntent(intent);
     }
 
-    public void OpenCargoPage(View view) {
+
+    public void OpenCargoPage(View view)
+    {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-       intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
        // intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         startActivity(intent);
@@ -106,14 +115,7 @@ public class CargoInContainer extends AppCompatActivity {
         for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
             cargoButton = CargoTablePage.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
-                ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(cargoButton.getLayoutParams().height, cargoButton.getLayoutParams().width);
-                //this.setpa
-                //lp.setMargins(10, 10, 10, 10);
-                cargoButton.setLayoutParams(lp);
-                int temp = cargoButton.width1;
-                cargoButton.setWidth1(cargoButton.length1);
-                cargoButton.setLength1(temp);
-               // break;
+               cargoButton.rotate();
             }
         }
     }
@@ -127,9 +129,12 @@ public class CargoInContainer extends AppCompatActivity {
         for (int i = 0; i < MainActivity.CargoList.size(); i++)
         {
             Cargo tempCr = MainActivity.CargoList.get(i);
-            if (!(tempCr.isInCargoPage())) {
+            if (!(tempCr.isInCargoPage()))
+            {
                 CargoButton newButton = new CargoButton(this, tempCr.objectid, x1, y1);
+
                 autoMoveButton(newButton);
+
                 MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
                 ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
 
@@ -144,10 +149,7 @@ public class CargoInContainer extends AppCompatActivity {
  void autoMoveButton(CargoButton newButton) {
      float minY = 0;
      float x = 0, y = 0, x1, y1;
-     boolean hooffem = false, first = true, rotated = false, putOnOther = false, onFloor = false, inOkPlace = false;
-
-     x = newButton.getX();
-     y = newButton.getY();
+     boolean hooffem = false, first = true, rotated = false, onFloor = false, inOkPlace = false;
 
      CargoButton cargoButton1 = null;
 
@@ -157,71 +159,69 @@ public class CargoInContainer extends AppCompatActivity {
      CargoTablePage.containerX = ((View) findViewById(R.id.Container)).getX(); //44 //44
      CargoTablePage.containerY = ((View) findViewById(R.id.Container)).getY();//517
 
+     x = newButton.getX();
+     y = newButton.getY();
+
      minY = y1;
 
      //check space algorithm
      int size = CargoTablePage.buttons.size();
 
-     // if (size == 0)
-     //   return new Pair<>(0, 0);
-     // for (int i=0;i<size;i++)
-     //     cargoButton1=autoButtons.get(i);
-
-     //  hooffem = cargoButton1.checkhooffeem(newButton);
-     //while (hooffem==true) {
-
      //for on y
-     for (float j = y1; j < dpToPx(502, this.getApplicationContext()) + y1; j++) { //for on x
+     for (float j = y1; j < dpToPx(502, this.getApplicationContext()) + y1; j++)
+     {
          rotated = false;
-         for (float i = x1; i < dpToPx(200, this.getApplicationContext()) + x1; i++) {
-             if (i + newButton.width1 > dpToPx(200, this.getApplicationContext()) + x1) {
-                    if (rotated==false) {
-                       /* ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(newButton.getLayoutParams().height, newButton.getLayoutParams().width);
-                        //this.setpa
-                        //lp.setMargins(10, 10, 10, 10);
-                        newButton.setLayoutParams(lp);
-                        int temp = newButton.width1;
-                        newButton.setWidth1(newButton.length1);
-                        newButton.setLength1(temp);*/
+
+         //for on x
+         for (float i = x1; i < dpToPx(200, this.getApplicationContext()) + x1; i++)
+         {
+             if (i + newButton.width1 > dpToPx(200, this.getApplicationContext()) + x1)
+             {
+                    if (rotated==false)
+                    {
                         newButton.rotate();
                         i=x1;
                         rotated=true;
-                        
                     }
                     else
                     {
+                        newButton.rotate();
                         j = minY + 1;
                     }
-
-                 first = true;
-                 break;
-
+                    first = true;
+                    break;
              }
              if (j + newButton.length1 > dpToPx(502, this.getApplicationContext()) + y1)
                  break;
 
+
              newButton.setX(i);
              newButton.setY(j);
 
-             for (int k = 0; k < size; k++) {
+             for (int k = 0; k < size; k++)
+             {
                  cargoButton1 = CargoTablePage.buttons.get(k);
                  //  if (cargoButton1.objectId.equals(newButton.objectId)==false) {
                  //  if (cargoButton1.objectId!=newButton.objectId){
-                 //if (cargoButton1!=newButton) {
-                 hooffem = cargoButton1.checkhooffeem(newButton);
-                 if (hooffem == true) {
-                     i = cargoButton1.getX() + cargoButton1.width1;
-                     if (first == true) {
-                         minY = cargoButton1.getY() + cargoButton1.length1;
-                         first = false;
-                     } else {
-                         if (cargoButton1.getY() + cargoButton1.length1 < minY)
-                             minY = (cargoButton1.getY() + cargoButton1.length1);
-                     }
-
+                 if (cargoButton1!=newButton)
+                 {
+                    hooffem = cargoButton1.checkhooffeem(newButton);
+                    if (hooffem == true)
+                    {
+                        i = cargoButton1.getX() + cargoButton1.width1;
+                        if (first == true)
+                        {
+                            minY = cargoButton1.getY() + cargoButton1.length1;
+                            first = false;
+                        }
+                        else
+                        {
+                            if (cargoButton1.getY() + cargoButton1.length1 < minY)
+                            minY = (cargoButton1.getY() + cargoButton1.length1);
+                        }
                      break;
+                    }
                  }
-                 //}
                  //}
              }
              if (hooffem == false) {
@@ -235,14 +235,7 @@ public class CargoInContainer extends AppCompatActivity {
              break;
          }
      }
-           /*if (cargoButton1.getLayoutParams().width + cargoButton1.getX() + 1 < 234) {
-               x = newButton.getX() + cargoButton1.getX();
-               newButton.setX(x);
-           } else {
-               newButton.setX(0);
-               x = 0;
-               y= cargoButton1.getY();
-           }*/
+
 
      if (hooffem == true) {
          //check if we can put it on another cargo
@@ -314,10 +307,7 @@ public class CargoInContainer extends AppCompatActivity {
          newButton.insideContainer=true;
  }
 
-    public static void updateTotalWieghtText()
-    {
 
-    }
     public static int dpToPx(float dp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
