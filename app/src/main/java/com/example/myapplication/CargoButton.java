@@ -574,6 +574,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         }
 
         if (inOkPlace == false) {
+
             setxInContainer(oldX);
             setyInContainer(oldy);
             if(oldX==-1 && oldy==-1) {
@@ -627,6 +628,23 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                 }
             }
             else {
+
+
+                    if (down != null) {
+                        if (down.up.isEmpty() != true) {
+                            for (int i = 0; i < down.up.size(); i++)
+                                if (down.up.get(i).objectId.equals(this.objectId)) {
+                                    down.up.remove(i);
+                                    // i=i-1;
+                                    break;
+                                }
+                            z -= down.cargo.height;
+                        }
+                        z=0;
+                        down=null;
+                    }
+
+
                 z=0;
                 }
             return true;
