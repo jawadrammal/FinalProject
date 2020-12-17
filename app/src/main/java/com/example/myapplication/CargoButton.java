@@ -52,7 +52,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         this.setX(xInContainer);
         this.setY(yInContainer);
 
-        popUp = new PopupWindow();
+        //popUp = new PopupWindow();
         this.setText(objectId);
         up = new ArrayList<>();
 
@@ -381,21 +381,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                         selected = objectId;
                         CargoInContainer.deleteButton.setVisibility(VISIBLE);
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        //builder.setTitle("id:" + cargo.objectid);
-
-                        builder.setMessage("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + view.getX() + "\n" + "y:" + view.getY() + "\n" + "z:" + z + "\n");
-                        AlertDialog dialog = builder.create();
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
-                        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                        wmlp.gravity = Gravity.TOP | Gravity.LEFT;
-                        wmlp.x = (int) Math.ceil(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.alertXPerc);   //x position
-                        wmlp.y = (int) Math.ceil(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.alertYPerc);
-                        ;   //y position
-                        dialog.show();
-                        dialog.getWindow().setLayout((int) Math.ceil(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.alertWidthPerc), (int) Math.ceil(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.alertHeightPerc));
-
+                        MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + view.getX() + "\n" + "y:" + view.getY() + "\n" + "z:" + z + "\n");
 
                         break;
 
@@ -418,12 +404,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
 
                                 if (tryToPutHere(null) == true) {
-                                    insideContainer = true;
-
-                                }
-                                if (insideContainer == false) {
-                                    MainActivity.MainInfo.totalWeight += cargo.weight;
-                                    CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
                                     insideContainer = true;
                                 }
                             } else {
@@ -478,6 +458,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                                 view.setY(y - yDelta);
                             }
                         }
+                        else
+                            MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
                         /*GradientDrawable drawable = new GradientDrawable();
                         drawable.setShape(GradientDrawable.RECTANGLE);
                         drawable.setStroke(5,Color.GREEN);
@@ -604,6 +586,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
         if (cnt == 0) {
             inOkPlace = true;
+            if (insideContainer == false) {
+                MainActivity.MainInfo.totalWeight += cargo.weight;
+                CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                insideContainer = true;
+            }
             insideContainer = true;
             if (other != null) {
                 if (canPutOnOther(other)) {

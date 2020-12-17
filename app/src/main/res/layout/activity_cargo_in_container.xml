@@ -17,7 +17,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         tools:context=".MainActivity">
+
+        <Button
+            android:id="@+id/importBtn"
+            android:layout_width="111dp"
+            android:layout_height="46dp"
+            android:onClick="ExportSolution"
+            android:text="Export"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.67"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/deletebutton"
@@ -93,6 +108,9 @@
             android:id="@+id/TotalTime"
             android:layout_width="204dp"
             android:layout_height="42dp"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:cursorVisible="false"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="total time: 0"
@@ -107,6 +125,9 @@
             android:id="@+id/TotalCost"
             android:layout_width="189dp"
             android:layout_height="39dp"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:cursorVisible="false"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="total cost: 0"
@@ -123,6 +144,9 @@
             android:layout_height="44dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="166dp"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:cursorVisible="false"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="workers amount: 0"
@@ -137,6 +161,9 @@
             android:id="@+id/TotalWeight"
             android:layout_width="224dp"
             android:layout_height="45dp"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:cursorVisible="false"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="container weight: 0"
@@ -199,16 +226,32 @@
             app:layout_constraintVertical_bias="0.886" />
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="189dp"
-            android:layout_height="43dp"
-            android:text="Import Container"
+            android:id="@+id/ImportBtn"
+            android:layout_width="99dp"
+            android:layout_height="48dp"
+            android:onClick="ImportSolution"
+            android:text="Import"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/DialogView"
+            android:layout_width="168dp"
+            android:layout_height="156dp"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:cursorVisible="false"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.958"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.081" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
