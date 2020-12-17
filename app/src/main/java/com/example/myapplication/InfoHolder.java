@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.widget.TextView;
+
 public class InfoHolder {
     double totalWeight;
     double totalCost;
@@ -18,5 +20,6 @@ public class InfoHolder {
     float buttonWidthPercentage;
     float buttonHeightPercentage;
     float CargoPercentagecontainer;
+    TextView Dialogbox;
     static double containerHeight= 238.44;
 }

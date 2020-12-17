@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -157,46 +158,54 @@ public class MainActivity extends AppCompatActivity {
 
     public void EditData(View view)
     {
-        for(int i=0;i<CargoList.size();i++)
-            if(CargoList.get(i).Selected==true)
-            {
-                CargoList.get(i).objectid=((EditText)findViewById(R.id.ObjectIDTxt1)).getText().toString();
-                CargoList.get(i).height=Double.parseDouble(((EditText)findViewById(R.id.HeightTxt1)).getText().toString());
-                CargoList.get(i).width=Double.parseDouble(((EditText)findViewById(R.id.WidthTxt)).getText().toString());
-                CargoList.get(i).weight=Double.parseDouble(((EditText)findViewById(R.id.WeightTxt)).getText().toString());
-                CargoList.get(i).length=Double.parseDouble(((EditText)findViewById(R.id.LengthTxt1)).getText().toString());
-                CargoList.get(i).WeightThreshold=Double.parseDouble(((EditText)findViewById(R.id.ThreshHoldTxt)).getText().toString());
+        if(isTextEmpty((EditText)findViewById(R.id.ObjectIDTxt1)) || isTextEmpty((EditText)findViewById(R.id.HeightTxt1)) || isTextEmpty((EditText)findViewById(R.id.WidthTxt))|| isTextEmpty((EditText)findViewById(R.id.WeightTxt))|| isTextEmpty((EditText)findViewById(R.id.LengthTxt1))|| isTextEmpty((EditText)findViewById(R.id.ThreshHoldTxt)))
+        {
+        }
+        else {
+            for (int i = 0; i < CargoList.size(); i++)
+                if (CargoList.get(i).Selected == true) {
+                    CargoList.get(i).objectid = ((EditText) findViewById(R.id.ObjectIDTxt1)).getText().toString();
+                    CargoList.get(i).height = Double.parseDouble(((EditText) findViewById(R.id.HeightTxt1)).getText().toString());
+                    CargoList.get(i).width = Double.parseDouble(((EditText) findViewById(R.id.WidthTxt)).getText().toString());
+                    CargoList.get(i).weight = Double.parseDouble(((EditText) findViewById(R.id.WeightTxt)).getText().toString());
+                    CargoList.get(i).length = Double.parseDouble(((EditText) findViewById(R.id.LengthTxt1)).getText().toString());
+                    CargoList.get(i).WeightThreshold = Double.parseDouble(((EditText) findViewById(R.id.ThreshHoldTxt)).getText().toString());
 
-                if(((CheckBox)findViewById(R.id.FragileBox1)).isChecked())
-                    CargoList.get(i).fragile=true;
-                else
-                    CargoList.get(i).fragile=false;
+                    if (((CheckBox) findViewById(R.id.FragileBox1)).isChecked())
+                        CargoList.get(i).fragile = true;
+                    else
+                        CargoList.get(i).fragile = false;
 
-                CargoList.get(i).Selected=false;
-                Cargo.selectedCnt--;
-            }
-        RebuildTable(view);
-        //updateClickableButtons();
+                    CargoList.get(i).Selected = false;
+                    Cargo.selectedCnt--;
+                }
+            RebuildTable(view);
+            //updateClickableButtons();
+        }
     }
   //  int i=0;
     public void AddCargo(View view) {
         Cargo newCargo = new Cargo();
-        newCargo.objectid=((EditText)findViewById(R.id.ObjectIDTxt)).getText().toString();
-       // ((EditText)findViewById(R.id.ObjectIDTxt)).setText(newCargo.objectid+""+i);
-      //  i++;
-        newCargo.height=Double.parseDouble(((EditText)findViewById(R.id.HeightTxt)).getText().toString());
-        newCargo.width=Double.parseDouble(((EditText)findViewById(R.id.WidthTxt)).getText().toString());
-        newCargo.weight=Double.parseDouble(((EditText)findViewById(R.id.WeightTxt)).getText().toString());
-        newCargo.length=Double.parseDouble(((EditText)findViewById(R.id.LengthTxt)).getText().toString());
-        newCargo.WeightThreshold=Double.parseDouble(((EditText)findViewById(R.id.ThreshHoldTxt)).getText().toString());
+         if(isTextEmpty((EditText)findViewById(R.id.ObjectIDTxt)) || isTextEmpty((EditText)findViewById(R.id.HeightTxt)) || isTextEmpty((EditText)findViewById(R.id.WidthTxt))|| isTextEmpty((EditText)findViewById(R.id.WeightTxt))|| isTextEmpty((EditText)findViewById(R.id.LengthTxt))|| isTextEmpty((EditText)findViewById(R.id.ThreshHoldTxt)))
+         {
 
-        if(((CheckBox)findViewById(R.id.FragileBox)).isChecked())
-            newCargo.fragile=true;
-        else
-            newCargo.fragile=false;
+         }
+         else {
+             newCargo.objectid = ((EditText) findViewById(R.id.ObjectIDTxt)).getText().toString();
+             newCargo.height = Double.parseDouble(((EditText) findViewById(R.id.HeightTxt)).getText().toString());
+             newCargo.width = Double.parseDouble(((EditText) findViewById(R.id.WidthTxt)).getText().toString());
+             newCargo.weight = Double.parseDouble(((EditText) findViewById(R.id.WeightTxt)).getText().toString());
+             newCargo.length = Double.parseDouble(((EditText) findViewById(R.id.LengthTxt)).getText().toString());
+             newCargo.WeightThreshold = Double.parseDouble(((EditText) findViewById(R.id.ThreshHoldTxt)).getText().toString());
 
-        CargoList.add(newCargo);
-        AddCargoToTable(view,newCargo);
+             if (((CheckBox) findViewById(R.id.FragileBox)).isChecked())
+                 newCargo.fragile = true;
+             else
+                 newCargo.fragile = false;
+
+             CargoList.add(newCargo);
+             AddCargoToTable(view, newCargo);
+         }
     }
 
     public void AddCargoToTable(View view, Cargo newCargo){
@@ -433,7 +442,9 @@ public class MainActivity extends AppCompatActivity {
             cargoTable.addView(Createrow(CargoList.get(i)),i+1);
         updateClickableButtons();
     }
-
+    private boolean isTextEmpty(EditText myeditText) {
+        return myeditText.getText().toString().trim().length() == 0;
+    }
     public void updateClickableButtons()
     {
         if (Cargo.selectedCnt!=1){

@@ -5,12 +5,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,10 +26,11 @@ public class CargoInContainer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_cargo_in_container);
-
         cL = (ConstraintLayout)  findViewById(R.id.constraintLayout);
         deleteButton = (ImageButton) findViewById(R.id.deletebutton);
         deleteButton.setVisibility(View.INVISIBLE);
+        ((TextView)findViewById(R.id.DialogView)).setMovementMethod(new ScrollingMovementMethod());
+        MainActivity.MainInfo.Dialogbox=((TextView)findViewById(R.id.DialogView));
         CargoTablePage.containerWidth = dpToPx(200, this.getApplicationContext());
         CargoTablePage.containerLength = dpToPx(502, this.getApplicationContext());
         totalWeightText = ((EditText) findViewById((R.id.TotalWeight)));
@@ -62,8 +66,8 @@ public class CargoInContainer extends AppCompatActivity {
                         CargoTablePage.buttons.add(newButton);
                         cL.addView(newButton);
                         tempCr.setInCargoPage(true);
-                        //MainActivity.MainInfo.totalWeight += MainActivity.CargoList.get(i).weight;
-                       // ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                        MainActivity.MainInfo.totalWeight += MainActivity.CargoList.get(i).weight;
+                        ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
                     }
                 }
             }
@@ -93,25 +97,30 @@ public class CargoInContainer extends AppCompatActivity {
     public void deleteCargoButton(View view) {
         int i;
         CargoButton temp;
+
         for (i = 0; i < CargoTablePage.buttons.size(); i++) {
             temp = CargoTablePage.buttons.get(i);
             if (temp.objectId.equals(CargoButton.selected)) {
-                if (temp.insideContainer==true) {
-                    MainActivity.MainInfo.totalWeight -= temp.cargo.weight;
-                    ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
-                }
-                temp.cargo.setInCargoPage(false);
-                if (temp.down!=null) {
-                    for (int j = 0; j < temp.down.up.size(); j++) {
-                        if (temp.down.up.get(j).objectId.equals(temp.objectId)) {
-                            temp.down.up.remove(j);
-                            j = j - 1;
+                if (temp.up.isEmpty()) {
+                    if (temp.insideContainer == true) {
+                        MainActivity.MainInfo.totalWeight -= temp.cargo.weight;
+                        ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                    }
+                    temp.cargo.setInCargoPage(false);
+                    if (temp.down != null) {
+                        for (int j = 0; j < temp.down.up.size(); j++) {
+                            if (temp.down.up.get(j).objectId.equals(temp.objectId)) {
+                                temp.down.up.remove(j);
+                                j = j - 1;
+                            }
                         }
                     }
+                    cL.removeView(temp);
+                    CargoTablePage.buttons.remove(i);
+                    i = i - 1;
                 }
-                cL.removeView(temp);
-                CargoTablePage.buttons.remove(i);
-                i = i - 1;
+                else
+                    MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to delete an object which has objects on top of it!");
             }
         }
         deleteButton.setVisibility(View.INVISIBLE);
@@ -123,7 +132,11 @@ public class CargoInContainer extends AppCompatActivity {
         for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
             cargoButton = CargoTablePage.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
+                if(cargoButton.up.isEmpty())
                cargoButton.rotate();
+                else
+                    MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to rotate an object which has objects on top of it!");
+
             }
         }
     }
