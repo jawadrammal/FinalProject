@@ -66,8 +66,8 @@ public class CargoInContainer extends AppCompatActivity {
                         CargoTablePage.buttons.add(newButton);
                         cL.addView(newButton);
                         tempCr.setInCargoPage(true);
-                        MainActivity.MainInfo.totalWeight += MainActivity.CargoList.get(i).weight;
-                        ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                     //   MainActivity.MainInfo.totalWeight += MainActivity.CargoList.get(i).weight;
+                     //   ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
                     }
                 }
             }

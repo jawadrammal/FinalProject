@@ -405,12 +405,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
                                 if (tryToPutHere(null) == true) {
                                     insideContainer = true;
-
-                                }
-                                if (insideContainer == false) {
-                                    MainActivity.MainInfo.totalWeight += cargo.weight;
-                                    CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
-                                    insideContainer = true;
                                 }
                             } else {
 
@@ -592,6 +586,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
         if (cnt == 0) {
             inOkPlace = true;
+            if (insideContainer == false) {
+                MainActivity.MainInfo.totalWeight += cargo.weight;
+                CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                insideContainer = true;
+            }
             insideContainer = true;
             if (other != null) {
                 if (canPutOnOther(other)) {

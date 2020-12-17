@@ -67,28 +67,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        MainInfo.screenHeight = displayMetrics.heightPixels;
-        MainInfo.screenWidth = displayMetrics.widthPixels;
-        MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
-        MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
-        MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
-        MainInfo.ContainerStartX = (float) (44/1080.0);//px
-        MainInfo.ContainerStartY = (float) (517/2040.0);//px
-        MainInfo.alertWidthPerc = (float) (600/1440.0);//px
-        MainInfo.alertHeightPerc = (float) (700/3040.0);//px
-        MainInfo.alertXPerc = (float) (1100/1440.0);//px
-        MainInfo.alertYPerc = (float) (280/2872.0);//px
-        MainInfo.containerViewLength = (float) (1559/2040.0);
-        MainInfo.containerViewWidth = (float) (331/1080.0);
 
         setContentView(R.layout.cargotable);
 
