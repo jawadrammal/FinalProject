@@ -95,6 +95,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        boolean importSolution = intent.getBooleanExtra("importSolution", false);
+        if (importSolution==true) {
+            RebuildTable(this.findViewById(android.R.id.content).getRootView());
+
+            Cargo.selectedCnt = 0;
+            CargoListIndex=0;
+            for (int i = 0; i < CargoList.size(); i++) {
+                if (CargoList.get(i).isSelected() == true) ;
+                Cargo.selectedCnt++;
+
+                CargoListIndex++;
+            }
+
+        }
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
@@ -438,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
         int i=0;
         setContentView(R.layout.cargotable);
         TableLayout cargoTable = findViewById(R.id.maintable);
-        for(i=0;i<CargoListIndex;i++)
+        for(i=0;i<CargoList.size();i++)
             cargoTable.addView(Createrow(CargoList.get(i)),i+1);
         updateClickableButtons();
     }
