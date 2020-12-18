@@ -48,17 +48,22 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
         this.xInContainer = xInContainer;
         this.yInContainer = yInContainer;
-
-        this.setX(xInContainer);
-        this.setY(yInContainer);
-
+        if (xInContainer==-1&&yInContainer==-1)
+        {
+            this.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
+            this.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+        }
+        else {
+            this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+            this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+        }
         //popUp = new PopupWindow();
         this.setText(objectId);
         up = new ArrayList<>();
 
         //get the cargo with objectId
         for (int i = 0; i < MainActivity.CargoList.size(); i++)
-            if (MainActivity.CargoList.get(i).objectid == objectId)
+            if (MainActivity.CargoList.get(i).objectid.equals(objectId))
                 cargo = MainActivity.CargoList.get(i);
 
         //set layoutparams for the CargoButton in the Layout
@@ -86,12 +91,57 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         this.setBackgroundDrawable(drawable);*/
     }
 
+
+
     /*public boolean canPutOnOther(CargoButton other) {
         if (((this.width1 * this.length1) <= (other.length1 * other.width1))&&(other.z+other.cargo.height+this.cargo.height)<InfoHolder.containerHeight)
             return true;
         return false;
     }*/
 
+    public CargoButton(Context context,CargoButtonInfoForSolution infob)
+    {
+        super(context);
+        z=infob.z;
+        this.objectId= infob.objectId;
+        this.setText(objectId);
+        up = new ArrayList<>();
+        this.xInContainer = infob.xInContainer;
+        this.yInContainer = infob.yInContainer;
+        this.insideContainer=infob.insideContainer;
+        //get the cargo with objectId
+        for (int i = 0; i < MainActivity.CargoList.size(); i++)
+            if (MainActivity.CargoList.get(i).objectid.equals(objectId))
+                cargo = MainActivity.CargoList.get(i);
+
+        if (xInContainer==-1&&yInContainer==-1 || insideContainer==false)
+        {
+            this.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
+            this.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+        }
+        else {
+            this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+            this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+        }
+        widthInCm = infob.widthInCm;
+        lengthInCm = infob.lengthInCm;
+        width1 = (int) Math.ceil(dpToPx(widthInCm, this.getContext()) * MainActivity.MainInfo.CargoPercentagecontainer);
+        length1 = (int) Math.ceil(dpToPx(lengthInCm, this.getContext()) * MainActivity.MainInfo.CargoPercentagecontainer);
+
+        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(width1, length1);
+        this.setLayoutParams(lp);
+
+        //set onTouch listener
+        setTouchListener();
+
+
+        //generate randomized color
+        r = infob.r;
+        g = infob.g;
+        b = infob.b;
+        this.setBackgroundColor(Color.rgb(r, g, b));
+
+    }
     //numeric
     public boolean canPutOnOther(CargoButton other) {
         if (((this.widthInCm * this.lengthInCm) <= (other.lengthInCm * other.widthInCm)) && (other.z + other.cargo.height + this.cargo.height) < InfoHolder.containerHeight)

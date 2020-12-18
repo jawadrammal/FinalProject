@@ -26,6 +26,7 @@ public class CargoInContainer extends AppCompatActivity {
     public static EditText totalTime;
     public static EditText totalWorkers;
     public static Solution trySolution;
+    public static boolean ifImportSolution;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,7 @@ public class CargoInContainer extends AppCompatActivity {
                 Cargo tempCr = MainActivity.CargoList.get(i);
                 if (tempCr.Selected == true) {
                     if (!(tempCr.isInCargoPage())) {
-                        CargoButton newButton = new CargoButton(this, tempCr.objectid, MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage, MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                        CargoButton newButton = new CargoButton(this, tempCr.objectid, -1,-1);
                         CargoTablePage.buttons.add(newButton);
                         cL.addView(newButton);
                         tempCr.setInCargoPage(true);
@@ -89,6 +90,14 @@ public class CargoInContainer extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         // intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        if(ifImportSolution==true) {
+            intent.putExtra("importSolution", true);
+            ifImportSolution=false;
+        }
+        else
+        {
+            intent.putExtra("importSolution", false);
+        }
         startActivity(intent);
     }
 
@@ -503,26 +512,92 @@ public class CargoInContainer extends AppCompatActivity {
 
 
     public void ImportSolution(View view) {
+        ifImportSolution=true;
         Solution LoadSolution = this.trySolution;// = new Solution();
-        for (int i = 0; i < LoadSolution.buttons.size(); i++)
+        /*for (int i = 0; i < LoadSolution.buttons.size(); i++)
             CargoInContainer.cL.addView(LoadSolution.buttons.get(i));
         CargoTablePage.buttons=LoadSolution.buttons;
-        totalWeightText.setText("" + LoadSolution.MainInfo.totalWeight);
-        MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
+
        /* totalCost.setText("" + LoadSolution.MainInfo.totalCost);
         MainActivity.MainInfo.totalCost = LoadSolution.MainInfo.totalCost;
         totalTime.setText("" + LoadSolution.MainInfo.totalTime);
         MainActivity.MainInfo.totalTime = LoadSolution.MainInfo.totalTime;
         totalWorkers.setText("" + LoadSolution.MainInfo.totalWorkers);
         MainActivity.MainInfo.totalWorkers = LoadSolution.MainInfo.totalWorkers;*/
-        MainActivity.CargoList = LoadSolution.CargoList;
+  //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
+//        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
+
+        MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
+        totalWeightText.setText("container weight: " + LoadSolution.totalWeight);
+
+        MainActivity.CargoList = new ArrayList<>();
+        for (Cargo c : LoadSolution.CargoList) {
+            MainActivity.CargoList.add(new Cargo(c));
+        }
+
+        CargoTablePage.buttons=new ArrayList<>();
+        for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo) {
+            CargoButton b =new CargoButton(this,i);
+            CargoTablePage.buttons.add(b);
+
+        }
+        for (CargoButton b:CargoTablePage.buttons)
+        {
+            for (Cargo car:MainActivity.CargoList) {
+                if (b.objectId.equals(car.objectid))
+                {
+                    b.cargo=car;
+                }
+            }
+
+            for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo)
+            {
+                if (b.objectId.equals(i.objectId)) {
+                    for (String sId : i.upIds) {
+                        for (CargoButton c : CargoTablePage.buttons) {
+                            if (sId.equals(c.objectId)) {
+                                b.up.add(c);
+                            }
+                        }
+                    }
+                    for (CargoButton c : CargoTablePage.buttons) {
+                        if (i.downObjectId!=null) {
+                            if (i.downObjectId.equals(c.objectId)) {
+                                b.down = c;
+                            }
+                        }
+                    }
+                }
+            }
+            CargoInContainer.cL.addView(b);
+        }
+        for (CargoButton b : CargoTablePage.buttons) {
+            if (b.z==0)
+            {
+               recursiveBringToFront(b);
+            }
+        }
+    }
+
+    void recursiveBringToFront(CargoButton b)
+    {
+        b.bringToFront();
+        CargoButton c=b;
+        if (b.up.isEmpty()!=true)
+        {
+            for (CargoButton u :b.up) {
+                recursiveBringToFront(u);
+            }
+        }
     }
 
     public void ExportSolution(View view) {
-        ArrayList<CargoButton> SaveButtons=new ArrayList<CargoButton>(CargoTablePage.buttons);
+
+     /*   ArrayList<CargoButton> SaveButtons=new ArrayList<CargoButton>(CargoTablePage.buttons);
         ArrayList<Cargo> SaveCargoList=new ArrayList<>(MainActivity.CargoList);
         Solution ExportSolution = new Solution(SaveCargoList, MainActivity.MainInfo, SaveButtons);
-        this.trySolution=ExportSolution;
+        this.trySolution=ExportSolution;*/
+        this.trySolution = new Solution();
     }
     //String filename = "MySolution.txt";
 
