@@ -2,7 +2,9 @@ package com.example.myapplication;
 
 import android.widget.TextView;
 
-public class InfoHolder {
+import java.io.Serializable;
+
+public class InfoHolder implements Serializable {
     double totalWeight;
     double totalCost;
     double totalTime;

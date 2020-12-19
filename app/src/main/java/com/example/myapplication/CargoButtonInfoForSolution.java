@@ -1,8 +1,9 @@
 package com.example.myapplication;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CargoButtonInfoForSolution {
+public class CargoButtonInfoForSolution implements Serializable {
     int r,g,b;
     String objectId;
     float xInContainer, yInContainer;

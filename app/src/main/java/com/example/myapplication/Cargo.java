@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
-public class Cargo
+import java.io.Serializable;
+
+public class Cargo implements Serializable
 {
     static int selectedCnt=0;
     String objectid;

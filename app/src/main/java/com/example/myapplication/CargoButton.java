@@ -14,10 +14,11 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
+public class CargoButton extends androidx.appcompat.widget.AppCompatButton implements Serializable {
 
     static String selected = null;
 
@@ -273,19 +274,20 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                     //  if (cargoButton1.objectId!=newButton.objectId){
 
                     if (cargoButton1 != this) {
-                        hooffem = cargoButton1.checkhooffeem(this);
-                        if (hooffem == true) {
-                            i = cargoButton1.xInContainer + cargoButton1.widthInCm;
-                            if (first == true) {
-                                minY = cargoButton1.yInContainer + cargoButton1.lengthInCm;
-                                first = false;
-                            } else {
-                                if (cargoButton1.yInContainer + cargoButton1.lengthInCm < minY)
-                                    minY = (cargoButton1.yInContainer + cargoButton1.lengthInCm);
+                        if (cargoButton1.insideContainer==true) {
+                            hooffem = cargoButton1.checkhooffeem(this);
+                            if (hooffem == true) {
+                                i = cargoButton1.xInContainer + cargoButton1.widthInCm;
+                                if (first == true) {
+                                    minY = cargoButton1.yInContainer + cargoButton1.lengthInCm;
+                                    first = false;
+                                } else {
+                                    if (cargoButton1.yInContainer + cargoButton1.lengthInCm < minY)
+                                        minY = (cargoButton1.yInContainer + cargoButton1.lengthInCm);
+                                }
+                                break;
                             }
-                            break;
                         }
-
                     }
                     //}
                 }
@@ -357,6 +359,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
         boolean hoffemY, hoffemX;
         double xright, xleft, viewXright, viewXLeft;
         double yUp, yDown, viewYup, viewYDown;
+
 
         xleft = other.xInContainer;
         viewXLeft = this.xInContainer;
@@ -591,11 +594,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
                 b = CargoTablePage.buttons.get(i);
                 if (v != b) {
                     if (b.z == 0) {
-                        if (v.checkhooffeem(b) == true) {
-                            cnt++;
-                            if (cnt > 1) {
-                                inOkPlace = false;
-                                break;
+                        if (b.insideContainer==true) {
+                            if (v.checkhooffeem(b) == true) {
+                                cnt++;
+                                if (cnt > 1) {
+                                    inOkPlace = false;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -606,11 +611,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
                 b = other.up.get(i);
                 if (v != b) {
-                    if (v.checkhooffeem(b) == true) {
-                        cnt++;
-                        if (cnt > 1) {
-                            inOkPlace = false;
-                            break;
+                    if (b.insideContainer==true) {
+                        if (v.checkhooffeem(b) == true) {
+                            cnt++;
+                            if (cnt > 1) {
+                                inOkPlace = false;
+                                break;
+                            }
                         }
                     }
                 }
@@ -705,26 +712,23 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
                     b = other.up.get(i);
                     if (v != b) {
-                        if (v.checkhooffeem(b) == true) {
-                            if( tryToPutHere(b)==true)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                setxInContainer(oldX);
-                                setyInContainer(oldy);
-                                if(oldX==-1 && oldy==-1) {
-                                    v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                                    v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
-                                }
-                                else
-                                {
-                                    v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                                    v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                        if (b.insideContainer == true) {
+                            if (v.checkhooffeem(b) == true) {
+                                if (tryToPutHere(b) == true) {
+                                    return true;
+                                } else {
+                                    setxInContainer(oldX);
+                                    setyInContainer(oldy);
+                                    if (oldX == -1 && oldy == -1) {
+                                        v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
+                                        v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                                    } else {
+                                        v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                                        v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
 
+                                    }
+                                    return false;
                                 }
-                                return false;
                             }
                         }
                     }
@@ -736,22 +740,24 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton {
 
                     b = CargoTablePage.buttons.get(i);
                     if (v != b) {
-                        if (v.checkhooffeem(b) == true) {
-                            if (tryToPutHere(b))
-                                return true;
+                        if (b.insideContainer == true) {
+                            if (v.checkhooffeem(b) == true) {
+                                if (tryToPutHere(b))
+                                    return true;
 
-                            else {
-                                setxInContainer(oldX);
-                                setyInContainer(oldy);
-                                if (oldX == -1 && oldy == -1) {
-                                    v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                                    v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
-                                } else {
-                                    v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                                    v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                                else {
+                                    setxInContainer(oldX);
+                                    setyInContainer(oldy);
+                                    if (oldX == -1 && oldy == -1) {
+                                        v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
+                                        v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                                    } else {
+                                        v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                                        v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
 
+                                    }
+                                    return false;
                                 }
-                                return false;
                             }
                         }
                     }

@@ -2,12 +2,18 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
@@ -15,7 +21,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class CargoInContainer extends AppCompatActivity {
@@ -30,6 +41,34 @@ public class CargoInContainer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        MainActivity.MainInfo.screenHeight = displayMetrics.heightPixels;
+        MainActivity.MainInfo.screenWidth = displayMetrics.widthPixels;
+        MainActivity.MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
+        MainActivity.MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
+        MainActivity.MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
+        MainActivity.MainInfo.ContainerStartX = (float) (44/1080.0);//px
+        MainActivity.MainInfo.ContainerStartY = (float) (517/2040.0);//px
+        MainActivity.MainInfo.alertWidthPerc = (float) (600/1440.0);//px
+        MainActivity.MainInfo.alertHeightPerc = (float) (700/3040.0);//px
+        MainActivity.MainInfo.alertXPerc = (float) (1100/1440.0);//px
+        MainActivity.MainInfo.alertYPerc = (float) (280/2872.0);//px
+        MainActivity.MainInfo.containerViewLength = (float) (1559/2040.0);
+        MainActivity.MainInfo.containerViewWidth = (float) (331/1080.0);
+
+
+
+
+
 
         setContentView(R.layout.activity_cargo_in_container);
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
@@ -73,9 +112,9 @@ public class CargoInContainer extends AppCompatActivity {
                 }
             }
         }
-
-        CargoTablePage.containerX = ((View) findViewById(R.id.Container)).getX(); //44 //44
-        CargoTablePage.containerY = ((View) findViewById(R.id.Container)).getY();//517
+       View container = ((View) findViewById(R.id.Container));
+        CargoTablePage.containerX = container.getX(); //44 //44
+        CargoTablePage.containerY = container.getY();//517
     }
 
     @Override
@@ -422,19 +461,20 @@ public class CargoInContainer extends AppCompatActivity {
                 for (int i1 = 0; i1 < size; i1++) {
                     cargoButton1 = CargoTablePage.buttons.get(i1);
                     if (cargoButton1 != newButton) {
-                        hooffem = cargoButton1.checkhooffeem(newButton);
-                        if (hooffem == true) {
-                            i = cargoButton1.xInContainer + cargoButton1.widthInCm;
-                            if (first == true) {
-                                minY = cargoButton1.yInContainer + cargoButton1.lengthInCm;
-                                first = false;
-                            } else {
-                                if (cargoButton1.yInContainer + cargoButton1.lengthInCm < minY)
-                                    minY = (cargoButton1.yInContainer + cargoButton1.lengthInCm);
+                        if (cargoButton1.insideContainer==true) {
+                            hooffem = cargoButton1.checkhooffeem(newButton);
+                            if (hooffem == true) {
+                                i = cargoButton1.xInContainer + cargoButton1.widthInCm;
+                                if (first == true) {
+                                    minY = cargoButton1.yInContainer + cargoButton1.lengthInCm;
+                                    first = false;
+                                } else {
+                                    if (cargoButton1.yInContainer + cargoButton1.lengthInCm < minY)
+                                        minY = (cargoButton1.yInContainer + cargoButton1.lengthInCm);
+                                }
+                                break;
                             }
-                            break;
                         }
-
                     }
                     //}
                 }
@@ -511,9 +551,31 @@ public class CargoInContainer extends AppCompatActivity {
     }
 
 
-    public void ImportSolution(View view) {
+    public void ImportSolution(View view) throws IOException, ClassNotFoundException {
+        cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
+        cL.setVisibility(View.VISIBLE);
+        View container = ((View) findViewById(R.id.Container));
+        CargoTablePage.containerX = container.getX(); //44 //44
+        CargoTablePage.containerY = container.getY();//517
         ifImportSolution=true;
-        Solution LoadSolution = this.trySolution;// = new Solution();
+      //  Solution LoadSolution = this.trySolution;
+
+        String file = "solution.txt";
+        FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory() + "/" + file);
+
+
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        //Cargo c1=(Cargo)(
+        Object o = objectInputStream.readObject();
+        objectInputStream.close();
+        Solution LoadSolution = ((Solution)o);
+
+        /*Solution s =(Solution)(objectInputStream.readObject());
+        objectInputStream.close();
+
+        LoadSolution = s;*/
+
+        // = new Solution();
         /*for (int i = 0; i < LoadSolution.buttons.size(); i++)
             CargoInContainer.cL.addView(LoadSolution.buttons.get(i));
         CargoTablePage.buttons=LoadSolution.buttons;
@@ -591,14 +653,23 @@ public class CargoInContainer extends AppCompatActivity {
         }
     }
 
-    public void ExportSolution(View view) {
+    public void ExportSolution(View view) throws IOException {
 
      /*   ArrayList<CargoButton> SaveButtons=new ArrayList<CargoButton>(CargoTablePage.buttons);
         ArrayList<Cargo> SaveCargoList=new ArrayList<>(MainActivity.CargoList);
         Solution ExportSolution = new Solution(SaveCargoList, MainActivity.MainInfo, SaveButtons);
         this.trySolution=ExportSolution;*/
         this.trySolution = new Solution();
-    }
+        Solution s1= trySolution;
+        String file="solution.txt";
+
+        FileOutputStream fileOutputStream ;
+        fileOutputStream=new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + file);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(s1);
+        objectOutputStream.close();
+
+        }
     //String filename = "MySolution.txt";
 
    /*     Gson gson = new Gson();
