@@ -380,6 +380,33 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         return false;
     }
 
+    public boolean hoffeemX(CargoButton other)
+    {
+        boolean hoffemX;
+        double xright, xleft, viewXright, viewXLeft;
+
+        xleft = other.xInContainer;
+        viewXLeft = this.xInContainer;
+        xright = xleft + other.widthInCm;
+        viewXright = viewXLeft + this.widthInCm;
+
+        hoffemX = checkHoffemAxis(viewXLeft, viewXright, xleft, xright);
+        return hoffemX;
+    }
+
+    public boolean hoffeemY(CargoButton other)
+    {
+        boolean hoffemY;
+        double yUp, yDown, viewYup, viewYDown;
+
+        yUp = other.yInContainer;
+        viewYup = this.yInContainer;
+        yDown = yUp + other.lengthInCm;
+        viewYDown = viewYup + this.lengthInCm;
+
+        hoffemY = checkHoffemAxis(viewYup, viewYDown, yUp, yDown);
+        return hoffemY;
+    }
     boolean ifInContainer() {
         return checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, CargoTablePage.containerX, CargoTablePage.containerWidth, CargoTablePage.containerY, CargoTablePage.containerLength);
     }

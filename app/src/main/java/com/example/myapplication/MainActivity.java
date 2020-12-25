@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
+
     ConstraintLayout rl;
     public static ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
     public static InfoHolder MainInfo = new InfoHolder();
