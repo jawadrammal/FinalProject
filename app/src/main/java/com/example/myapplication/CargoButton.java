@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -461,7 +462,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         selected = objectId;
                         CargoInContainer.deleteButton.setVisibility(VISIBLE);
 
-
                         break;
 
                     case MotionEvent.ACTION_UP:
@@ -494,7 +494,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                         .show();
                                 if (insideContainer == true) {
                                     MainActivity.MainInfo.totalWeight -= cargo.weight;
-                                    CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                                    CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight+"(kg)");
+                                    MainActivity.MainInfo.totalCost -= (cargo.cost + MainActivity.MainInfo.ProcessingCost + (1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers);
+                                    CargoInContainer.totalCostText.setText("container cost: " + (int) MainActivity.MainInfo.totalCost+"(NIS)");
+                                    MainActivity.MainInfo.totalTime -= (((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
+                                    CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
                                     insideContainer = false;
                                 }
 
@@ -673,7 +677,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
             inOkPlace = true;
             if (insideContainer == false) {
                 MainActivity.MainInfo.totalWeight += cargo.weight;
-                CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight+"(kg)");
+                MainActivity.MainInfo.totalCost += cargo.cost + MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers;
+                CargoInContainer.totalCostText.setText("container cost: " + (int) MainActivity.MainInfo.totalCost+"(NIS)");
+                MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
+                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
                 insideContainer = true;
             }
             insideContainer = true;

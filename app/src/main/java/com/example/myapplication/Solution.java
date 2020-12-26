@@ -9,6 +9,8 @@ public class Solution implements Serializable {
    // public ArrayList<CargoButton> buttons = new ArrayList<>();
     public ArrayList<CargoButtonInfoForSolution> buttonsInfo;
     public double totalWeight;
+    public double totalCost;
+    public double totalTime;
     Solution(ArrayList<Cargo> CargoList,InfoHolder MainInfo,ArrayList<CargoButton> buttons)
     {
         this.CargoList=CargoList;
@@ -19,6 +21,8 @@ public class Solution implements Serializable {
     Solution()
     {
         totalWeight = MainActivity.MainInfo.totalWeight;
+        totalCost   = MainActivity.MainInfo.totalCost;
+        totalTime = MainActivity.MainInfo.totalTime;
         buttonsInfo=new ArrayList<>();
         for (Cargo c:MainActivity.CargoList
              ) {

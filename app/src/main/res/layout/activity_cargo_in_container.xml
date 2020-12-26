@@ -106,8 +106,8 @@
 
         <EditText
             android:id="@+id/TotalTime"
-            android:layout_width="204dp"
-            android:layout_height="42dp"
+            android:layout_width="227dp"
+            android:layout_height="41dp"
             android:clickable="false"
             android:contextClickable="false"
             android:cursorVisible="false"
@@ -123,8 +123,8 @@
 
         <EditText
             android:id="@+id/TotalCost"
-            android:layout_width="189dp"
-            android:layout_height="39dp"
+            android:layout_width="226dp"
+            android:layout_height="53dp"
             android:clickable="false"
             android:contextClickable="false"
             android:cursorVisible="false"
@@ -136,7 +136,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.198" />
+            app:layout_constraintVertical_bias="0.19" />
 
         <EditText
             android:id="@+id/TotalWorkers"

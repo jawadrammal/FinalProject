@@ -6,7 +6,7 @@ public class Cargo implements Serializable
 {
     static int selectedCnt=0;
     String objectid;
-    Double height, width, weight, length;
+    Double height, width, weight, length, cost;
     boolean fragile;
     Double WeightThreshold;
     boolean Selected;
