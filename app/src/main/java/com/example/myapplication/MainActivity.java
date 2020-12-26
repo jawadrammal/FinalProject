@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 ((EditText)findViewById((R.id.WidthTxt))).setText(CargoList.get(i).width.toString());
                 ((EditText)findViewById((R.id.LengthTxt1))).setText(CargoList.get(i).length.toString());
                 ((EditText)findViewById((R.id.ThreshHoldTxt))).setText(CargoList.get(i).WeightThreshold.toString());
+                ((EditText)findViewById((R.id.CostTxt1))).setText(CargoList.get(i).cost.toString());
                 if(CargoList.get(i).fragile==true)
                     ((CheckBox)findViewById(R.id.FragileBox1)).setChecked(true);
                 break;
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     CargoList.get(i).weight = Double.parseDouble(((EditText) findViewById(R.id.WeightTxt)).getText().toString());
                     CargoList.get(i).length = Double.parseDouble(((EditText) findViewById(R.id.LengthTxt1)).getText().toString());
                     CargoList.get(i).WeightThreshold = Double.parseDouble(((EditText) findViewById(R.id.ThreshHoldTxt)).getText().toString());
+                    CargoList.get(i).cost = Double.parseDouble(((EditText) findViewById(R.id.CostTxt1)).getText().toString());
 
                     if (((CheckBox) findViewById(R.id.FragileBox1)).isChecked())
                         CargoList.get(i).fragile = true;
@@ -217,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
              newCargo.weight = Double.parseDouble(((EditText) findViewById(R.id.WeightTxt)).getText().toString());
              newCargo.length = Double.parseDouble(((EditText) findViewById(R.id.LengthTxt)).getText().toString());
              newCargo.WeightThreshold = Double.parseDouble(((EditText) findViewById(R.id.ThreshHoldTxt)).getText().toString());
+             newCargo.cost = Double.parseDouble(((EditText) findViewById(R.id.CostText)).getText().toString());
 
              if (((CheckBox) findViewById(R.id.FragileBox)).isChecked())
                  newCargo.fragile = true;

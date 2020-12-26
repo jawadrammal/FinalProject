@@ -33,8 +33,8 @@ public class CargoInContainer extends AppCompatActivity {
     public static ConstraintLayout cL;
     public static ImageButton deleteButton;
     public static EditText totalWeightText;
-    public static EditText totalCost;
-    public static EditText totalTime;
+    public static EditText totalCostText;
+    public static EditText totalTimeText;
     public static EditText totalWorkers;
     public static Solution trySolution;
     public static boolean ifImportSolution;
@@ -56,8 +56,8 @@ public class CargoInContainer extends AppCompatActivity {
         MainActivity.MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
         MainActivity.MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
         MainActivity.MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
-        MainActivity.MainInfo.ContainerStartX = (float) (44/1080.0);//px
-        MainActivity.MainInfo.ContainerStartY = (float) (517/2040.0);//px
+        MainActivity.MainInfo.ContainerStartX = (float) (56/1440.0);//px 44/1080
+        MainActivity.MainInfo.ContainerStartY = (float) (660/3040.0);//px
         MainActivity.MainInfo.alertWidthPerc = (float) (600/1440.0);//px
         MainActivity.MainInfo.alertHeightPerc = (float) (700/3040.0);//px
         MainActivity.MainInfo.alertXPerc = (float) (1100/1440.0);//px
@@ -79,6 +79,8 @@ public class CargoInContainer extends AppCompatActivity {
         CargoTablePage.containerWidth = dpToPx(200, this.getApplicationContext());
         CargoTablePage.containerLength = dpToPx(502, this.getApplicationContext());
         totalWeightText = ((EditText) findViewById((R.id.TotalWeight)));
+        totalCostText = ((EditText) findViewById((R.id.TotalCost)));
+        totalTimeText =  ((EditText) findViewById((R.id.TotalTime)));
     }
 
     @Override
@@ -106,9 +108,7 @@ public class CargoInContainer extends AppCompatActivity {
                         CargoTablePage.buttons.add(newButton);
                         cL.addView(newButton);
                         tempCr.setInCargoPage(true);
-                        //   MainActivity.MainInfo.totalWeight += MainActivity.CargoList.get(i).weight;
-                        //   ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
-                    }
+                     }
                 }
             }
         }
@@ -150,7 +150,11 @@ public class CargoInContainer extends AppCompatActivity {
                 if (temp.up.isEmpty()) {
                     if (temp.insideContainer == true) {
                         MainActivity.MainInfo.totalWeight -= temp.cargo.weight;
-                        ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                        ((EditText) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
+                        MainActivity.MainInfo.totalCost -= (temp.cargo.cost+MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
+                        ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                        MainActivity.MainInfo.totalTime -= ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
+                        CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
                     }
                     temp.cargo.setInCargoPage(false);
                     if (temp.down != null) {
@@ -180,7 +184,7 @@ public class CargoInContainer extends AppCompatActivity {
                 if (cargoButton.up.isEmpty())
                     cargoButton.rotate();
                 else
-                    MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to rotate an object which has objects on top of it!");
+                    MainActivity.MainInfo.Dialogbox.setText("Alert!:You are trying to rotate an  object which has objects on top of it!");
 
             }
         }
@@ -388,8 +392,11 @@ public class CargoInContainer extends AppCompatActivity {
                 autoMoveButton(newButton);
 
                 MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
-                ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
-
+                ((EditText) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight +"(kg)");
+                MainActivity.MainInfo.totalCost += newButton.cargo.cost + MainActivity.MainInfo.ProcessingCost + ((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
+                ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
+                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
                 CargoTablePage.buttons.add(newButton);
                 cL.addView(newButton);
                 tempCr.setInCargoPage(true);
@@ -590,8 +597,11 @@ public class CargoInContainer extends AppCompatActivity {
 //        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
 
         MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
-        totalWeightText.setText("container weight: " + LoadSolution.totalWeight);
-
+        totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
+        MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
+       ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+        MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
+        CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
         MainActivity.CargoList = new ArrayList<>();
         for (Cargo c : LoadSolution.CargoList) {
             MainActivity.CargoList.add(new Cargo(c));
