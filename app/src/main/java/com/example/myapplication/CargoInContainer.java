@@ -79,9 +79,6 @@ public class CargoInContainer extends AppCompatActivity {
         CargoTablePage.containerWidth = dpToPx(200, this.getApplicationContext());
         CargoTablePage.containerLength = dpToPx(502, this.getApplicationContext());
         totalWeightText = ((EditText) findViewById((R.id.TotalWeight)));
-
-
-
     }
 
     @Override
@@ -456,19 +453,19 @@ public class CargoInContainer extends AppCompatActivity {
                         continue;
                     } else {
                         newButton.rotate();
-                       // j = minY + 1;
+                        j = minY + 1;
                     }
                     first = true;
                     break;
                 }
                 if (j + newButton.lengthInCm > 586) {
-                        /*if (rotated == false) {
+                        if (rotated == false) {
                             newButton.rotate();
                             i = 0;
                             rotated = true;
                             first = true;
                             continue;
-                        }*/
+                        }
                     break;
                 }
 
@@ -479,29 +476,9 @@ public class CargoInContainer extends AppCompatActivity {
                 newButton.setY(y1 + (int) Math.ceil(dpToPx(newButton.yInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
 
 
-                if(newButton.tryToPutHere(null)==true)
-                {
-                    return;
-                }
-                /*for (CargoButton c:CargoTablePage.buttons) {
-                    if (c.z == 0) {
-                        if (cargoButton1.insideContainer == true) {
-                            hooffem = c.checkhooffeem(newButton);
-                            if (hooffem == true) {
-                                i = c.xInContainer + c.widthInCm;
-                                if (first == true) {
-                                    minY = c.yInContainer + c.lengthInCm;
-                                    first = false;
-                                } else {
-                                    if (c.yInContainer + c.lengthInCm < minY)
-                                        minY = (c.yInContainer + c.lengthInCm);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }*/
-                /*
+              //  if(newButton.tryToPutHere(null);
+
+
                 //check if not conflict with other if yes move i width and minY length
                 for (int i1 = 0; i1 < size; i1++) {
                     cargoButton1 = CargoTablePage.buttons.get(i1);
@@ -530,13 +507,13 @@ public class CargoInContainer extends AppCompatActivity {
                     inOkPlace = true;
                     break;
                 }
-                */
+
             }
-         /*   //if no conflict stop
+            //if no conflict stop
             if (hooffem == false) {
                 inOkPlace = true;
                 break;
-            }*/
+            }
         }
         //}
 
@@ -636,6 +613,7 @@ public class CargoInContainer extends AppCompatActivity {
   //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
 //        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
 
+        deleteAllButtons();
         MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
         totalWeightText.setText("container weight: " + LoadSolution.totalWeight);
 
@@ -782,7 +760,7 @@ public class CargoInContainer extends AppCompatActivity {
                                 }
                             }
                         } else {
-                            if (c.hoffeemY(cb) == true ) {
+                            if (c.hoffeemY(cb) == true) {
                                 if (cb.xInContainer < c.xInContainer) {
                                     xLeft = c.xInContainer - (cb.xInContainer + cb.widthInCm);
 

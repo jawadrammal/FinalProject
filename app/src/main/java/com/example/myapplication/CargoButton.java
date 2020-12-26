@@ -461,7 +461,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         selected = objectId;
                         CargoInContainer.deleteButton.setVisibility(VISIBLE);
 
-                        MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + view.getX() + "\n" + "y:" + view.getY() + "\n" + "z:" + z + "\n");
 
                         break;
 
@@ -537,6 +536,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 view.setX(x - xDelta);
                                 view.setY(y - yDelta);
                             }
+                            MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
+
                         }
                         else
                             MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
