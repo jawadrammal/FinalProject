@@ -381,6 +381,33 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         return false;
     }
 
+    public boolean hoffeemX(CargoButton other)
+    {
+        boolean hoffemX;
+        double xright, xleft, viewXright, viewXLeft;
+
+        xleft = other.xInContainer;
+        viewXLeft = this.xInContainer;
+        xright = xleft + other.widthInCm;
+        viewXright = viewXLeft + this.widthInCm;
+
+        hoffemX = checkHoffemAxis(viewXLeft, viewXright, xleft, xright);
+        return hoffemX;
+    }
+
+    public boolean hoffeemY(CargoButton other)
+    {
+        boolean hoffemY;
+        double yUp, yDown, viewYup, viewYDown;
+
+        yUp = other.yInContainer;
+        viewYup = this.yInContainer;
+        yDown = yUp + other.lengthInCm;
+        viewYDown = viewYup + this.lengthInCm;
+
+        hoffemY = checkHoffemAxis(viewYup, viewYDown, yUp, yDown);
+        return hoffemY;
+    }
     boolean ifInContainer() {
         return checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, CargoTablePage.containerX, CargoTablePage.containerWidth, CargoTablePage.containerY, CargoTablePage.containerLength);
     }
@@ -434,9 +461,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         yDelta = (int) (y - view.getY());
                         selected = objectId;
                         CargoInContainer.deleteButton.setVisibility(VISIBLE);
-                     //   float CurrentXinCm = view.getX()-MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.containerViewWidth
-                        // float CurrentYinCm = view.getY()-MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.containerViewLength;
-                        MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + " cm \n" + "width:" + cargo.width + " cm \n" + "length:" + cargo.length + " cm \n" + "x:" + c.xInContainer + " cm \n" + "y:" + c.yInContainer + " cm \n" + "z:" + z + " cm \n");
 
                         break;
 
@@ -516,6 +540,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 view.setX(x - xDelta);
                                 view.setY(y - yDelta);
                             }
+                            MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
+
                         }
                         else
                             MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
