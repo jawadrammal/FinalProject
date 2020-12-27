@@ -6,7 +6,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -21,6 +23,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,6 +50,8 @@ public class CargoInContainer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
@@ -56,8 +66,8 @@ public class CargoInContainer extends AppCompatActivity {
         MainActivity.MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
         MainActivity.MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
         MainActivity.MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
-        MainActivity.MainInfo.ContainerStartX = (float) (56/1440.0);//px 44/1080
-        MainActivity.MainInfo.ContainerStartY = (float) (660/3040.0);//px
+        MainActivity.MainInfo.ContainerStartX = (float) (56/1440.0);//px
+        MainActivity.MainInfo.ContainerStartY = (float) (739/2872.0);//px
         MainActivity.MainInfo.alertWidthPerc = (float) (600/1440.0);//px
         MainActivity.MainInfo.alertHeightPerc = (float) (700/3040.0);//px
         MainActivity.MainInfo.alertXPerc = (float) (1100/1440.0);//px
@@ -81,6 +91,19 @@ public class CargoInContainer extends AppCompatActivity {
         totalWeightText = ((EditText) findViewById((R.id.TotalWeight)));
         totalCostText = ((EditText) findViewById((R.id.TotalCost)));
         totalTimeText =  ((EditText) findViewById((R.id.TotalTime)));
+        totalWorkers =  ((EditText) findViewById((R.id.TotalWorkers)));
+        totalWorkers.setText("Total Workers : " + MainActivity.MainInfo.totalWorkers);
+
+        String path= "/storage/emulated/0/MySolution.txt";
+        File file = new File ( path );
+        if ( file.exists() )
+        {
+            try {
+                ImportSolutionOnStart("MySolution.txt");
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -128,6 +151,54 @@ public class CargoInContainer extends AppCompatActivity {
         deleteAllButtons();
     }
 
+
+    public void SaveSol(View view) throws IOException {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Solution s1=  new Solution();
+                        String file="MySolution.txt";
+
+                        FileOutputStream fileOutputStream = null;
+                        try {
+                            fileOutputStream=new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + file);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        ObjectOutputStream objectOutputStream = null;
+                        try {
+                            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            objectOutputStream.writeObject(s1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            objectOutputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(CargoInContainer.this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+
+
     public void deleteAllButtons()
     {
         for (int i= 0; i<CargoTablePage.buttons.size();i++)
@@ -138,7 +209,14 @@ public class CargoInContainer extends AppCompatActivity {
             cL.removeView(b);
             CargoTablePage.buttons.remove(b);
             i=i-1;
-
+            if (b.insideContainer == true) {
+                MainActivity.MainInfo.totalWeight -= b.cargo.weight;
+                ((EditText) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
+                MainActivity.MainInfo.totalCost -= (b.cargo.cost+MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
+                ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                MainActivity.MainInfo.totalTime -= ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
+                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
+            }
 
         }
     }
@@ -157,7 +235,90 @@ public class CargoInContainer extends AppCompatActivity {
         }
         startActivity(intent);
     }
+    public void ProduceReport(View view) {
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Container Report"); //Creating a sheet
+        Solution s1 = new Solution();
+        Cargo c = null;
+        int cellindex = 0;
+        for (int i = 0; i < s1.buttonsInfo.size() + 1; i++) {
+            if (i == 0) {
+                Row row = sheet.createRow(i);
+                row.createCell(0).setCellValue("Object ID");
+                row.createCell(1).setCellValue("Width(cm)");
+                row.createCell(2).setCellValue("Height(cm)");
+                row.createCell(3).setCellValue("Length(cm)");
+                row.createCell(4).setCellValue("Xplacement(cm)");
+                row.createCell(5).setCellValue("Yplacement(cm)");
+                row.createCell(6).setCellValue("Zplacement(cm)");
+                row.createCell(7).setCellValue("Weight(kg)");
+                row.createCell(8).setCellValue("Fragile");
+                row.createCell(9).setCellValue("Cost(NIS)");
+                row.createCell(10).setCellValue("ObjectUnder");
+            } else {
+                int k=i-1;
+                if (s1.buttonsInfo.get(k).insideContainer) {
+                    Row row = sheet.createRow(i);
+                    for (int j = 0; j < s1.CargoList.size(); j++)
+                        if (s1.buttonsInfo.get(k).objectId.equals(s1.CargoList.get(j).objectid))
+                            c = s1.CargoList.get(j);
+                    row.createCell(0).setCellValue(s1.buttonsInfo.get(k).objectId);
+                    row.createCell(1).setCellValue(c.width);
+                    row.createCell(2).setCellValue(c.height);
+                    row.createCell(3).setCellValue(c.length);
+                    row.createCell(4).setCellValue(s1.buttonsInfo.get(k).xInContainer);
+                    row.createCell(5).setCellValue(s1.buttonsInfo.get(k).yInContainer);
+                    row.createCell(6).setCellValue(s1.buttonsInfo.get(k).z);
+                    row.createCell(7).setCellValue(c.weight);
+                    row.createCell(9).setCellValue(c.cost);
+                    row.createCell(8).setCellValue(c.fragile);
+                    row.createCell(10).setCellValue(s1.buttonsInfo.get(k).downObjectId);
+                }
+            }
+        }
+        Row MyRow;
+        if(sheet.getRow(6)==null)
+            MyRow = sheet.createRow(6);
+        if(sheet.getRow(7)==null)
+            MyRow = sheet.createRow(7);
+        if(sheet.getRow(8)==null)
+            MyRow = sheet.createRow(8);
+        if(sheet.getRow(9)==null)
+            MyRow = sheet.createRow(9);
+        sheet.getRow(6).createCell(14).setCellValue("Workers Amount:");
+        sheet.getRow(6).createCell(15).setCellValue(s1.MainInfo.totalWorkers);
+        sheet.getRow(7).createCell(14).setCellValue("Total Weight (kg):");
+        sheet.getRow(7).createCell(15).setCellValue(s1.totalWeight);
+        sheet.getRow(8).createCell(14).setCellValue("Total Cost (NIS)");
+        sheet.getRow(8).createCell(15).setCellValue(s1.totalCost);
+        sheet.getRow(9).createCell(14).setCellValue("Approximate Time");
+        sheet.getRow(9).createCell(15).setCellValue(s1.totalTime);
 
+        sheet.autoSizeColumn(15);
+                String fileName = "Container Report.xls"; //Name of the file
+
+                String extStorageDirectory = Environment.getExternalStorageDirectory()
+                        .toString();
+                File folder = new File(extStorageDirectory, "Report");// Name of the folder you want to keep your file in the local storage.
+                folder.mkdir(); //creating the folder
+                File file = new File(folder, fileName);
+                try {
+                    file.createNewFile(); // creating the file inside the folder
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(file); //Opening the file
+                    workbook.write(fileOut); //Writing all your row column inside the file
+                    fileOut.close(); //closing the file and done
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+    }
     public void deleteCargoButton(View view) {
         int i;
         CargoButton temp;
@@ -584,14 +745,108 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void ImportSolution(View view) throws IOException, ClassNotFoundException {
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
+            cL.setVisibility(View.VISIBLE);
+            View container = ((View) findViewById(R.id.Container));
+            CargoTablePage.containerX = container.getX(); //44 //44
+            CargoTablePage.containerY = container.getY();//517
+            ifImportSolution=true; //56/1040 739/2872
+            //  Solution LoadSolution = this.trySolution;
+
+            String file = "solution.txt";
+            FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory() + "/" + file);
+
+
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            //Cargo c1=(Cargo)(
+            Object o = objectInputStream.readObject();
+            objectInputStream.close();
+            Solution LoadSolution = ((Solution)o);
+
+        /*Solution s =(Solution)(objectInputStream.readObject());
+        objectInputStream.close();
+
+        LoadSolution = s;*/
+
+            // = new Solution();
+        /*for (int i = 0; i < LoadSolution.buttons.size(); i++)
+            CargoInContainer.cL.addView(LoadSolution.buttons.get(i));
+        CargoTablePage.buttons=LoadSolution.buttons;
+
+       /* totalCost.setText("" + LoadSolution.MainInfo.totalCost);
+        MainActivity.MainInfo.totalCost = LoadSolution.MainInfo.totalCost;
+        totalTime.setText("" + LoadSolution.MainInfo.totalTime);
+        MainActivity.MainInfo.totalTime = LoadSolution.MainInfo.totalTime;
+        totalWorkers.setText("" + LoadSolution.MainInfo.totalWorkers);
+        MainActivity.MainInfo.totalWorkers = LoadSolution.MainInfo.totalWorkers;*/
+            //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
+//        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
+
+            deleteAllButtons();
+            MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
+            totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
+            MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
+            ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+            MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
+            CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
+            MainActivity.CargoList = new ArrayList<>();
+            for (Cargo c : LoadSolution.CargoList) {
+                MainActivity.CargoList.add(new Cargo(c));
+            }
+
+            CargoTablePage.buttons=new ArrayList<>();
+            for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo) {
+                CargoButton b =new CargoButton(this,i);
+                CargoTablePage.buttons.add(b);
+
+            }
+            for (CargoButton b:CargoTablePage.buttons)
+            {
+                for (Cargo car:MainActivity.CargoList) {
+                    if (b.objectId.equals(car.objectid))
+                    {
+                        b.cargo=car;
+                    }
+                }
+
+                for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo)
+                {
+                    if (b.objectId.equals(i.objectId)) {
+                        for (String sId : i.upIds) {
+                            for (CargoButton c : CargoTablePage.buttons) {
+                                if (sId.equals(c.objectId)) {
+                                    b.up.add(c);
+                                }
+                            }
+                        }
+                        for (CargoButton c : CargoTablePage.buttons) {
+                            if (i.downObjectId!=null) {
+                                if (i.downObjectId.equals(c.objectId)) {
+                                    b.down = c;
+                                }
+                            }
+                        }
+                    }
+                }
+                CargoInContainer.cL.addView(b);
+        }
+        for (CargoButton b : CargoTablePage.buttons) {
+            if (b.z==0)
+            {
+               recursiveBringToFront(b);
+            }
+        }
+    }
+
+    public void ImportSolutionOnStart(String FileName) throws IOException, ClassNotFoundException {
+        cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
         cL.setVisibility(View.VISIBLE);
         View container = ((View) findViewById(R.id.Container));
-        CargoTablePage.containerX = container.getX(); //44 //44
-        CargoTablePage.containerY = container.getY();//517
+        CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
+        CargoTablePage.containerY = MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight;
         ifImportSolution=true;
-      //  Solution LoadSolution = this.trySolution;
+        //  Solution LoadSolution = this.trySolution;
 
-        String file = "solution.txt";
+        String file = FileName;
         FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory() + "/" + file);
 
 
@@ -617,14 +872,14 @@ public class CargoInContainer extends AppCompatActivity {
         MainActivity.MainInfo.totalTime = LoadSolution.MainInfo.totalTime;
         totalWorkers.setText("" + LoadSolution.MainInfo.totalWorkers);
         MainActivity.MainInfo.totalWorkers = LoadSolution.MainInfo.totalWorkers;*/
-  //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
+        //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
 //        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
 
         deleteAllButtons();
         MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
         totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
         MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
-       ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+        ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
         MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
         CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
         MainActivity.CargoList = new ArrayList<>();
@@ -671,10 +926,14 @@ public class CargoInContainer extends AppCompatActivity {
         for (CargoButton b : CargoTablePage.buttons) {
             if (b.z==0)
             {
-               recursiveBringToFront(b);
+                recursiveBringToFront(b);
             }
         }
     }
+
+
+
+
 
     void recursiveBringToFront(CargoButton b)
     {

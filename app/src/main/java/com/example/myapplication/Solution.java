@@ -16,7 +16,6 @@ public class Solution implements Serializable {
         this.CargoList=CargoList;
         this.MainInfo=MainInfo;
        // this.buttons=buttons;
-
     }
     Solution()
     {
