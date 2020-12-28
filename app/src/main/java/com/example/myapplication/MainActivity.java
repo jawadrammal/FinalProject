@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
         MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
         MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
-        MainInfo.ContainerStartX = (float) (44/1080.0);//px
-        MainInfo.ContainerStartY = (float) (517/2040.0);//px
+        MainInfo.ContainerStartX = (float) (56/1440.0);//px
+        MainInfo.ContainerStartY = (float) (739/2872.0);//px
         MainInfo.alertWidthPerc = (float) (600/1440.0);//px
         MainInfo.alertHeightPerc = (float) (700/3040.0);//px
         MainInfo.alertXPerc = (float) (1100/1440.0);//px
@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 SelectedCargo.width = CargoList.get(i).width;
                 SelectedCargo.length = CargoList.get(i).length;
                 SelectedCargo.WeightThreshold = CargoList.get(i).WeightThreshold;
+                SelectedCargo.cost = CargoList.get(i).cost;
                 if(CargoList.get(i).fragile==true)
                     SelectedCargo.fragile = true;
             }
@@ -330,7 +331,9 @@ public class MainActivity extends AppCompatActivity {
                                                 case 5:
                                                     newcargo.WeightThreshold = currentCell.getNumericCellValue();
                                                     break;
-
+                                                case 7:
+                                                    newcargo.cost = currentCell.getNumericCellValue();
+                                                    break;
                                             }
                                         }
                                     }

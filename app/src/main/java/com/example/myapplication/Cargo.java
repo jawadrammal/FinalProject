@@ -20,6 +20,7 @@ public class Cargo implements Serializable
         length=c.length;
         fragile=c.fragile;
         WeightThreshold=c.WeightThreshold;
+        cost=c.cost;
         Selected=c.Selected;
         inCargoPage=c.inCargoPage;
     }

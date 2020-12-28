@@ -461,6 +461,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         yDelta = (int) (y - view.getY());
                         selected = objectId;
                         CargoInContainer.deleteButton.setVisibility(VISIBLE);
+                        MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
 
                         break;
 
@@ -479,6 +480,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                             view.setBackgroundDrawable(drawable);*/
 
                             // *change to numeric
+
                             if (checkIfInContainer(view.getX(), view.getY(), view.getWidth(), view.getHeight(), CargoTablePage.containerX, CargoTablePage.containerY, CargoTablePage.containerWidth, CargoTablePage.containerLength) == true) {
 
 
@@ -540,7 +542,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 view.setX(x - xDelta);
                                 view.setY(y - yDelta);
                             }
-                            MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
 
                         }
                         else
