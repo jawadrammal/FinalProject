@@ -294,7 +294,7 @@ public class CargoInContainer extends AppCompatActivity {
         sheet.getRow(9).createCell(14).setCellValue("Approximate Time");
         sheet.getRow(9).createCell(15).setCellValue(s1.totalTime);
 
-        sheet.autoSizeColumn(15);
+      //  sheet.autoSizeColumn(15); not working 28/12/2020
                 String fileName = "Container Report.xls"; //Name of the file
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory()
