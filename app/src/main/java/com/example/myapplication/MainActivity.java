@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
             Cargo.selectedCnt = 0;
             CargoListIndex=0;
             for (int i = 0; i < CargoList.size(); i++) {
-                if (CargoList.get(i).isSelected() == true) ;
+                if (CargoList.get(i).isSelected() == true)
                 Cargo.selectedCnt++;
 
                 CargoListIndex++;
             }
-
+            updateClickableButtons();
         }
     }
 

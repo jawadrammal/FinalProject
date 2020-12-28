@@ -356,10 +356,42 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void rotate(View view) {
         CargoButton cargoButton = null;
+        boolean canRotate=true;
 
         for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
             cargoButton = CargoTablePage.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
+                if (cargoButton.up.isEmpty()) {
+                    if(cargoButton.lengthInCm + cargoButton.xInContainer <= 234.8 && cargoButton.widthInCm +cargoButton.yInContainer <= 586) {
+                        if(cargoButton.down!=null) {
+                            if (cargoButton.lengthInCm + cargoButton.xInContainer <= cargoButton.down.xInContainer + cargoButton.down.widthInCm && cargoButton.widthInCm + cargoButton.yInContainer <= cargoButton.down.yInContainer + cargoButton.down.lengthInCm) {
+
+                            }
+                            else
+                            {
+                                canRotate = false;
+                            }
+                        }
+                        if (canRotate == true) {
+                            cargoButton.rotate();
+                            for (CargoButton c : CargoTablePage.buttons) {
+                                if (cargoButton != c && cargoButton.z == c.z) {
+
+                                    if (cargoButton.checkhooffeem(c)) {
+                                        cargoButton.rotate();
+                                        canRotate = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(canRotate==false)
+                    {
+                        MainActivity.MainInfo.Dialogbox.setText("You can't rotate this object!");
+                    }
+
+                }
                 if (cargoButton.up.isEmpty())
                     cargoButton.rotate();
                 else
