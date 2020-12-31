@@ -1,10 +1,12 @@
 package com.example.myapplication;
 
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.Serializable;
 
 public class InfoHolder implements Serializable {
+    TableLayout mytable;
     double totalWeight=0;//holds the total weight of the container excluding the container's weight
     double totalCost=0; //holds the total price of the cargo+processing cost of the container excluding the container's price
     double totalTime=0; // holds approximate time to load container via a certain plan
