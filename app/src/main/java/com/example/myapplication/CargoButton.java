@@ -526,7 +526,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 }
                                 z = 0;
                             }
-
+                            CargoInContainer.saveSolution();
                         } else {
                             Toast.makeText(getContext(),
                                     "didn't move!", Toast.LENGTH_SHORT)

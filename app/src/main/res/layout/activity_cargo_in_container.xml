@@ -24,10 +24,11 @@
         <Button
             android:id="@+id/importBtn"
             android:layout_width="111dp"
-            android:layout_height="46dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="391dp"
             android:onClick="ExportSolution"
             android:text="Export"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/button8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.67"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,76 +105,6 @@
             app:layout_constraintVertical_bias="0.401"
             app:srcCompat="@android:drawable/ic_dialog_dialer" />
 
-        <EditText
-            android:id="@+id/TotalTime"
-            android:layout_width="227dp"
-            android:layout_height="41dp"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:cursorVisible="false"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="total time: 0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.121" />
-
-        <EditText
-            android:id="@+id/TotalCost"
-            android:layout_width="226dp"
-            android:layout_height="53dp"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:cursorVisible="false"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="total cost: 0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.165" />
-
-        <EditText
-            android:id="@+id/TotalWorkers"
-            android:layout_width="194dp"
-            android:layout_height="44dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="166dp"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:cursorVisible="false"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="workers amount: 0"
-            app:layout_constraintBottom_toTopOf="@+id/button5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.578" />
-
-        <EditText
-            android:id="@+id/TotalWeight"
-            android:layout_width="224dp"
-            android:layout_height="45dp"
-            android:clickable="false"
-            android:contextClickable="false"
-            android:cursorVisible="false"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="container weight: 0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.067" />
-
         <ImageButton
             android:id="@+id/imageButton9"
             android:layout_width="128dp"
@@ -215,12 +146,15 @@
 
         <View
             android:id="@+id/Container"
-            android:layout_width="200dp"
+            android:layout_width="0dp"
             android:layout_height="502.333901188dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="6dp"
             android:background="#AC8A8A"
             android:backgroundTint="#BF9F9F"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button8"
             app:layout_constraintHorizontal_bias="0.075"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -294,6 +228,63 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.073" />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="101dp"
+            android:layout_marginBottom="246dp"
+            android:onClick="randomSolution"
+            android:text="Rand"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Container"
+            app:layout_constraintTop_toBottomOf="@+id/importBtn" />
+
+        <TextView
+            android:id="@+id/TotalWorkers"
+            android:layout_width="176dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Workers amount: 0"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/TotalWeight"
+            android:layout_width="217dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="Container weight: 0"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TotalWorkers" />
+
+        <TextView
+            android:id="@+id/TotalTime"
+            android:layout_width="217dp"
+            android:layout_height="29dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="Total time: 0"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TotalWeight" />
+
+        <TextView
+            android:id="@+id/TotalCost"
+            android:layout_width="212dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="Total cost: 0"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TotalTime" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -21,12 +21,15 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,14 +39,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CargoInContainer extends AppCompatActivity {
     public static ConstraintLayout cL;
     public static ImageButton deleteButton;
-    public static EditText totalWeightText;
-    public static EditText totalCostText;
-    public static EditText totalTimeText;
-    public static EditText totalWorkers;
+    public static TextView totalWeightText;
+    public static TextView totalCostText;
+    public static TextView totalTimeText;
+    public static TextView totalWorkers;
     public static Solution trySolution;
     public static boolean ifImportSolution;
     @Override
@@ -88,10 +92,10 @@ public class CargoInContainer extends AppCompatActivity {
         MainActivity.MainInfo.Dialogbox = ((TextView) findViewById(R.id.DialogView));
         CargoTablePage.containerWidth = dpToPx(200, this.getApplicationContext());
         CargoTablePage.containerLength = dpToPx(502, this.getApplicationContext());
-        totalWeightText = ((EditText) findViewById((R.id.TotalWeight)));
-        totalCostText = ((EditText) findViewById((R.id.TotalCost)));
-        totalTimeText =  ((EditText) findViewById((R.id.TotalTime)));
-        totalWorkers =  ((EditText) findViewById((R.id.TotalWorkers)));
+        totalWeightText = ((TextView) findViewById((R.id.TotalWeight)));
+        totalCostText = ((TextView) findViewById((R.id.TotalCost)));
+        totalTimeText =  ((TextView) findViewById((R.id.TotalTime)));
+        totalWorkers =  ((TextView) findViewById((R.id.TotalWorkers)));
         totalWorkers.setText("Total Workers : " + MainActivity.MainInfo.totalWorkers);
 
         String path= "/storage/emulated/0/MySolution.txt";
@@ -129,6 +133,17 @@ public class CargoInContainer extends AppCompatActivity {
                     if (!(tempCr.isInCargoPage())) {
                         CargoButton newButton = new CargoButton(this, tempCr.objectid, -1,-1);
                         CargoTablePage.buttons.add(newButton);
+                        TableLayout cargoTable = MainActivity.MainInfo.mytable;
+                        for (int j =0 ;j<cargoTable.getChildCount();j++)
+                        {
+                             TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
+                             String s =t.getText().toString();
+                            if(s.equals(newButton.objectId))
+                            {
+                                ((TableRow)(cargoTable.getChildAt(j))).setBackgroundColor(Color.BLUE);
+                            }
+
+                        }
                         cL.addView(newButton);
                         tempCr.setInCargoPage(true);
                      }
@@ -148,7 +163,25 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void deleteAll(View view)
     {
-        deleteAllButtons();
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        deleteAllButtons();
+                        saveSolution();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(CargoInContainer.this);
+        builder.setMessage("Are you sure you want to delete all?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
     }
 
 
@@ -158,32 +191,7 @@ public class CargoInContainer extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        Solution s1=  new Solution();
-                        String file="MySolution.txt";
-
-                        FileOutputStream fileOutputStream = null;
-                        try {
-                            fileOutputStream=new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + file);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-
-                        ObjectOutputStream objectOutputStream = null;
-                        try {
-                            objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            objectOutputStream.writeObject(s1);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            objectOutputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                       saveSolution();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -197,10 +205,39 @@ public class CargoInContainer extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
+    public static void saveSolution()
+    {
+        Solution s1=  new Solution();
+        String file="MySolution.txt";
 
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream=new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            objectOutputStream.writeObject(s1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            objectOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void deleteAllButtons()
     {
+        TableLayout cargoTable = MainActivity.MainInfo.mytable;
         for (int i= 0; i<CargoTablePage.buttons.size();i++)
         {
             CargoButton b = CargoTablePage.buttons.get(i);
@@ -211,14 +248,29 @@ public class CargoInContainer extends AppCompatActivity {
             i=i-1;
             if (b.insideContainer == true) {
                 MainActivity.MainInfo.totalWeight -= b.cargo.weight;
-                ((EditText) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
+                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
                 MainActivity.MainInfo.totalCost -= (b.cargo.cost+MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
                 MainActivity.MainInfo.totalTime -= ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
                 CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
             }
 
+            for (int j =0 ;j<cargoTable.getChildCount();j++)
+            {
+                TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
+
+                if(t.getText().toString().equals(b.objectId)) {
+                    if (b.cargo.isSelected() == true) {
+                        ((TableRow) (cargoTable.getChildAt(j))).setBackgroundColor(Color.LTGRAY);
+                    }
+                    else {
+                        ((TableRow) (cargoTable.getChildAt(j))).setBackgroundColor(Color.TRANSPARENT);
+                    }
+                }
+
+            }
         }
+
     }
     public void OpenCargoPage(View view) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -322,16 +374,16 @@ public class CargoInContainer extends AppCompatActivity {
     public void deleteCargoButton(View view) {
         int i;
         CargoButton temp;
-
+        TableLayout cargoTable = MainActivity.MainInfo.mytable;
         for (i = 0; i < CargoTablePage.buttons.size(); i++) {
             temp = CargoTablePage.buttons.get(i);
             if (temp.objectId.equals(CargoButton.selected)) {
                 if (temp.up.isEmpty()) {
                     if (temp.insideContainer == true) {
                         MainActivity.MainInfo.totalWeight -= temp.cargo.weight;
-                        ((EditText) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
+                        ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
                         MainActivity.MainInfo.totalCost -= (temp.cargo.cost+MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                        ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
                         MainActivity.MainInfo.totalTime -= ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
                         CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
                     }
@@ -344,8 +396,25 @@ public class CargoInContainer extends AppCompatActivity {
                             }
                         }
                     }
+                    temp.cargo.inCargoPage=false;
                     cL.removeView(temp);
                     CargoTablePage.buttons.remove(i);
+
+                    for (int j =0 ;j<cargoTable.getChildCount();j++)
+                    {
+                        TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
+
+                        if(t.getText().toString().equals(temp.objectId)) {
+                            if (temp.cargo.isSelected() == true) {
+                                ((TableRow) (cargoTable.getChildAt(j))).setBackgroundColor(Color.LTGRAY);
+                            }
+                            else {
+                                ((TableRow) (cargoTable.getChildAt(j))).setBackgroundColor(Color.TRANSPARENT);
+                            }
+                        }
+
+                    }
+                    saveSolution();
                     i = i - 1;
                 } else
                     MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to delete an object which has objects on top of it!");
@@ -356,44 +425,14 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void rotate(View view) {
         CargoButton cargoButton = null;
-        boolean canRotate=true;
 
         for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
             cargoButton = CargoTablePage.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
                 if (cargoButton.up.isEmpty()) {
-                    if(cargoButton.lengthInCm + cargoButton.xInContainer <= 234.8 && cargoButton.widthInCm +cargoButton.yInContainer <= 586) {
-                        if(cargoButton.down!=null) {
-                            if (cargoButton.lengthInCm + cargoButton.xInContainer <= cargoButton.down.xInContainer + cargoButton.down.widthInCm && cargoButton.widthInCm + cargoButton.yInContainer <= cargoButton.down.yInContainer + cargoButton.down.lengthInCm) {
-
-                            }
-                            else
-                            {
-                                canRotate = false;
-                            }
-                        }
-                        if (canRotate == true) {
-                            cargoButton.rotate();
-                            for (CargoButton c : CargoTablePage.buttons) {
-                                if (cargoButton != c && cargoButton.z == c.z) {
-
-                                    if (cargoButton.checkhooffeem(c)) {
-                                        cargoButton.rotate();
-                                        canRotate = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if(canRotate==false)
-                    {
-                        MainActivity.MainInfo.Dialogbox.setText("You can't rotate this object!");
-                    }
-
-                }
-                if (cargoButton.up.isEmpty())
                     cargoButton.rotate();
+                    saveSolution();
+                }
                 else
                     MainActivity.MainInfo.Dialogbox.setText("Alert!:You are trying to rotate an  object which has objects on top of it!");
 
@@ -417,7 +456,7 @@ public class CargoInContainer extends AppCompatActivity {
                 autoMoveButton(newButton);
 
                 MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
-                ((EditText) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
+                ((TextView) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
 
                 CargoTablePage.buttons.add(newButton);
                 cL.addView(newButton);
@@ -589,6 +628,47 @@ public class CargoInContainer extends AppCompatActivity {
  }*/
 
     //numeric
+    public void randomSolution(View view)
+    {
+        deleteAllButtons();
+        float x1, y1;
+
+        x1 = ((View) findViewById(R.id.Container)).getX(); //44
+        y1 = ((View) findViewById(R.id.Container)).getY();//517
+        ArrayList<Cargo> randomArray = new ArrayList<Cargo>(MainActivity.CargoList);
+
+        Collections.shuffle(randomArray);
+        for (int i = 0; i < randomArray.size(); i++) {
+            Cargo tempCr = randomArray.get(i);
+            if (!(tempCr.isInCargoPage())) {
+                CargoButton newButton = new CargoButton(this, tempCr.objectid, 0, 0);
+
+                autoMoveButton(newButton);
+
+                MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
+                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight +"(kg)");
+                MainActivity.MainInfo.totalCost += newButton.cargo.cost + MainActivity.MainInfo.ProcessingCost + ((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
+                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
+                CargoTablePage.buttons.add(newButton);
+                cL.addView(newButton);
+                tempCr.setInCargoPage(true);
+                TableLayout cargoTable = MainActivity.MainInfo.mytable;
+                for (int j =0 ;j<cargoTable.getChildCount();j++)
+                {
+                    TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
+                    String s =t.getText().toString();
+                    if(s.equals(newButton.objectId))
+                    {
+                        ((TableRow)(cargoTable.getChildAt(j))).setBackgroundColor(Color.BLUE);
+                    }
+
+                }
+            }
+        }
+        saveSolution();
+    }
     public void automaticSolution(View view) {
         float x1, y1;
 
@@ -603,16 +683,29 @@ public class CargoInContainer extends AppCompatActivity {
                 autoMoveButton(newButton);
 
                 MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
-                ((EditText) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight +"(kg)");
+                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight +"(kg)");
                 MainActivity.MainInfo.totalCost += newButton.cargo.cost + MainActivity.MainInfo.ProcessingCost + ((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
                 MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
                 CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
                 CargoTablePage.buttons.add(newButton);
                 cL.addView(newButton);
                 tempCr.setInCargoPage(true);
+
+                TableLayout cargoTable = MainActivity.MainInfo.mytable;
+                for (int j =0 ;j<cargoTable.getChildCount();j++)
+                {
+                    TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
+                    String s =t.getText().toString();
+                    if(s.equals(newButton.objectId))
+                    {
+                        ((TableRow)(cargoTable.getChildAt(j))).setBackgroundColor(Color.BLUE);
+                    }
+
+                }
             }
         }
+        saveSolution();
     }
 
 
@@ -817,7 +910,7 @@ public class CargoInContainer extends AppCompatActivity {
             MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
             totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
             MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
-            ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+            ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
             MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
             CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
             MainActivity.CargoList = new ArrayList<>();
@@ -911,7 +1004,7 @@ public class CargoInContainer extends AppCompatActivity {
         MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
         totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
         MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
-        ((EditText) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
         MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
         CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
         MainActivity.CargoList = new ArrayList<>();
@@ -1019,6 +1112,7 @@ public class CargoInContainer extends AppCompatActivity {
             if(c.objectId.equals(CargoButton.selected))
                 moveToNearest(c);
         }
+        saveSolution();
     }
 
     public void moveToNearest(CargoButton c) {

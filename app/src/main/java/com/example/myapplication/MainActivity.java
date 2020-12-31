@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout rl;
     public static ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
     public static InfoHolder MainInfo = new InfoHolder();
+
     int CargoListIndex=0;
     Intent myFileIntent;
     String ExcelFilePath;
@@ -92,7 +93,14 @@ public class MainActivity extends AppCompatActivity {
         MainInfo.containerViewWidth = (float) (331/1080.0);
 
         setContentView(R.layout.cargotable);
+        MainInfo.mytable=findViewById(R.id.maintable);
 
+        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.putExtra("AddToContainer?",false);
+        startActivity(intent);
     }
 
     @Override
@@ -113,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             }
             updateClickableButtons();
         }
+        updateClickableButtons();
     }
 
     @Override
@@ -125,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
     int yDelta;
     @SuppressLint("ClickableViewAccessibility")
     public void DrawObject(View view) {
+        MainActivity.MainInfo.mytable=findViewById(R.id.maintable);
+
         Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -163,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     {
         setContentView(R.layout.editcargopage);
         for(int i=0;i<CargoList.size();i++)
-            if(CargoList.get(i).Selected==true)
+            if(CargoList.get(i).Selected==true && CargoList.get(i).inCargoPage==false)
             {
                 ((EditText)findViewById((R.id.ObjectIDTxt1))).setText(CargoList.get(i).objectid);
                 ((EditText)findViewById((R.id.HeightTxt1))).setText(CargoList.get(i).height.toString());
@@ -375,11 +386,12 @@ public class MainActivity extends AppCompatActivity {
                 for(int j=0;j<CargoList.size();j++)
                 {
                     if (CargoList.get(j).objectid == ObjectId)
-                        if (CargoList.get(j).Selected == true)
-                        {
-                            Cargo.selectedCnt--;
-                            CargoListIndex--;
-                            CargoList.remove(j);
+                        if(CargoList.get(j).inCargoPage==false) {
+                            if (CargoList.get(j).Selected == true) {
+                                Cargo.selectedCnt--;
+                                CargoListIndex--;
+                                CargoList.remove(j);
+                            }
                         }
                 }
 
@@ -418,10 +430,14 @@ public class MainActivity extends AppCompatActivity {
             texts.get(5).setText("no");
 
         row.addView(texts.get(5));
+
         if (newCargo.Selected==true)
             row.setBackgroundColor(Color.LTGRAY);
         else
             row.setBackgroundColor(Color.TRANSPARENT);
+        if (newCargo.inCargoPage==true) {
+            row.setBackgroundColor(Color.BLUE);
+        }
         row.setClickable(true);
         row.setOnClickListener(tablerowOnClickListener);
         return row;
@@ -444,19 +460,17 @@ public class MainActivity extends AppCompatActivity {
             ObjectId=ObjectIdView.getText().toString();
             for(int j=0;j<CargoList.size();j++) {
                 if (CargoList.get(j).objectid == ObjectId)
-                    if (CargoList.get(j).Selected == false)
-                    {
-                        tr1.setBackgroundColor(Color.LTGRAY);
-                        CargoList.get(j).Selected = true;
-                        Cargo.selectedCnt++;
-                    }
-                    else
-                        {
-                        CargoList.get(j).Selected = false;
+                    if(CargoList.get(j).inCargoPage!=true) {
+                        if (CargoList.get(j).Selected == false) {
+                            tr1.setBackgroundColor(Color.LTGRAY);
+                            CargoList.get(j).Selected = true;
+                            Cargo.selectedCnt++;
+                        } else {
+                            CargoList.get(j).Selected = false;
                             tr1.setBackgroundColor(Color.TRANSPARENT);
-                           Cargo.selectedCnt--;
+                            Cargo.selectedCnt--;
+                        }
                     }
-
             }
             updateClickableButtons();
         }
@@ -464,6 +478,7 @@ public class MainActivity extends AppCompatActivity {
     public void RebuildTable(View view){
         int i=0;
         setContentView(R.layout.cargotable);
+        MainActivity.MainInfo.mytable=findViewById(R.id.maintable);
         TableLayout cargoTable = findViewById(R.id.maintable);
         for(i=0;i<CargoList.size();i++)
             cargoTable.addView(Createrow(CargoList.get(i)),i+1);
@@ -474,6 +489,17 @@ public class MainActivity extends AppCompatActivity {
     }
     public void updateClickableButtons()
     {
+        Cargo.selectedCnt=0;
+        for (Cargo c:CargoList) {
+            if(c.inCargoPage==false)
+            {
+                if(c.Selected==true)
+                {
+                    Cargo.selectedCnt++;
+                }
+            }
+        }
+
         if (Cargo.selectedCnt!=1){
             findViewById(R.id.imageButton6).setClickable(false);
         }
