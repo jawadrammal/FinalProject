@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         intent.putExtra("AddToContainer?",false);
         startActivity(intent);
     }
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         intent.putExtra("AddToContainer?",true);
         startActivity(intent);
 
@@ -161,11 +159,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.addcargopage);
     }
     public void OpenFirstlayoutPage(View view) {
-       // setContentView(R.layout.layout);
         Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         intent.putExtra("AddToContainer?",false);
         startActivity(intent);
 
@@ -214,10 +210,8 @@ public class MainActivity extends AppCompatActivity {
                     Cargo.selectedCnt--;
                 }
             RebuildTable(view);
-            //updateClickableButtons();
         }
     }
-  //  int i=0;
     public void AddCargo(View view) {
         Cargo newCargo = new Cargo();
          if(isTextEmpty((EditText)findViewById(R.id.ObjectIDTxt)) || isTextEmpty((EditText)findViewById(R.id.HeightTxt)) || isTextEmpty((EditText)findViewById(R.id.WidthTxt))|| isTextEmpty((EditText)findViewById(R.id.WeightTxt))|| isTextEmpty((EditText)findViewById(R.id.LengthTxt))|| isTextEmpty((EditText)findViewById(R.id.ThreshHoldTxt)))
@@ -301,10 +295,8 @@ public class MainActivity extends AppCompatActivity {
                             int colindex = 0;
                             while (cellIterator.hasNext()) {
                                 Cell currentCell = cellIterator.next();
-                                //getCellTypeEnum shown as deprecated for version 3.15
-                                //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+
                                 if (currentCell.getCellType() == Cell.CELL_TYPE_STRING) {
-                                    //System.out.print(currentCell.getStringCellValue() + "--");
                                     if (rowindex != 0) {
                                         if (colindex == 0)
                                           newcargo.objectid = currentCell.getStringCellValue();
@@ -321,7 +313,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 } else {
                                     if (currentCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                        //System.out.print(currentCell.getNumericCellValue() + "--");
                                         if (rowindex != 0) {
                                             switch (colindex) {
                                                 case 0:
@@ -398,7 +389,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         RebuildTable(view);
-      //  updateClickableButtons();
     }
     public TableRow Createrow(Cargo newCargo)
     {

@@ -86,20 +86,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         g = getRandomNum(255);
         this.setBackgroundColor(Color.rgb(r, g, b));
 
-       /* GradientDrawable drawable = new GradientDrawable();
-        drawable.setShape(GradientDrawable.RECTANGLE);
-        drawable.setStroke(0,Color.GREEN);
-        drawable.setColor(Color.rgb(r,g,b));
-        this.setBackgroundDrawable(drawable);*/
+
     }
 
 
 
-    /*public boolean canPutOnOther(CargoButton other) {
-        if (((this.width1 * this.length1) <= (other.length1 * other.width1))&&(other.z+other.cargo.height+this.cargo.height)<InfoHolder.containerHeight)
-            return true;
-        return false;
-    }*/
 
     public CargoButton(Context context,CargoButtonInfoForSolution infob)
     {
@@ -152,61 +143,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         return false;
     }
 
-/*
-    public boolean putItOnOther(CargoButton other) {
-        boolean hoffeem=false;
-        if (other.up.isEmpty()) {
-            this.setX(other.getX());
-            this.setY(other.getY());
-            if (this.width1 > other.width1) {
-                this.rotate();
-            }
-            //other.up.add(this);
-            if (down!=null)
-            {
-                if (down.up.isEmpty()!= true) {
-                    for(int i=0;i<down.up.size();i++)
-                        if (down.up.get(i).objectId.equals(this.objectId))
-                        {
-
-                            down.up.remove(i);
-                            break;
-                        }
-                    z-=down.cargo.height;
-                }
-            }
-            down = other;
-            down.up.add(this);
-            z=(down.z+down.cargo.height);
-            return true;
-        }
-        else
-        {
-            for (int i=0;i<other.up.size();i++)
-            {
-                if (checkhooffeem(other.up.get(i))) {
-                    if(canPutOnOther(other.up.get(i))) {
-                       if (putItOnOther(other.up.get(i))==true) {
-                            return true;
-                       }
-                    }
-                }
-            }
-        }
-
-      return false;
-
-    }*/
-
 
     //numeric
     public boolean putItOnOther(CargoButton other) {
         boolean hoffeem = false;
 
-        // this.setxInContainer(other.xInContainer);
-        //this.setyInContainer(other.yInContainer);
-        //this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-        //this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
         if (checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, other.xInContainer, other.yInContainer, other.widthInCm, other.lengthInCm) == true && (other.z + other.cargo.height + this.cargo.height) < InfoHolder.containerHeight) {
             if (down != null) {
                 if (down.up.isEmpty() != true) {
@@ -328,32 +269,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
     }
 
-    /*
-    public boolean checkhooffeem(CargoButton other)
-    {
-        boolean hoffemY, hoffemX;
-        float xright, xleft, viewXright, viewXLeft;
-        float yUp, yDown, viewYup, viewYDown;
 
-        xleft = other.getX();
-        viewXLeft = this.getX();
-        xright = xleft + other.getLayoutParams().width;
-        viewXright = viewXLeft + this.getLayoutParams().width;
-
-        yUp = other.getY();
-        viewYup = this.getY();
-        yDown = yUp + other.getLayoutParams().height;
-        viewYDown = viewYup + this.getLayoutParams().height;
-
-        hoffemX = checkHoffemAxis(viewXLeft, viewXright, xleft, xright);
-        hoffemY = checkHoffemAxis(viewYup, viewYDown, yUp, yDown);
-
-        if (hoffemX == true && hoffemY == true) {
-            return true;
-        }
-        return false;
-    }
-    */
 
     //numeric
     public boolean checkhooffeem(CargoButton other) {
@@ -420,8 +336,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
     public void rotate() {
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(this.getLayoutParams().height, this.getLayoutParams().width);
-        //this.setpa
-        //lp.setMargins(10, 10, 10, 10);
+
         this.setLayoutParams(lp);
         int temp = this.width1;
         this.setWidth1(this.length1);
@@ -469,17 +384,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         boolean hoffemX = false;
                         boolean hoffemY = false;
                         if (moved == true) {
-                            Toast.makeText(getContext(),
-                                    "thanks for new location!", Toast.LENGTH_SHORT)
-                                    .show();
 
-                           /* GradientDrawable drawable = new GradientDrawable();
-                            drawable.setShape(GradientDrawable.RECTANGLE);
-                            drawable.setStroke(0,Color.rgb(r,g,b));
-                            drawable.setColor(Color.rgb(r,g,b));
-                            view.setBackgroundDrawable(drawable);*/
 
-                            // *change to numeric
 
                             if (checkIfInContainer(view.getX(), view.getY(), view.getWidth(), view.getHeight(), CargoTablePage.containerX, CargoTablePage.containerY, CargoTablePage.containerWidth, CargoTablePage.containerLength) == true) {
 
@@ -489,8 +395,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 }
                             } else {
 
-                                //down = null
-                                //remove from up
                                 Toast.makeText(getContext(),
                                         "out of the container", Toast.LENGTH_SHORT)
                                         .show();
@@ -509,7 +413,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 ((CargoButton) view).setyInContainer(-1);
                                 view.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
                                 view.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
-                                // down.up.remove(this);
                                 if (down != null) {
                                     if (down.up != null)
                                         if (down.up.isEmpty() == false) {
@@ -528,9 +431,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                             }
                             CargoInContainer.saveSolution();
                         } else {
-                            Toast.makeText(getContext(),
-                                    "didn't move!", Toast.LENGTH_SHORT)
-                                    .show();
+
                         }
                         break;
 
@@ -538,7 +439,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         if (flag == 0) {
 
                             moved = true;
-                            if (y - yDelta > MainActivity.MainInfo.ContainerStartY * MainActivity.MainInfo.screenHeight) {
+                            if (y - yDelta > CargoTablePage.containerY) {
                                 view.setX(x - xDelta);
                                 view.setY(y - yDelta);
                             }
@@ -546,11 +447,6 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         }
                         else
                             MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
-                        /*GradientDrawable drawable = new GradientDrawable();
-                        drawable.setShape(GradientDrawable.RECTANGLE);
-                        drawable.setStroke(5,Color.GREEN);
-                        drawable.setColor(Color.rgb(r,g,b));
-                        view.setBackgroundDrawable(drawable);*/
                         break;
                 }
 

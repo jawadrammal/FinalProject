@@ -1,11 +1,13 @@
 package com.example.myapplication;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Pair;
@@ -26,6 +29,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -40,6 +44,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 public class CargoInContainer extends AppCompatActivity {
     public static ConstraintLayout cL;
@@ -50,6 +55,7 @@ public class CargoInContainer extends AppCompatActivity {
     public static TextView totalWorkers;
     public static Solution trySolution;
     public static boolean ifImportSolution;
+    Intent myFileIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,8 +157,8 @@ public class CargoInContainer extends AppCompatActivity {
             }
         }
        View container = ((View) findViewById(R.id.Container));
-        CargoTablePage.containerX = container.getX(); //44 //44
-        CargoTablePage.containerY = container.getY();//517
+        CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
+        CargoTablePage.containerY = MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight;
     }
 
     @Override
@@ -160,7 +166,43 @@ public class CargoInContainer extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);
     }
+    public void ChangeWorkersAmount(View view)
+    {
+        final String[] m_Text = {""};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Amount of workers");
 
+// Set up the input
+        final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text[0] = input.getText().toString();
+                int OldWorkersAmount= MainActivity.MainInfo.totalWorkers;
+                Double OldTotalTime = MainActivity.MainInfo.totalTime;
+                MainActivity.MainInfo.totalWorkers=Integer.parseInt(input.getText().toString());
+                totalWorkers.setText("Total Workers : " + MainActivity.MainInfo.totalWorkers);
+                MainActivity.MainInfo.totalTime= MainActivity.MainInfo.totalTime * OldWorkersAmount / MainActivity.MainInfo.totalWorkers ;
+                MainActivity.MainInfo.totalCost = MainActivity.MainInfo.totalCost - OldTotalTime * (MainActivity.MainInfo.WorkersHourlySalary/60.0) * OldWorkersAmount;
+                MainActivity.MainInfo.totalCost =  MainActivity.MainInfo.totalCost + MainActivity.MainInfo.totalWorkers * (MainActivity.MainInfo.WorkersHourlySalary/60.0) * MainActivity.MainInfo.totalTime;
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
     public void deleteAll(View view)
     {
 
@@ -346,7 +388,6 @@ public class CargoInContainer extends AppCompatActivity {
         sheet.getRow(9).createCell(14).setCellValue("Approximate Time");
         sheet.getRow(9).createCell(15).setCellValue(s1.totalTime);
 
-      //  sheet.autoSizeColumn(15); not working 28/12/2020
                 String fileName = "Container Report.xls"; //Name of the file
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory()
@@ -425,207 +466,47 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void rotate(View view) {
         CargoButton cargoButton = null;
+        boolean canRotate=true;
 
         for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
             cargoButton = CargoTablePage.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
                 if (cargoButton.up.isEmpty()) {
-                    cargoButton.rotate();
-                    saveSolution();
+                    if(cargoButton.lengthInCm + cargoButton.xInContainer <= 234.8 && cargoButton.widthInCm +cargoButton.yInContainer <= 586) {
+                        if(cargoButton.down!=null) {
+                            if (cargoButton.lengthInCm + cargoButton.xInContainer <= cargoButton.down.xInContainer + cargoButton.down.widthInCm && cargoButton.widthInCm + cargoButton.yInContainer <= cargoButton.down.yInContainer + cargoButton.down.lengthInCm) {
+
+                            }
+                            else
+                            {
+                                canRotate = false;
+                            }
+                        }
+                        if (canRotate == true) {
+                            cargoButton.rotate();
+                            for (CargoButton c : CargoTablePage.buttons) {
+                                if (cargoButton != c && cargoButton.z == c.z) {
+
+                                    if (cargoButton.checkhooffeem(c)) {
+                                        cargoButton.rotate();
+                                        canRotate = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(canRotate==false)
+                    {
+                        MainActivity.MainInfo.Dialogbox.setText("You can't rotate this object!");
+                    }
+
                 }
                 else
                     MainActivity.MainInfo.Dialogbox.setText("Alert!:You are trying to rotate an  object which has objects on top of it!");
-
             }
         }
     }
-
-   /* public void automaticSolution(View view) {
-        float x1, y1;
-
-        x1 = ((View) findViewById(R.id.Container)).getX(); //44
-        y1 = ((View) findViewById(R.id.Container)).getY();//517
-
-        for (int i = 0; i < MainActivity.CargoList.size(); i++)
-        {
-            Cargo tempCr = MainActivity.CargoList.get(i);
-            if (!(tempCr.isInCargoPage()))
-            {
-                CargoButton newButton = new CargoButton(this, tempCr.objectid, x1, y1);
-
-                autoMoveButton(newButton);
-
-                MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
-                ((TextView) findViewById((R.id.TotalWeight))).setText("container weight: " + (int) MainActivity.MainInfo.totalWeight);
-
-                CargoTablePage.buttons.add(newButton);
-                cL.addView(newButton);
-                tempCr.setInCargoPage(true);
-            }
-        }
-    }*/
-
-
- /*void autoMoveButton(CargoButton newButton) {
-     float minY = 0;
-     float x = 0, y = 0, x1, y1;
-     boolean hooffem = false, first = true, rotated = false, onFloor = false, inOkPlace = false;
-
-     CargoButton cargoButton1 = null;
-
-     x1 = ((View) findViewById(R.id.Container)).getX(); //44
-     y1 = ((View) findViewById(R.id.Container)).getY();//517
-
-     CargoTablePage.containerX = ((View) findViewById(R.id.Container)).getX(); //44 //44
-     CargoTablePage.containerY = ((View) findViewById(R.id.Container)).getY();//517
-
-     x = newButton.getX();
-     y = newButton.getY();
-
-     minY = y1;
-
-     //check space algorithm
-     int size = CargoTablePage.buttons.size();
-
-     //for on y
-     for (float j = y1; j < dpToPx(502, this.getApplicationContext()) + y1; j++)
-     {
-         rotated = false;
-
-         //for on x
-         for (float i = x1; i < dpToPx(200, this.getApplicationContext()) + x1; i++)
-         {
-             if (i + newButton.width1 > dpToPx(200, this.getApplicationContext()) + x1)
-             {
-                    if (rotated==false)
-                    {
-                        newButton.rotate();
-                        i=x1;
-                        rotated=true;
-                    }
-                    else
-                    {
-                        newButton.rotate();
-                        j = minY + 1;
-                    }
-                    first = true;
-                    break;
-             }
-             if (j + newButton.length1 > dpToPx(502, this.getApplicationContext()) + y1)
-                 break;
-
-
-             newButton.setX(i);
-             newButton.setY(j);
-
-             for (int k = 0; k < size; k++)
-             {
-                 cargoButton1 = CargoTablePage.buttons.get(k);
-                 //  if (cargoButton1.objectId.equals(newButton.objectId)==false) {
-                 //  if (cargoButton1.objectId!=newButton.objectId){
-                 if (cargoButton1!=newButton)
-                 {
-                    hooffem = cargoButton1.checkhooffeem(newButton);
-                    if (hooffem == true)
-                    {
-                        i = cargoButton1.getX() + cargoButton1.width1;
-                        if (first == true)
-                        {
-                            minY = cargoButton1.getY() + cargoButton1.length1;
-                            first = false;
-                        }
-                        else
-                        {
-                            if (cargoButton1.getY() + cargoButton1.length1 < minY)
-                            minY = (cargoButton1.getY() + cargoButton1.length1);
-                        }
-                     break;
-                    }
-                 }
-                 //}
-             }
-             if (hooffem == false) {
-                 inOkPlace = true;
-                 break;
-             }
-
-         }
-         if (hooffem == false) {
-             inOkPlace = true;
-             break;
-         }
-     }
-
-
-     if (hooffem == true) {
-         //check if we can put it on another cargo
-         newButton.setX(x1);
-         newButton.setY(y1);
-
-         CargoButton other;
-         size = CargoTablePage.buttons.size();
-         for (float j = y1; j < dpToPx(502, this.getApplicationContext()) + y1; j++) { //for on x
-             rotated = false;
-             for (float i = x1; i < dpToPx(200, this.getApplicationContext()) + x1; i++) {
-                 if (i + newButton.width1 > dpToPx(200, this.getApplicationContext()) + x1) {
-                     j = minY + 1;
-                     first = true;
-                     break;
-                 }
-                 if (j + newButton.length1 > dpToPx(502, this.getApplicationContext()) + y1)
-                     break;
-
-                 newButton.setX(i);
-                 newButton.setY(j);
-
-                 for (int k1 = 0; k1 < size; k1++) {
-                     other = CargoTablePage.buttons.get(k1);
-                     //if (newButton.objectId.equals(other.objectId)==false) {
-                     // if (cargoButton1.objectId!=newButton.objectId){
-                     if (newButton.checkhooffeem(other) == true) {
-                         //check if we can put it above this cargo
-                         if (newButton.canPutOnOther(other) == true) {
-                             float oldX = newButton.getX();
-                             float oldY = newButton.getY();
-                             if(newButton.putItOnOther(other)==true) {
-                                 inOkPlace = true;
-                                 break;
-                             }
-                             else{
-                                 newButton.setX(oldX);
-                                 newButton.setY(oldY);
-
-                                 i = other.getX() + other.width1;
-                                 if (first == true) {
-                                     minY = other.getY() + other.length1;
-                                     first = false;
-                                 } else {
-                                     if (other.getY() + other.length1 < minY)
-                                         minY = (other.getY() + other.length1);
-                                 }
-
-                             }
-                         }
-                     }
-                 }
-                 if (inOkPlace==true)
-                     break;
-             }
-             if (inOkPlace==true)
-                 break;
-         }
-
-         //}
-
-     }
-     if (inOkPlace == false) {
-         newButton.insideContainer=false;
-         newButton.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-         newButton.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
-     }
-     else
-         newButton.insideContainer=true;
- }*/
 
     //numeric
     public void randomSolution(View view)
@@ -672,8 +553,8 @@ public class CargoInContainer extends AppCompatActivity {
     public void automaticSolution(View view) {
         float x1, y1;
 
-        x1 = ((View) findViewById(R.id.Container)).getX(); //44
-        y1 = ((View) findViewById(R.id.Container)).getY();//517
+        x1 = ((View) findViewById(R.id.Container)).getX();
+        y1 = ((View) findViewById(R.id.Container)).getY();
 
         for (int i = 0; i < MainActivity.CargoList.size(); i++) {
             Cargo tempCr = MainActivity.CargoList.get(i);
@@ -821,21 +702,11 @@ public class CargoInContainer extends AppCompatActivity {
             for (int k1 = 0; k1 < size; k1++) {
                 other = CargoTablePage.buttons.get(k1);
                 if (newButton.objectId.equals(other.objectId) == false) {
-                    // if (cargoButton1.objectId!=newButton.objectId){
-                    //  if (newButton.checkhooffeem(other) == true) {
-
-                    //check if we can put it above this cargo
                     if (newButton.canPutOnOther(other) == true) {
-                        //float oldX = newButton.xInContainer;
-                        //float oldY = newButton.yInContainer;
-                        //try to put it above other
                         if (newButton.AutoPutOnOther(other) == true) {
                             inOkPlace = true;
                             break;
                         } else {
-                            //if cant return it to old position
-                            //newButton.setxInContainer(oldX);
-                            //newButton.setyInContainer(oldY);
                             newButton.insideContainer = false;
                             newButton.setyInContainer(-1);
                             newButton.setxInContainer(-1);
@@ -869,98 +740,103 @@ public class CargoInContainer extends AppCompatActivity {
 
 
     public void ImportSolution(View view) throws IOException, ClassNotFoundException {
+            myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            myFileIntent.setType("*/*");
+             startActivityForResult(myFileIntent,10);
+    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
-            cL.setVisibility(View.VISIBLE);
-            View container = ((View) findViewById(R.id.Container));
-            CargoTablePage.containerX = container.getX(); //44 //44
-            CargoTablePage.containerY = container.getY();//517
-            ifImportSolution=true; //56/1040 739/2872
-            //  Solution LoadSolution = this.trySolution;
+        cL.setVisibility(View.VISIBLE);
+        View container = ((View) findViewById(R.id.Container));
+        CargoTablePage.containerX = container.getX();
+        CargoTablePage.containerY = container.getY();
+        ifImportSolution=true;
+        switch (requestCode) {
+            case 10:
+                if (resultCode == RESULT_OK) {
+                    String path = data.getData().getPath();
+                    //ExcelFilePath = path;
 
-            String file = "solution.txt";
-            FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory() + "/" + file);
+                    try {
+                        File expath = Environment.getExternalStorageDirectory();
+                        String newpath = path.replace("/document/primary:", "");
+                        FileInputStream MyFile = new FileInputStream(new File((expath + "/" + newpath)));//"/storage/emulated/0/"+newpath));
 
 
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            //Cargo c1=(Cargo)(
-            Object o = objectInputStream.readObject();
-            objectInputStream.close();
-            Solution LoadSolution = ((Solution)o);
+                        ObjectInputStream objectInputStream = new ObjectInputStream(MyFile);
+                        Object o = objectInputStream.readObject();
+                        objectInputStream.close();
+                        Solution LoadSolution = ((Solution)o);
 
-        /*Solution s =(Solution)(objectInputStream.readObject());
-        objectInputStream.close();
+                        deleteAllButtons();
+                        MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
+                        totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg)");
+                        MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
+                        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
+                        MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
+                        CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
+                        MainActivity.CargoList = new ArrayList<>();
+                        for (Cargo c : LoadSolution.CargoList) {
+                            MainActivity.CargoList.add(new Cargo(c));
+                        }
 
-        LoadSolution = s;*/
+                        CargoTablePage.buttons=new ArrayList<>();
+                        for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo) {
+                            CargoButton b =new CargoButton(this,i);
+                            CargoTablePage.buttons.add(b);
 
-            // = new Solution();
-        /*for (int i = 0; i < LoadSolution.buttons.size(); i++)
-            CargoInContainer.cL.addView(LoadSolution.buttons.get(i));
-        CargoTablePage.buttons=LoadSolution.buttons;
-
-       /* totalCost.setText("" + LoadSolution.MainInfo.totalCost);
-        MainActivity.MainInfo.totalCost = LoadSolution.MainInfo.totalCost;
-        totalTime.setText("" + LoadSolution.MainInfo.totalTime);
-        MainActivity.MainInfo.totalTime = LoadSolution.MainInfo.totalTime;
-        totalWorkers.setText("" + LoadSolution.MainInfo.totalWorkers);
-        MainActivity.MainInfo.totalWorkers = LoadSolution.MainInfo.totalWorkers;*/
-            //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
-//        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
-
-            deleteAllButtons();
-            MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
-            totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
-            MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
-            ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-            MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
-            CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
-            MainActivity.CargoList = new ArrayList<>();
-            for (Cargo c : LoadSolution.CargoList) {
-                MainActivity.CargoList.add(new Cargo(c));
-            }
-
-            CargoTablePage.buttons=new ArrayList<>();
-            for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo) {
-                CargoButton b =new CargoButton(this,i);
-                CargoTablePage.buttons.add(b);
-
-            }
-            for (CargoButton b:CargoTablePage.buttons)
-            {
-                for (Cargo car:MainActivity.CargoList) {
-                    if (b.objectId.equals(car.objectid))
-                    {
-                        b.cargo=car;
-                    }
-                }
-
-                for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo)
-                {
-                    if (b.objectId.equals(i.objectId)) {
-                        for (String sId : i.upIds) {
-                            for (CargoButton c : CargoTablePage.buttons) {
-                                if (sId.equals(c.objectId)) {
-                                    b.up.add(c);
+                        }
+                        for (CargoButton b:CargoTablePage.buttons)
+                        {
+                            for (Cargo car:MainActivity.CargoList) {
+                                if (b.objectId.equals(car.objectid))
+                                {
+                                    b.cargo=car;
                                 }
                             }
-                        }
-                        for (CargoButton c : CargoTablePage.buttons) {
-                            if (i.downObjectId!=null) {
-                                if (i.downObjectId.equals(c.objectId)) {
-                                    b.down = c;
+
+                            for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo)
+                            {
+                                if (b.objectId.equals(i.objectId)) {
+                                    for (String sId : i.upIds) {
+                                        for (CargoButton c : CargoTablePage.buttons) {
+                                            if (sId.equals(c.objectId)) {
+                                                b.up.add(c);
+                                            }
+                                        }
+                                    }
+                                    for (CargoButton c : CargoTablePage.buttons) {
+                                        if (i.downObjectId!=null) {
+                                            if (i.downObjectId.equals(c.objectId)) {
+                                                b.down = c;
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                            CargoInContainer.cL.addView(b);
                         }
+                        for (CargoButton b : CargoTablePage.buttons) {
+                            if (b.z==0)
+                            {
+                                recursiveBringToFront(b);
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
+                    break;
                 }
-                CargoInContainer.cL.addView(b);
-        }
-        for (CargoButton b : CargoTablePage.buttons) {
-            if (b.z==0)
-            {
-               recursiveBringToFront(b);
-            }
         }
     }
+
+
 
     public void ImportSolutionOnStart(String FileName) throws IOException, ClassNotFoundException {
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
@@ -969,40 +845,21 @@ public class CargoInContainer extends AppCompatActivity {
         CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
         CargoTablePage.containerY = MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight;
         ifImportSolution=true;
-        //  Solution LoadSolution = this.trySolution;
+
 
         String file = FileName;
         FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory() + "/" + file);
 
 
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        //Cargo c1=(Cargo)(
         Object o = objectInputStream.readObject();
         objectInputStream.close();
         Solution LoadSolution = ((Solution)o);
 
-        /*Solution s =(Solution)(objectInputStream.readObject());
-        objectInputStream.close();
-
-        LoadSolution = s;*/
-
-        // = new Solution();
-        /*for (int i = 0; i < LoadSolution.buttons.size(); i++)
-            CargoInContainer.cL.addView(LoadSolution.buttons.get(i));
-        CargoTablePage.buttons=LoadSolution.buttons;
-
-       /* totalCost.setText("" + LoadSolution.MainInfo.totalCost);
-        MainActivity.MainInfo.totalCost = LoadSolution.MainInfo.totalCost;
-        totalTime.setText("" + LoadSolution.MainInfo.totalTime);
-        MainActivity.MainInfo.totalTime = LoadSolution.MainInfo.totalTime;
-        totalWorkers.setText("" + LoadSolution.MainInfo.totalWorkers);
-        MainActivity.MainInfo.totalWorkers = LoadSolution.MainInfo.totalWorkers;*/
-        //      MainActivity.MainInfo.totalWeight = LoadSolution.MainInfo.totalWeight;
-//        totalWeightText.setText("container weight: " + LoadSolution.MainInfo.totalWeight);
 
         deleteAllButtons();
         MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
-        totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg))");
+        totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg)");
         MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
         ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
         MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
@@ -1074,10 +931,6 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void ExportSolution(View view) throws IOException {
 
-     /*   ArrayList<CargoButton> SaveButtons=new ArrayList<CargoButton>(CargoTablePage.buttons);
-        ArrayList<Cargo> SaveCargoList=new ArrayList<>(MainActivity.CargoList);
-        Solution ExportSolution = new Solution(SaveCargoList, MainActivity.MainInfo, SaveButtons);
-        this.trySolution=ExportSolution;*/
         this.trySolution = new Solution();
         Solution s1= trySolution;
         String file="solution.txt";
@@ -1089,23 +942,7 @@ public class CargoInContainer extends AppCompatActivity {
         objectOutputStream.close();
 
         }
-    //String filename = "MySolution.txt";
 
-   /*     Gson gson = new Gson();
-        String s = gson.toJson(v);
-
-        FileOutputStream outputStream;
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(s.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-}*/
     public void moveToNearest(View view)
     {
         for (CargoButton c:CargoTablePage.buttons) {
