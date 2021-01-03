@@ -23,14 +23,13 @@
 
         <Button
             android:id="@+id/importBtn"
-            android:layout_width="111dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="391dp"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
             android:onClick="ExportSolution"
             android:text="Export"
-            app:layout_constraintBottom_toTopOf="@+id/button8"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.67"
+            app:layout_constraintHorizontal_bias="0.662"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
@@ -62,19 +61,7 @@
             app:layout_constraintHorizontal_bias="0.9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.922" />
-
-        <Button
-            android:id="@+id/ArrangementPlan"
-            android:layout_width="161dp"
-            android:layout_height="50dp"
-            android:text="Optimize"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.932"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.994" />
+            app:layout_constraintVertical_bias="0.977" />
 
         <TextView
             android:id="@+id/textView2"
@@ -112,10 +99,10 @@
             android:onClick="ProduceReport"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.875"
+            app:layout_constraintHorizontal_bias="0.897"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.875"
+            app:layout_constraintVertical_bias="0.931"
             app:srcCompat="@drawable/reportbtn" />
 
         <Button
@@ -136,13 +123,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="automaticSolution"
-            android:text="automatic"
+            android:text="auto"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.855"
+            app:layout_constraintHorizontal_bias="0.969"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.786" />
+            app:layout_constraintVertical_bias="0.758" />
 
         <View
             android:id="@+id/Container"
@@ -199,22 +186,20 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.238" />
+            app:layout_constraintVertical_bias="0.22" />
 
         <Button
             android:id="@+id/button7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="128dp"
             android:onClick="moveToNearest"
             android:text="moveToNearest"
-            app:layout_constraintBottom_toBottomOf="@+id/ArrangementPlan"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/Container"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintHorizontal_bias="0.902"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.84" />
 
         <Button
             android:id="@+id/SaveBtn"
@@ -234,57 +219,70 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="101dp"
-            android:layout_marginBottom="246dp"
             android:onClick="randomSolution"
             android:text="Rand"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/Container"
-            app:layout_constraintTop_toBottomOf="@+id/importBtn" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.758" />
 
         <TextView
             android:id="@+id/TotalWorkers"
             android:layout_width="176dp"
             android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:text="Workers amount: 0"
             android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/TotalWeight"
-            android:layout_width="217dp"
-            android:layout_height="46dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="237dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="48dp"
             android:text="Container weight: 0"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TotalWorkers" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/TotalTime"
-            android:layout_width="217dp"
-            android:layout_height="29dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="228dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="80dp"
             android:text="Total time: 0"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TotalWeight" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/TotalCost"
             android:layout_width="212dp"
             android:layout_height="26dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="120dp"
             android:text="Total cost: 0"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TotalTime" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/WorkersAmount"
+            android:layout_width="33dp"
+            android:layout_height="31dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/SaveBtn"
+            app:layout_constraintHorizontal_bias="0.427"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.007"
+            app:srcCompat="@android:drawable/ic_menu_preferences" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
