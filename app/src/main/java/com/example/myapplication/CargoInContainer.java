@@ -155,6 +155,7 @@ public class CargoInContainer extends AppCompatActivity {
                      }
                 }
             }
+            saveSolution();
         }
        View container = ((View) findViewById(R.id.Container));
         CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
