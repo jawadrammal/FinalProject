@@ -29,6 +29,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
     int widthInCm, lengthInCm;
     float xInContainer, yInContainer;
     double z = 0;
+
+    double upWeight;
     ArrayList<CargoButton> up;
     CargoButton down;
     boolean insideContainer = false;
@@ -137,12 +139,33 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
     }
     //numeric
     public boolean canPutOnOther(CargoButton other) {
+        CargoButton temp=other;boolean flag=true;
         if (((this.widthInCm * this.lengthInCm) <= (other.lengthInCm * other.widthInCm)) && (other.z + other.cargo.height + this.cargo.height) < InfoHolder.containerHeight)
-            if (this.widthInCm <= other.widthInCm && this.lengthInCm <= other.lengthInCm && other.insideContainer == true)
-                return true;
+            if (this.widthInCm <= other.widthInCm && this.lengthInCm <= other.lengthInCm && other.insideContainer == true) {
+                temp=other;
+                    while(temp!=null)
+                    { double tempUpWeight = calculateOtherUpWeight(temp);
+                        if(temp.cargo.WeightThreshold < tempUpWeight + this.cargo.weight) {
+                            flag=false;
+                            break;
+                        }
+
+                        temp = temp.down;
+                    }
+                    if(flag==true)
+                    return true;
+            }
         return false;
     }
 
+    double calculateOtherUpWeight(CargoButton other)
+    {
+        double weightUpOther=0;
+        for (CargoButton c : other.up) {
+            weightUpOther = weightUpOther + c.cargo.weight;
+        }
+        return weightUpOther;
+    }
 
     //numeric
     public boolean putItOnOther(CargoButton other) {
