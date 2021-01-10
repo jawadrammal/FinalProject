@@ -443,6 +443,7 @@ public class CargoInContainer extends AppCompatActivity {
     }
     public void deleteCargoButton(View view) {
         TableLayout cargoTable = MainActivity.MainInfo.mytable;
+        int flaggy=0;
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -490,15 +491,15 @@ public class CargoInContainer extends AppCompatActivity {
 
                                     }
                                     saveSolution();
+                                    deleteButton.setVisibility(View.INVISIBLE);
+                                    MainActivity.MainInfo.Dialogbox.setText("");
+                                    RotateButton.setVisibility(View.INVISIBLE);
+                                    MoveToNearestBtn.setVisibility(View.INVISIBLE);
                                     i = i - 1;
                                 } else
                                     MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to delete an object which has objects on top of it!");
                             }
                         }
-                        deleteButton.setVisibility(View.INVISIBLE);
-                        MainActivity.MainInfo.Dialogbox.setText("");
-                        RotateButton.setVisibility(View.INVISIBLE);
-                        MoveToNearestBtn.setVisibility(View.INVISIBLE);
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;
