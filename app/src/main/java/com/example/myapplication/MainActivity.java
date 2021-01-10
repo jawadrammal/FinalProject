@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+       /* Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra("AddToContainer?",false);
-        startActivity(intent);
+        startActivity(intent);*/
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             for (int i = 0; i < CargoList.size(); i++)
-                if (CargoList.get(i).Selected == true) {
+                if (CargoList.get(i).Selected == true && CargoList.get(i).inCargoPage==false) {
                     CargoList.get(i).objectid = ((EditText) findViewById(R.id.ObjectIDTxt1)).getText().toString();
                     CargoList.get(i).height = Double.parseDouble(((EditText) findViewById(R.id.HeightTxt1)).getText().toString());
                     CargoList.get(i).width = Double.parseDouble(((EditText) findViewById(R.id.WidthTxt)).getText().toString());
@@ -209,7 +209,9 @@ public class MainActivity extends AppCompatActivity {
                     CargoList.get(i).Selected = false;
                     Cargo.selectedCnt--;
                 }
+            CargoInContainer.saveSolution();
             RebuildTable(view);
+
         }
     }
     public void AddCargo(View view) {
@@ -234,6 +236,8 @@ public class MainActivity extends AppCompatActivity {
 
              CargoList.add(newCargo);
              AddCargoToTable(view, newCargo);
+             CargoInContainer.saveSolution();
+
          }
     }
 
@@ -245,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
         for(i=0;i<CargoListIndex;i++)
             cargoTable.addView(Createrow(CargoList.get(i)),i+1);
         updateClickableButtons();
+
     }
 
     public void uploadDataFile(View view){
@@ -387,8 +392,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
         }
-
         RebuildTable(view);
+
     }
     public TableRow Createrow(Cargo newCargo)
     {
@@ -463,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
                     }
             }
             updateClickableButtons();
+            CargoInContainer.saveSolution();
         }
     };
     public void RebuildTable(View view){
@@ -473,6 +479,7 @@ public class MainActivity extends AppCompatActivity {
         for(i=0;i<CargoList.size();i++)
             cargoTable.addView(Createrow(CargoList.get(i)),i+1);
         updateClickableButtons();
+        CargoInContainer.saveSolution();
     }
     private boolean isTextEmpty(EditText myeditText) {
         return myeditText.getText().toString().trim().length() == 0;

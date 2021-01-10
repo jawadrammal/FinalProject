@@ -276,6 +276,7 @@
             android:id="@+id/WorkersAmount"
             android:layout_width="33dp"
             android:layout_height="31dp"
+            android:onClick="ChangeWorkersAmount"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/SaveBtn"
             app:layout_constraintHorizontal_bias="0.427"
