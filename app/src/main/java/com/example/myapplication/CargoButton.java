@@ -399,6 +399,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         yDelta = (int) (y - view.getY());
                         selected = objectId;
                         CargoInContainer.deleteButton.setVisibility(VISIBLE);
+                        CargoInContainer.RotateButton.setVisibility(View.VISIBLE);
+                        CargoInContainer.MoveToNearestBtn.setVisibility(View.VISIBLE);
                         MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
 
                         break;
