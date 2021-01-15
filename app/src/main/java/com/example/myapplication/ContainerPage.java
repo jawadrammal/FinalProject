@@ -19,7 +19,6 @@ import android.os.Environment;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -30,11 +29,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,9 +42,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 
-public class CargoInContainer extends AppCompatActivity {
+public class ContainerPage extends AppCompatActivity {
     public static ConstraintLayout cL;
     public static ImageButton deleteButton;
     public static Button RotateButton;
@@ -59,6 +55,7 @@ public class CargoInContainer extends AppCompatActivity {
     public static Solution trySolution;
     public String ExportString;
     public static boolean ifImportSolution;
+    public static View containerView;
     Intent myFileIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +72,19 @@ public class CargoInContainer extends AppCompatActivity {
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        MainActivity.MainInfo.screenHeight = displayMetrics.heightPixels;
-        MainActivity.MainInfo.screenWidth = displayMetrics.widthPixels;
-        MainActivity.MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
-        MainActivity.MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
-        MainActivity.MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
-        MainActivity.MainInfo.ContainerStartX = (float) (56/1440.0);//px
-        MainActivity.MainInfo.ContainerStartY = (float) (739/2872.0);//px
-        MainActivity.MainInfo.alertWidthPerc = (float) (600/1440.0);//px
-        MainActivity.MainInfo.alertHeightPerc = (float) (700/3040.0);//px
-        MainActivity.MainInfo.alertXPerc = (float) (1100/1440.0);//px
-        MainActivity.MainInfo.alertYPerc = (float) (280/2872.0);//px
-        MainActivity.MainInfo.containerViewLength = (float) (1559/2040.0);
-        MainActivity.MainInfo.containerViewWidth = (float) (331/1080.0);
+        CargoList.MainInfo.screenHeight = displayMetrics.heightPixels;
+        CargoList.MainInfo.screenWidth = displayMetrics.widthPixels;
+        CargoList.MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
+        CargoList.MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
+        CargoList.MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
+        CargoList.MainInfo.ContainerStartX = (float) (56/1440.0);//px
+        CargoList.MainInfo.ContainerStartY = (float) (739/2872.0);//px
+        CargoList.MainInfo.alertWidthPerc = (float) (600/1440.0);//px
+        CargoList.MainInfo.alertHeightPerc = (float) (700/3040.0);//px
+        CargoList.MainInfo.alertXPerc = (float) (1100/1440.0);//px
+        CargoList.MainInfo.alertYPerc = (float) (280/2872.0);//px
+        CargoList.MainInfo.containerViewLength = (float) (1559/2040.0);
+        CargoList.MainInfo.containerViewWidth = (float) (331/1080.0);
 
 
 
@@ -103,25 +100,34 @@ public class CargoInContainer extends AppCompatActivity {
         MoveToNearestBtn = (Button) findViewById(R.id.button7);
         MoveToNearestBtn.setVisibility(View.INVISIBLE);
         ((TextView) findViewById(R.id.DialogView)).setMovementMethod(new ScrollingMovementMethod());
-        MainActivity.MainInfo.Dialogbox = ((TextView) findViewById(R.id.DialogView));
-        CargoTablePage.containerWidth = dpToPx(200, this.getApplicationContext());
-        CargoTablePage.containerLength = dpToPx(502, this.getApplicationContext());
+        CargoList.MainInfo.Dialogbox = ((TextView) findViewById(R.id.DialogView));
+        ContainerInfo.containerWidth = dpToPx(200, this.getApplicationContext());
+        ContainerInfo.containerLength = dpToPx(502, this.getApplicationContext());
         totalWeightText = ((TextView) findViewById((R.id.TotalWeight)));
         totalCostText = ((TextView) findViewById((R.id.TotalCost)));
         totalTimeText =  ((TextView) findViewById((R.id.TotalTime)));
         totalWorkers =  ((TextView) findViewById((R.id.TotalWorkers)));
-        totalWorkers.setText("Total Workers : " + MainActivity.MainInfo.totalWorkers);
+        totalWorkers.setText("Total Workers : " + CargoList.MainInfo.totalWorkers);
 
-        String path= "/storage/emulated/0/MySolution.txt";
-        File file = new File ( path );
-        if ( file.exists() )
-        {
-            try {
-                ImportSolutionOnStart("MySolution.txt");
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+
+        containerView = (View)findViewById((R.id.Container));
+        containerView.post(new Runnable() {
+            @Override
+            public void run() {
+                ContainerInfo.containerX=containerView.getX();
+                ContainerInfo.containerY=containerView.getY();
+                String path= "/storage/emulated/0/MySolution.txt";
+                File file = new File ( path );
+                if ( file.exists() )
+                {
+                    try {
+                        ImportSolutionOnStart("MySolution.txt");
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
+        });
     }
 
     @Override
@@ -141,13 +147,13 @@ public class CargoInContainer extends AppCompatActivity {
 
             cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
 
-            for (int i = 0; i < MainActivity.CargoList.size(); i++) {
-                Cargo tempCr = MainActivity.CargoList.get(i);
+            for (int i = 0; i < CargoList.CargoList.size(); i++) {
+                Cargo tempCr = CargoList.CargoList.get(i);
                 if (tempCr.Selected == true) {
                     if (!(tempCr.isInCargoPage())) {
                         CargoButton newButton = new CargoButton(this, tempCr.objectid, -1,-1);
-                        CargoTablePage.buttons.add(newButton);
-                        TableLayout cargoTable = MainActivity.MainInfo.mytable;
+                        ContainerInfo.buttons.add(newButton);
+                        TableLayout cargoTable = CargoList.MainInfo.mytable;
                         for (int j =0 ;j<cargoTable.getChildCount();j++)
                         {
                              TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
@@ -165,9 +171,6 @@ public class CargoInContainer extends AppCompatActivity {
             }
             saveSolution();
         }
-       View container = ((View) findViewById(R.id.Container));
-        CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
-        CargoTablePage.containerY = MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight;
     }
 
     @Override
@@ -192,15 +195,15 @@ public class CargoInContainer extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text[0] = input.getText().toString();
-                int OldWorkersAmount= MainActivity.MainInfo.totalWorkers;
-                Double OldTotalTime = MainActivity.MainInfo.totalTime;
-                MainActivity.MainInfo.totalWorkers=Integer.parseInt(input.getText().toString());
-                totalWorkers.setText("Total Workers : " + MainActivity.MainInfo.totalWorkers);
-                MainActivity.MainInfo.totalTime= MainActivity.MainInfo.totalTime * OldWorkersAmount / MainActivity.MainInfo.totalWorkers ;
-                MainActivity.MainInfo.totalCost = MainActivity.MainInfo.totalCost - OldTotalTime * (MainActivity.MainInfo.WorkersHourlySalary/60.0) * OldWorkersAmount;
-                MainActivity.MainInfo.totalCost =  MainActivity.MainInfo.totalCost + MainActivity.MainInfo.totalWorkers * (MainActivity.MainInfo.WorkersHourlySalary/60.0) * MainActivity.MainInfo.totalTime;
-                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
+                int OldWorkersAmount= CargoList.MainInfo.totalWorkers;
+                Double OldTotalTime = CargoList.MainInfo.totalTime;
+                CargoList.MainInfo.totalWorkers=Integer.parseInt(input.getText().toString());
+                totalWorkers.setText("Total Workers : " + CargoList.MainInfo.totalWorkers);
+                CargoList.MainInfo.totalTime= CargoList.MainInfo.totalTime * OldWorkersAmount / CargoList.MainInfo.totalWorkers ;
+                CargoList.MainInfo.totalCost = CargoList.MainInfo.totalCost - OldTotalTime * (CargoList.MainInfo.WorkersHourlySalary/60.0) * OldWorkersAmount;
+                CargoList.MainInfo.totalCost =  CargoList.MainInfo.totalCost + CargoList.MainInfo.totalWorkers * (CargoList.MainInfo.WorkersHourlySalary/60.0) * CargoList.MainInfo.totalTime;
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+                ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime) +"(H)");
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -229,7 +232,7 @@ public class CargoInContainer extends AppCompatActivity {
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CargoInContainer.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ContainerPage.this);
         builder.setMessage("Are you sure you want to delete all?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
 
@@ -251,7 +254,7 @@ public class CargoInContainer extends AppCompatActivity {
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CargoInContainer.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ContainerPage.this);
         builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
@@ -288,22 +291,22 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void deleteAllButtons()
     {
-        TableLayout cargoTable = MainActivity.MainInfo.mytable;
-        for (int i= 0; i<CargoTablePage.buttons.size();i++)
+        TableLayout cargoTable = CargoList.MainInfo.mytable;
+        for (int i = 0; i< ContainerInfo.buttons.size(); i++)
         {
-            CargoButton b = CargoTablePage.buttons.get(i);
+            CargoButton b = ContainerInfo.buttons.get(i);
 
             b.cargo.inCargoPage = false;
             cL.removeView(b);
-            CargoTablePage.buttons.remove(b);
+            ContainerInfo.buttons.remove(b);
             i=i-1;
             if (b.insideContainer == true) {
-                MainActivity.MainInfo.totalWeight -= b.cargo.weight;
-                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
-                MainActivity.MainInfo.totalCost -= (b.cargo.cost+MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-                MainActivity.MainInfo.totalTime -= ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
-                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
+                CargoList.MainInfo.totalWeight -= b.cargo.weight;
+                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) CargoList.MainInfo.totalWeight + "(kg)");
+                CargoList.MainInfo.totalCost -= (b.cargo.cost+ CargoList.MainInfo.ProcessingCost+(1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker*(CargoList.MainInfo.WorkersHourlySalary/60.0)* CargoList.MainInfo.totalWorkers) ;
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+                CargoList.MainInfo.totalTime -= ((1/ CargoList.MainInfo.AverageAmountOfBoxes* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker)/ CargoList.MainInfo.totalWorkers) ;
+                ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime) +"(H)");
             }
 
             for (int j =0 ;j<cargoTable.getChildCount();j++)
@@ -321,13 +324,13 @@ public class CargoInContainer extends AppCompatActivity {
 
             }
         }
-        MainActivity.MainInfo.Dialogbox.setText("");
+        CargoList.MainInfo.Dialogbox.setText("");
         deleteButton.setVisibility(View.INVISIBLE);
         RotateButton.setVisibility(View.INVISIBLE);
         MoveToNearestBtn.setVisibility(View.INVISIBLE);
     }
     public void OpenCargoPage(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), CargoList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         // intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -430,7 +433,7 @@ public class CargoInContainer extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-        AlertDialog alertDialog = new AlertDialog.Builder(CargoInContainer.this).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(ContainerPage.this).create();
         alertDialog.setTitle("Report");
         alertDialog.setMessage("Produced Report successfully!");
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
@@ -442,7 +445,7 @@ public class CargoInContainer extends AppCompatActivity {
         alertDialog.show();
     }
     public void deleteCargoButton(View view) {
-        TableLayout cargoTable = MainActivity.MainInfo.mytable;
+        TableLayout cargoTable = CargoList.MainInfo.mytable;
         int flaggy=0;
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -451,17 +454,17 @@ public class CargoInContainer extends AppCompatActivity {
                 CargoButton temp;
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        for (i = 0; i < CargoTablePage.buttons.size(); i++) {
-                            temp = CargoTablePage.buttons.get(i);
+                        for (i = 0; i < ContainerInfo.buttons.size(); i++) {
+                            temp = ContainerInfo.buttons.get(i);
                             if (temp.objectId.equals(CargoButton.selected)) {
                                 if (temp.up.isEmpty()) {
                                     if (temp.insideContainer == true) {
-                                        MainActivity.MainInfo.totalWeight -= temp.cargo.weight;
-                                        ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight + "(kg)");
-                                        MainActivity.MainInfo.totalCost -= (temp.cargo.cost+MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                                        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-                                        MainActivity.MainInfo.totalTime -= ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
-                                        CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
+                                        CargoList.MainInfo.totalWeight -= temp.cargo.weight;
+                                        ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) CargoList.MainInfo.totalWeight + "(kg)");
+                                        CargoList.MainInfo.totalCost -= (temp.cargo.cost+ CargoList.MainInfo.ProcessingCost+(1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker*(CargoList.MainInfo.WorkersHourlySalary/60.0)* CargoList.MainInfo.totalWorkers) ;
+                                        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+                                        CargoList.MainInfo.totalTime -= ((1/ CargoList.MainInfo.AverageAmountOfBoxes* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker)/ CargoList.MainInfo.totalWorkers) ;
+                                        ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime) +"(H)");
                                     }
                                     temp.cargo.setInCargoPage(false);
                                     if (temp.down != null) {
@@ -474,7 +477,7 @@ public class CargoInContainer extends AppCompatActivity {
                                     }
                                     temp.cargo.inCargoPage=false;
                                     cL.removeView(temp);
-                                    CargoTablePage.buttons.remove(i);
+                                    ContainerInfo.buttons.remove(i);
 
                                     for (int j =0 ;j<cargoTable.getChildCount();j++)
                                     {
@@ -492,12 +495,12 @@ public class CargoInContainer extends AppCompatActivity {
                                     }
                                     saveSolution();
                                     deleteButton.setVisibility(View.INVISIBLE);
-                                    MainActivity.MainInfo.Dialogbox.setText("");
+                                    CargoList.MainInfo.Dialogbox.setText("");
                                     RotateButton.setVisibility(View.INVISIBLE);
                                     MoveToNearestBtn.setVisibility(View.INVISIBLE);
                                     i = i - 1;
                                 } else
-                                    MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to delete an object which has objects on top of it!");
+                                    CargoList.MainInfo.Dialogbox.setText("Alert!: You are trying to delete an object which has objects on top of it!");
                             }
                         }
                         break;
@@ -507,7 +510,7 @@ public class CargoInContainer extends AppCompatActivity {
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CargoInContainer.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ContainerPage.this);
         builder.setMessage("Are you sure you want to delete this object?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
@@ -516,8 +519,8 @@ public class CargoInContainer extends AppCompatActivity {
         CargoButton cargoButton = null;
         boolean canRotate=true;
 
-        for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
-            cargoButton = CargoTablePage.buttons.get(i);
+        for (int i = 0; i < ContainerInfo.buttons.size(); i++) {
+            cargoButton = ContainerInfo.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
                 if (cargoButton.up.isEmpty()) {
                     if(cargoButton.lengthInCm + cargoButton.xInContainer <= 234.8 && cargoButton.widthInCm +cargoButton.yInContainer <= 586) {
@@ -532,7 +535,7 @@ public class CargoInContainer extends AppCompatActivity {
                         }
                         if (canRotate == true) {
                             cargoButton.rotate();
-                            for (CargoButton c : CargoTablePage.buttons) {
+                            for (CargoButton c : ContainerInfo.buttons) {
                                 if (cargoButton != c && cargoButton.z == c.z) {
 
                                     if (cargoButton.checkhooffeem(c)) {
@@ -546,12 +549,12 @@ public class CargoInContainer extends AppCompatActivity {
                     }
                     if(canRotate==false)
                     {
-                        MainActivity.MainInfo.Dialogbox.setText("You can't rotate this object!");
+                        CargoList.MainInfo.Dialogbox.setText("You can't rotate this object!");
                     }
 
                 }
                 else
-                    MainActivity.MainInfo.Dialogbox.setText("Alert!:You are trying to rotate an  object which has objects on top of it!");
+                    CargoList.MainInfo.Dialogbox.setText("Alert!:You are trying to rotate an  object which has objects on top of it!");
             }
         }
     }
@@ -562,9 +565,9 @@ public class CargoInContainer extends AppCompatActivity {
         deleteAllButtons();
         float x1, y1;
 
-        x1 = ((View) findViewById(R.id.Container)).getX(); //44
-        y1 = ((View) findViewById(R.id.Container)).getY();//517
-        ArrayList<Cargo> randomArray = new ArrayList<Cargo>(MainActivity.CargoList);
+        x1 = ((View) findViewById(R.id.Container)).getX();
+        y1 = ((View) findViewById(R.id.Container)).getY();
+        ArrayList<Cargo> randomArray = new ArrayList<Cargo>(CargoList.CargoList);
 
         Collections.shuffle(randomArray);
         for (int i = 0; i < randomArray.size(); i++) {
@@ -574,16 +577,16 @@ public class CargoInContainer extends AppCompatActivity {
 
                 autoMoveButton(newButton);
 
-                MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
-                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight +"(kg)");
-                MainActivity.MainInfo.totalCost += newButton.cargo.cost + MainActivity.MainInfo.ProcessingCost + ((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-                MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
-                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
-                CargoTablePage.buttons.add(newButton);
+                CargoList.MainInfo.totalWeight += newButton.cargo.weight;
+                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) CargoList.MainInfo.totalWeight +"(kg)");
+                CargoList.MainInfo.totalCost += newButton.cargo.cost + CargoList.MainInfo.ProcessingCost + ((1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker*(CargoList.MainInfo.WorkersHourlySalary/60.0)* CargoList.MainInfo.totalWorkers) ;
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+                CargoList.MainInfo.totalTime += ((1/ CargoList.MainInfo.AverageAmountOfBoxes* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker)/ CargoList.MainInfo.totalWorkers) ;
+                ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime) +"(H)");
+                ContainerInfo.buttons.add(newButton);
                 cL.addView(newButton);
                 tempCr.setInCargoPage(true);
-                TableLayout cargoTable = MainActivity.MainInfo.mytable;
+                TableLayout cargoTable = CargoList.MainInfo.mytable;
                 for (int j =0 ;j<cargoTable.getChildCount();j++)
                 {
                     TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
@@ -604,24 +607,24 @@ public class CargoInContainer extends AppCompatActivity {
         x1 = ((View) findViewById(R.id.Container)).getX();
         y1 = ((View) findViewById(R.id.Container)).getY();
 
-        for (int i = 0; i < MainActivity.CargoList.size(); i++) {
-            Cargo tempCr = MainActivity.CargoList.get(i);
+        for (int i = 0; i < CargoList.CargoList.size(); i++) {
+            Cargo tempCr = CargoList.CargoList.get(i);
             if (!(tempCr.isInCargoPage())) {
                 CargoButton newButton = new CargoButton(this, tempCr.objectid, 0, 0);
 
                 autoMoveButton(newButton);
 
-                MainActivity.MainInfo.totalWeight += newButton.cargo.weight;
-                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) MainActivity.MainInfo.totalWeight +"(kg)");
-                MainActivity.MainInfo.totalCost += newButton.cargo.cost + MainActivity.MainInfo.ProcessingCost + ((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers) ;
-                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-                MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
-                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime) +"(H)");
-                CargoTablePage.buttons.add(newButton);
+                CargoList.MainInfo.totalWeight += newButton.cargo.weight;
+                ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) CargoList.MainInfo.totalWeight +"(kg)");
+                CargoList.MainInfo.totalCost += newButton.cargo.cost + CargoList.MainInfo.ProcessingCost + ((1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker*(CargoList.MainInfo.WorkersHourlySalary/60.0)* CargoList.MainInfo.totalWorkers) ;
+                ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+                CargoList.MainInfo.totalTime += ((1/ CargoList.MainInfo.AverageAmountOfBoxes* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker)/ CargoList.MainInfo.totalWorkers) ;
+                ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime) +"(H)");
+                ContainerInfo.buttons.add(newButton);
                 cL.addView(newButton);
                 tempCr.setInCargoPage(true);
 
-                TableLayout cargoTable = MainActivity.MainInfo.mytable;
+                TableLayout cargoTable = CargoList.MainInfo.mytable;
                 for (int j =0 ;j<cargoTable.getChildCount();j++)
                 {
                     TextView t=(TextView) (((TableRow)(cargoTable.getChildAt(j))).getChildAt(0));
@@ -645,11 +648,11 @@ public class CargoInContainer extends AppCompatActivity {
 
         CargoButton cargoButton1 = null;
 
-        x1 = ((View) findViewById(R.id.Container)).getX(); //44
-        y1 = ((View) findViewById(R.id.Container)).getY();//517
+        x1 = ((View) findViewById(R.id.Container)).getX();
+        y1 = ((View) findViewById(R.id.Container)).getY();
 
-        CargoTablePage.containerX = ((View) findViewById(R.id.Container)).getX(); //44 //44
-        CargoTablePage.containerY = ((View) findViewById(R.id.Container)).getY();//517
+        ContainerInfo.containerX = ((View) findViewById(R.id.Container)).getX();
+        ContainerInfo.containerY = ((View) findViewById(R.id.Container)).getY();
 
         x = newButton.getX();
         y = newButton.getY();
@@ -657,7 +660,7 @@ public class CargoInContainer extends AppCompatActivity {
         minY = 0;
 
         //check space algorithm
-        int size = CargoTablePage.buttons.size();
+        int size = ContainerInfo.buttons.size();
         float i, j;
         //for on Z
         //  for (int k=0 ; k<259 ; k++) {
@@ -694,8 +697,8 @@ public class CargoInContainer extends AppCompatActivity {
                 //check if can put here(float x , float y)
                 newButton.setxInContainer(i);
                 newButton.setyInContainer(j);
-                newButton.setX(x1 + (int) Math.ceil(dpToPx(newButton.xInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                newButton.setY(y1 + (int) Math.ceil(dpToPx(newButton.yInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                newButton.setX(x1 + (int) Math.ceil(dpToPx(newButton.xInContainer, getApplicationContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                newButton.setY(y1 + (int) Math.ceil(dpToPx(newButton.yInContainer, getApplicationContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
 
               //  if(newButton.tryToPutHere(null);
@@ -703,7 +706,7 @@ public class CargoInContainer extends AppCompatActivity {
 
                 //check if not conflict with other if yes move i width and minY length
                 for (int i1 = 0; i1 < size; i1++) {
-                    cargoButton1 = CargoTablePage.buttons.get(i1);
+                    cargoButton1 = ContainerInfo.buttons.get(i1);
                     if (cargoButton1 != newButton) {
                         if (cargoButton1.insideContainer==true) {
                             hooffem = cargoButton1.checkhooffeem(newButton);
@@ -745,10 +748,10 @@ public class CargoInContainer extends AppCompatActivity {
             //check if we can put it on another cargo
 
             CargoButton other;
-            size = CargoTablePage.buttons.size();
+            size = ContainerInfo.buttons.size();
 
             for (int k1 = 0; k1 < size; k1++) {
-                other = CargoTablePage.buttons.get(k1);
+                other = ContainerInfo.buttons.get(k1);
                 if (newButton.objectId.equals(other.objectId) == false) {
                     if (newButton.canPutOnOther(other) == true) {
                         if (newButton.AutoPutOnOther(other) == true) {
@@ -758,8 +761,8 @@ public class CargoInContainer extends AppCompatActivity {
                             newButton.insideContainer = false;
                             newButton.setyInContainer(-1);
                             newButton.setxInContainer(-1);
-                            newButton.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                            newButton.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                            newButton.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                            newButton.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
                         }
                     }
 
@@ -776,8 +779,8 @@ public class CargoInContainer extends AppCompatActivity {
             newButton.insideContainer = false;
             newButton.setxInContainer(-1);
             newButton.setyInContainer(-1);
-            newButton.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-            newButton.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+            newButton.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+            newButton.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
         } else
             newButton.insideContainer = true;
     }
@@ -798,8 +801,6 @@ public class CargoInContainer extends AppCompatActivity {
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
         cL.setVisibility(View.VISIBLE);
         View container = ((View) findViewById(R.id.Container));
-        CargoTablePage.containerX = container.getX();
-        CargoTablePage.containerY = container.getY();
         ifImportSolution=true;
         switch (requestCode) {
             case 10:
@@ -819,43 +820,43 @@ public class CargoInContainer extends AppCompatActivity {
                         Solution LoadSolution = ((Solution)o);
 
                         deleteAllButtons();
-                        MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
+                        CargoList.MainInfo.totalWeight = LoadSolution.totalWeight;
                         totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg)");
-                        MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
-                        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-                        MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
-                        CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
-                        MainActivity.CargoList = new ArrayList<>();
+                        CargoList.MainInfo.totalCost += LoadSolution.totalCost;
+                        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+                        CargoList.MainInfo.totalTime += LoadSolution.totalTime;
+                        ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime)+"(H)");
+                        CargoList.CargoList = new ArrayList<>();
                         for (Cargo c : LoadSolution.CargoList) {
-                            MainActivity.CargoList.add(new Cargo(c));
+                            CargoList.CargoList.add(new Cargo(c));
                         }
 
-                        CargoTablePage.buttons=new ArrayList<>();
-                        for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo) {
+                        ContainerInfo.buttons=new ArrayList<>();
+                        for (CargoButtonInfo i:LoadSolution.buttonsInfo) {
                             CargoButton b =new CargoButton(this,i);
-                            CargoTablePage.buttons.add(b);
+                            ContainerInfo.buttons.add(b);
 
                         }
-                        for (CargoButton b:CargoTablePage.buttons)
+                        for (CargoButton b: ContainerInfo.buttons)
                         {
-                            for (Cargo car:MainActivity.CargoList) {
+                            for (Cargo car: CargoList.CargoList) {
                                 if (b.objectId.equals(car.objectid))
                                 {
                                     b.cargo=car;
                                 }
                             }
 
-                            for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo)
+                            for (CargoButtonInfo i:LoadSolution.buttonsInfo)
                             {
                                 if (b.objectId.equals(i.objectId)) {
                                     for (String sId : i.upIds) {
-                                        for (CargoButton c : CargoTablePage.buttons) {
+                                        for (CargoButton c : ContainerInfo.buttons) {
                                             if (sId.equals(c.objectId)) {
                                                 b.up.add(c);
                                             }
                                         }
                                     }
-                                    for (CargoButton c : CargoTablePage.buttons) {
+                                    for (CargoButton c : ContainerInfo.buttons) {
                                         if (i.downObjectId!=null) {
                                             if (i.downObjectId.equals(c.objectId)) {
                                                 b.down = c;
@@ -864,9 +865,9 @@ public class CargoInContainer extends AppCompatActivity {
                                     }
                                 }
                             }
-                            CargoInContainer.cL.addView(b);
+                            ContainerPage.cL.addView(b);
                         }
-                        for (CargoButton b : CargoTablePage.buttons) {
+                        for (CargoButton b : ContainerInfo.buttons) {
                             if (b.z==0)
                             {
                                 recursiveBringToFront(b);
@@ -890,8 +891,8 @@ public class CargoInContainer extends AppCompatActivity {
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
         cL.setVisibility(View.VISIBLE);
         View container = ((View) findViewById(R.id.Container));
-        CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
-        CargoTablePage.containerY = MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight;
+      //  CargoTablePage.containerX = MainActivity.MainInfo.ContainerStartX*MainActivity.MainInfo.screenWidth;
+      //  CargoTablePage.containerY = MainActivity.MainInfo.ContainerStartY*MainActivity.MainInfo.screenHeight;
         ifImportSolution=true;
 
 
@@ -906,43 +907,43 @@ public class CargoInContainer extends AppCompatActivity {
 
 
         deleteAllButtons();
-        MainActivity.MainInfo.totalWeight = LoadSolution.totalWeight;
+        CargoList.MainInfo.totalWeight = LoadSolution.totalWeight;
         totalWeightText.setText("Container weight: " + LoadSolution.totalWeight +"(kg)");
-        MainActivity.MainInfo.totalCost += LoadSolution.totalCost;
-        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) MainActivity.MainInfo.totalCost +"(NIS)");
-        MainActivity.MainInfo.totalTime += LoadSolution.totalTime;
-        CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
-        MainActivity.CargoList = new ArrayList<>();
+        CargoList.MainInfo.totalCost += LoadSolution.totalCost;
+        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+        CargoList.MainInfo.totalTime += LoadSolution.totalTime;
+        ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime)+"(H)");
+        CargoList.CargoList = new ArrayList<>();
         for (Cargo c : LoadSolution.CargoList) {
-            MainActivity.CargoList.add(new Cargo(c));
+            CargoList.CargoList.add(new Cargo(c));
         }
 
-        CargoTablePage.buttons=new ArrayList<>();
-        for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo) {
+        ContainerInfo.buttons=new ArrayList<>();
+        for (CargoButtonInfo i:LoadSolution.buttonsInfo) {
             CargoButton b =new CargoButton(this,i);
-            CargoTablePage.buttons.add(b);
+            ContainerInfo.buttons.add(b);
 
         }
-        for (CargoButton b:CargoTablePage.buttons)
+        for (CargoButton b: ContainerInfo.buttons)
         {
-            for (Cargo car:MainActivity.CargoList) {
+            for (Cargo car: CargoList.CargoList) {
                 if (b.objectId.equals(car.objectid))
                 {
                     b.cargo=car;
                 }
             }
 
-            for (CargoButtonInfoForSolution i:LoadSolution.buttonsInfo)
+            for (CargoButtonInfo i:LoadSolution.buttonsInfo)
             {
                 if (b.objectId.equals(i.objectId)) {
                     for (String sId : i.upIds) {
-                        for (CargoButton c : CargoTablePage.buttons) {
+                        for (CargoButton c : ContainerInfo.buttons) {
                             if (sId.equals(c.objectId)) {
                                 b.up.add(c);
                             }
                         }
                     }
-                    for (CargoButton c : CargoTablePage.buttons) {
+                    for (CargoButton c : ContainerInfo.buttons) {
                         if (i.downObjectId!=null) {
                             if (i.downObjectId.equals(c.objectId)) {
                                 b.down = c;
@@ -951,9 +952,9 @@ public class CargoInContainer extends AppCompatActivity {
                     }
                 }
             }
-            CargoInContainer.cL.addView(b);
+            ContainerPage.cL.addView(b);
         }
-        for (CargoButton b : CargoTablePage.buttons) {
+        for (CargoButton b : ContainerInfo.buttons) {
             if (b.z==0)
             {
                 recursiveBringToFront(b);
@@ -983,7 +984,7 @@ public class CargoInContainer extends AppCompatActivity {
         Solution s1= trySolution;
         final String[] m_Text = {""};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Amount of workers");
+        builder.setTitle("Enter File Name:");
 
 // Set up the input
         final EditText input = new EditText(this);
@@ -1036,7 +1037,7 @@ public class CargoInContainer extends AppCompatActivity {
 
     public void moveToNearest(View view)
     {
-        for (CargoButton c:CargoTablePage.buttons) {
+        for (CargoButton c: ContainerInfo.buttons) {
             if(c.objectId.equals(CargoButton.selected))
                 moveToNearest(c);
         }
@@ -1059,7 +1060,7 @@ public class CargoInContainer extends AppCompatActivity {
                 minYDown = c.down.yInContainer + c.down.lengthInCm - (c.yInContainer + c.lengthInCm);
 
             }
-            for (CargoButton cb : CargoTablePage.buttons) {
+            for (CargoButton cb : ContainerInfo.buttons) {
                 if (cb != c && cb.insideContainer == true) {
                     if (cb.z == c.z && c.down == cb.down) {
                         if (c.hoffeemX(cb) == true) {
@@ -1112,25 +1113,25 @@ public class CargoInContainer extends AppCompatActivity {
 
             if (minYUp <= minYDown && (((minYUp <= minXLeft) && (minYUp <= minXRight))||(minXLeft==0||minXRight==0))) {
                 c.setyInContainer((float) (c.yInContainer - minYUp));
-                c.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(c.yInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                c.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(c.yInContainer, getApplicationContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
             }
 
             if (minYDown < minYUp && (((minYDown < minXLeft) && (minYDown < minXRight)) || (minXLeft==0||minXRight==0))) {
                 c.setyInContainer((float) (c.yInContainer + minYDown));
-                c.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(c.yInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                c.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(c.yInContainer, getApplicationContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
             }
 
             if (minXLeft < minXRight && (((minXLeft < minYUp) && (minXLeft < minYDown)) || (minYUp==0||minYDown==0))) {
                 c.setxInContainer((float) (c.xInContainer - minXLeft));
-                c.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(c.xInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                c.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(c.xInContainer, getApplicationContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
             }
 
             if (minXRight < minXLeft && (((minXRight < minYUp) && (minXRight < minYDown)) || (minYUp==0 || minYDown==0))) {
                 c.setxInContainer((float) (c.xInContainer + minXRight));
-                c.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(c.xInContainer, getApplicationContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                c.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(c.xInContainer, getApplicationContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
             }
         }

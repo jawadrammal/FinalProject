@@ -7,18 +7,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class MainActivity extends AppCompatActivity {
+public class CargoList extends AppCompatActivity {
 
     ConstraintLayout rl;
     public static ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
@@ -59,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       /* Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+       /* Intent intent = new Intent(getApplicationContext(), ContainerPage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra("AddToContainer?",false);
@@ -94,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.cargotable);
         MainInfo.mytable=findViewById(R.id.maintable);
 
-        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        Intent intent = new Intent(getApplicationContext(), ContainerPage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -133,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
     int yDelta;
     @SuppressLint("ClickableViewAccessibility")
     public void DrawObject(View view) {
-        MainActivity.MainInfo.mytable=findViewById(R.id.maintable);
+        com.example.myapplication.CargoList.MainInfo.mytable=findViewById(R.id.maintable);
 
-        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        Intent intent = new Intent(getApplicationContext(), ContainerPage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra("AddToContainer?",true);
@@ -159,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.addcargopage);
     }
     public void OpenFirstlayoutPage(View view) {
-        Intent intent = new Intent(getApplicationContext(), CargoInContainer.class);
+        Intent intent = new Intent(getApplicationContext(), ContainerPage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra("AddToContainer?",false);
@@ -209,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     CargoList.get(i).Selected = false;
                     Cargo.selectedCnt--;
                 }
-            CargoInContainer.saveSolution();
+            ContainerPage.saveSolution();
             RebuildTable(view);
 
         }
@@ -236,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
              CargoList.add(newCargo);
              AddCargoToTable(view, newCargo);
-             CargoInContainer.saveSolution();
+             ContainerPage.saveSolution();
 
          }
     }
@@ -468,18 +463,18 @@ public class MainActivity extends AppCompatActivity {
                     }
             }
             updateClickableButtons();
-            CargoInContainer.saveSolution();
+            ContainerPage.saveSolution();
         }
     };
     public void RebuildTable(View view){
         int i=0;
         setContentView(R.layout.cargotable);
-        MainActivity.MainInfo.mytable=findViewById(R.id.maintable);
+        com.example.myapplication.CargoList.MainInfo.mytable=findViewById(R.id.maintable);
         TableLayout cargoTable = findViewById(R.id.maintable);
         for(i=0;i<CargoList.size();i++)
             cargoTable.addView(Createrow(CargoList.get(i)),i+1);
         updateClickableButtons();
-        CargoInContainer.saveSolution();
+        ContainerPage.saveSolution();
     }
     private boolean isTextEmpty(EditText myeditText) {
         return myeditText.getText().toString().trim().length() == 0;
