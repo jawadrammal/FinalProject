@@ -523,7 +523,7 @@ public class ContainerPage extends AppCompatActivity {
             cargoButton = ContainerInfo.buttons.get(i);
             if (cargoButton.objectId.equals(CargoButton.selected)) {
                 if (cargoButton.up.isEmpty()) {
-                    if(cargoButton.lengthInCm + cargoButton.xInContainer <= 234.8 && cargoButton.widthInCm +cargoButton.yInContainer <= 586) {
+                    if(cargoButton.lengthInCm + cargoButton.xInContainer <= 234.8 && cargoButton.widthInCm +cargoButton.yInContainer <= 589.74) {
                         if(cargoButton.down!=null) {
                             if (cargoButton.lengthInCm + cargoButton.xInContainer <= cargoButton.down.xInContainer + cargoButton.down.widthInCm && cargoButton.widthInCm + cargoButton.yInContainer <= cargoButton.down.yInContainer + cargoButton.down.lengthInCm) {
 
@@ -665,7 +665,7 @@ public class ContainerPage extends AppCompatActivity {
         //for on Z
         //  for (int k=0 ; k<259 ; k++) {
         //for on y
-        for (j = 0; j < 586; j++) {
+        for (j = 0; j < 589.74; j++) {
             rotated = false;
 
             //for on x
@@ -683,7 +683,7 @@ public class ContainerPage extends AppCompatActivity {
                     first = true;
                     break;
                 }
-                if (j + newButton.lengthInCm > 586) {
+                if (j + newButton.lengthInCm > 589.74) {
                         if (rotated == false) {
                             newButton.rotate();
                             i = 0;
@@ -1046,10 +1046,10 @@ public class ContainerPage extends AppCompatActivity {
 
     public void moveToNearest(CargoButton c) {
         boolean flag = false;
-        double minXLeft = c.xInContainer, minXRight = 234 - (c.xInContainer + c.widthInCm), minYUp = c.yInContainer, minYDown = 586 - (c.yInContainer + c.lengthInCm);
+        double minXLeft = c.xInContainer, minXRight = 234.8 - (c.xInContainer + c.widthInCm), minYUp = c.yInContainer, minYDown = 589.74 - (c.yInContainer + c.lengthInCm);
         double xLeft, xRight, yUp, yDown;
         double temp=(c.xInContainer + c.widthInCm);
-        minXRight = (234 - temp);
+        minXRight = (234.8 - temp);
         boolean noHoffemXCargoToYUp = true, noHoffemXCargoToYDown = true, noHoffemYCargoToXRight = true, noHoffemYCargoToXLeft = true;
         if (c.insideContainer == true && c.up.isEmpty()==true) {
 
