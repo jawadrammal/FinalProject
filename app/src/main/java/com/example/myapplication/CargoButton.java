@@ -1,15 +1,10 @@
 package com.example.myapplication;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -54,25 +49,25 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         this.yInContainer = yInContainer;
         if (xInContainer==-1&&yInContainer==-1)
         {
-            this.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-            this.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+            this.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+            this.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
         }
         else {
-            this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-            this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+            this.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+            this.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
         }
         //popUp = new PopupWindow();
         this.setText(objectId);
         up = new ArrayList<>();
 
         //get the cargo with objectId
-        for (int i = 0; i < MainActivity.CargoList.size(); i++)
-            if (MainActivity.CargoList.get(i).objectid.equals(objectId))
-                cargo = MainActivity.CargoList.get(i);
+        for (int i = 0; i < CargoList.CargoList.size(); i++)
+            if (CargoList.CargoList.get(i).objectid.equals(objectId))
+                cargo = CargoList.CargoList.get(i);
 
         //set layoutparams for the CargoButton in the Layout
-        width1 = (int) Math.ceil(dpToPx(cargo.width.floatValue(), this.getContext()) * MainActivity.MainInfo.CargoPercentagecontainer);
-        length1 = (int) Math.ceil(dpToPx(cargo.length.floatValue(), this.getContext()) * MainActivity.MainInfo.CargoPercentagecontainer);
+        width1 = (int) Math.ceil(dpToPx(cargo.width.floatValue(), this.getContext()) * CargoList.MainInfo.CargoPercentagecontainer);
+        length1 = (int) Math.ceil(dpToPx(cargo.length.floatValue(), this.getContext()) * CargoList.MainInfo.CargoPercentagecontainer);
         widthInCm = cargo.width.intValue();
         lengthInCm = cargo.length.intValue();
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(width1, length1);
@@ -94,7 +89,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
 
 
-    public CargoButton(Context context,CargoButtonInfoForSolution infob)
+    public CargoButton(Context context, CargoButtonInfo infob)
     {
         super(context);
         z=infob.z;
@@ -105,23 +100,23 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         this.yInContainer = infob.yInContainer;
         this.insideContainer=infob.insideContainer;
         //get the cargo with objectId
-        for (int i = 0; i < MainActivity.CargoList.size(); i++)
-            if (MainActivity.CargoList.get(i).objectid.equals(objectId))
-                cargo = MainActivity.CargoList.get(i);
+        for (int i = 0; i < CargoList.CargoList.size(); i++)
+            if (CargoList.CargoList.get(i).objectid.equals(objectId))
+                cargo = CargoList.CargoList.get(i);
 
         if (xInContainer==-1&&yInContainer==-1 || insideContainer==false)
         {
-            this.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-            this.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+            this.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+            this.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
         }
         else {
-            this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-            this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+            this.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+            this.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
         }
         widthInCm = infob.widthInCm;
         lengthInCm = infob.lengthInCm;
-        width1 = (int) Math.ceil(dpToPx(widthInCm, this.getContext()) * MainActivity.MainInfo.CargoPercentagecontainer);
-        length1 = (int) Math.ceil(dpToPx(lengthInCm, this.getContext()) * MainActivity.MainInfo.CargoPercentagecontainer);
+        width1 = (int) Math.ceil(dpToPx(widthInCm, this.getContext()) * CargoList.MainInfo.CargoPercentagecontainer);
+        length1 = (int) Math.ceil(dpToPx(lengthInCm, this.getContext()) * CargoList.MainInfo.CargoPercentagecontainer);
 
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(width1, length1);
         this.setLayoutParams(lp);
@@ -202,8 +197,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         CargoButton cargoButton1 = null;
         this.setxInContainer(other.xInContainer);
         this.setyInContainer(other.yInContainer);
-        this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-        this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+        this.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+        this.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
 
         for (float j = other.yInContainer; j < other.yInContainer + other.lengthInCm; j++) {
@@ -231,8 +226,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                 //check if can put here(float x , float y)
                 this.setxInContainer(i);
                 this.setyInContainer(j);
-                this.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                this.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                this.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                this.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
                 for (int i1 = 0; i1 < size; i1++) {
                     cargoButton1 = other.up.get(i1);
                     //  if (cargoButton1.objectId.equals(newButton.objectId)==false) {
@@ -348,7 +343,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         return hoffemY;
     }
     boolean ifInContainer() {
-        return checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, CargoTablePage.containerX, CargoTablePage.containerWidth, CargoTablePage.containerY, CargoTablePage.containerLength);
+        return checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, ContainerInfo.containerX, ContainerInfo.containerWidth, ContainerInfo.containerY, ContainerInfo.containerLength);
     }
 
     static boolean checkIfInContainer(float x, float y, float width, float length, float containerX, float containerY, float containerWidth, float containerLength) {
@@ -398,10 +393,10 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         xDelta = (int) (x - view.getX());
                         yDelta = (int) (y - view.getY());
                         selected = objectId;
-                        CargoInContainer.deleteButton.setVisibility(VISIBLE);
-                        CargoInContainer.RotateButton.setVisibility(View.VISIBLE);
-                        CargoInContainer.MoveToNearestBtn.setVisibility(View.VISIBLE);
-                        MainActivity.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
+                        ContainerPage.deleteButton.setVisibility(VISIBLE);
+                        ContainerPage.RotateButton.setVisibility(View.VISIBLE);
+                        ContainerPage.MoveToNearestBtn.setVisibility(View.VISIBLE);
+                        CargoList.MainInfo.Dialogbox.setText("id:" + cargo.objectid + "\n" + "height:" + cargo.height + "\n" + "width:" + cargo.width + "\n" + "length:" + cargo.length + "\n" + "x:" + c.xInContainer + "\n" + "y:" + c.yInContainer + "\n" + "z:" + z + "\n");
 
                         break;
 
@@ -412,7 +407,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
 
 
-                            if (checkIfInContainer(view.getX(), view.getY(), view.getWidth(), view.getHeight(), CargoTablePage.containerX, CargoTablePage.containerY, CargoTablePage.containerWidth, CargoTablePage.containerLength) == true) {
+                            if (checkIfInContainer(view.getX(), view.getY(), view.getWidth(), view.getHeight(), ContainerInfo.containerX, ContainerInfo.containerY, ContainerInfo.containerWidth, ContainerInfo.containerLength) == true) {
 
 
                                 if (tryToPutHere(null) == true) {
@@ -424,20 +419,20 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                         "out of the container", Toast.LENGTH_SHORT)
                                         .show();
                                 if (insideContainer == true) {
-                                    MainActivity.MainInfo.totalWeight -= cargo.weight;
-                                    CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight+"(kg)");
-                                    MainActivity.MainInfo.totalCost -= (cargo.cost + MainActivity.MainInfo.ProcessingCost + (1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers);
-                                    CargoInContainer.totalCostText.setText("container cost: " + (int) MainActivity.MainInfo.totalCost+"(NIS)");
-                                    MainActivity.MainInfo.totalTime -= (((1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
-                                    CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
+                                    CargoList.MainInfo.totalWeight -= cargo.weight;
+                                    ContainerPage.totalWeightText.setText("container weight: " + (int) CargoList.MainInfo.totalWeight+"(kg)");
+                                    CargoList.MainInfo.totalCost -= (cargo.cost + CargoList.MainInfo.ProcessingCost + (1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker*(CargoList.MainInfo.WorkersHourlySalary/60.0)* CargoList.MainInfo.totalWorkers);
+                                    ContainerPage.totalCostText.setText("container cost: " + (int) CargoList.MainInfo.totalCost+"(NIS)");
+                                    CargoList.MainInfo.totalTime -= (((1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker)/ CargoList.MainInfo.totalWorkers) ;
+                                    ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime)+"(H)");
                                     insideContainer = false;
                                 }
 
                                 ((CargoButton) view).insideContainer = false;
                                 ((CargoButton) view).setxInContainer(-1);
                                 ((CargoButton) view).setyInContainer(-1);
-                                view.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                                view.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                                view.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                                view.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
                                 if (down != null) {
                                     if (down.up != null)
                                         if (down.up.isEmpty() == false) {
@@ -454,7 +449,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                 }
                                 z = 0;
                             }
-                            CargoInContainer.saveSolution();
+                            ContainerPage.saveSolution();
                         } else {
 
                         }
@@ -464,14 +459,14 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         if (flag == 0) {
 
                             moved = true;
-                            if (y - yDelta > CargoTablePage.containerY) {
+                            if (y - yDelta > ContainerInfo.containerY) {
                                 view.setX(x - xDelta);
                                 view.setY(y - yDelta);
                             }
 
                         }
                         else
-                            MainActivity.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
+                            CargoList.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
                         break;
                 }
 
@@ -531,21 +526,21 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         CargoButton b, v = this;
         int cnt = 0;
         boolean inOkPlace = true;
-        float numericX = (((this.getX() - CargoTablePage.containerX) / CargoTablePage.containerWidth) * 234);
-        float numericY = (((this.getY() - CargoTablePage.containerY) / CargoTablePage.containerLength) * 586);
+        float numericX = (((this.getX() - ContainerInfo.containerX) / ContainerInfo.containerWidth) * 234);
+        float numericY = (((this.getY() - ContainerInfo.containerY) / ContainerInfo.containerLength) * 586);
 
         float oldX = v.xInContainer;
         float oldy = v.yInContainer;
 
         v.setxInContainer(numericX);
         v.setyInContainer(numericY);
-        v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-        v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+        v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+        v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
         if (other == null) {
-            for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
+            for (int i = 0; i < ContainerInfo.buttons.size(); i++) {
 
-                b = CargoTablePage.buttons.get(i);
+                b = ContainerInfo.buttons.get(i);
                 if (v != b) {
                     if (b.z == 0) {
                         if (b.insideContainer==true) {
@@ -583,13 +578,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
             setxInContainer(oldX);
             setyInContainer(oldy);
             if(oldX==-1 && oldy==-1) {
-                v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                v.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                v.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
               }
             else
             {
-                v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
             }
             return false;
@@ -598,12 +593,12 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         if (cnt == 0) {
             inOkPlace = true;
             if (insideContainer == false) {
-                MainActivity.MainInfo.totalWeight += cargo.weight;
-                CargoInContainer.totalWeightText.setText("container weight: " + (int) MainActivity.MainInfo.totalWeight+"(kg)");
-                MainActivity.MainInfo.totalCost += cargo.cost + MainActivity.MainInfo.ProcessingCost+(1.0/MainActivity.MainInfo.AverageAmountOfBoxes)*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker*(MainActivity.MainInfo.WorkersHourlySalary/60.0)*MainActivity.MainInfo.totalWorkers;
-                CargoInContainer.totalCostText.setText("container cost: " + (int) MainActivity.MainInfo.totalCost+"(NIS)");
-                MainActivity.MainInfo.totalTime += ((1/MainActivity.MainInfo.AverageAmountOfBoxes*MainActivity.MainInfo.OneFullContainerTimeInMinutesPerWorker)/MainActivity.MainInfo.totalWorkers) ;
-                CargoInContainer.totalTimeText.setText("Approximate Time: " + String.format("%.2f", MainActivity.MainInfo.totalTime)+"(H)");
+                CargoList.MainInfo.totalWeight += cargo.weight;
+                ContainerPage.totalWeightText.setText("container weight: " + (int) CargoList.MainInfo.totalWeight+"(kg)");
+                CargoList.MainInfo.totalCost += cargo.cost + CargoList.MainInfo.ProcessingCost+(1.0/ CargoList.MainInfo.AverageAmountOfBoxes)* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker*(CargoList.MainInfo.WorkersHourlySalary/60.0)* CargoList.MainInfo.totalWorkers;
+                ContainerPage.totalCostText.setText("container cost: " + (int) CargoList.MainInfo.totalCost+"(NIS)");
+                CargoList.MainInfo.totalTime += ((1/ CargoList.MainInfo.AverageAmountOfBoxes* CargoList.MainInfo.OneFullContainerTimeInMinutesPerWorker)/ CargoList.MainInfo.totalWorkers) ;
+                ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime)+"(H)");
                 insideContainer = true;
             }
             insideContainer = true;
@@ -613,13 +608,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         setxInContainer(oldX);
                         setyInContainer(oldy);
                         if(oldX==-1 && oldy==-1) {
-                            v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                            v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                            v.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                            v.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
                         }
                         else
                         {
-                            v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                            v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                            v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                            v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
                         }        return false;
                     }
@@ -629,13 +624,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                     setxInContainer(oldX);
                     setyInContainer(oldy);
                     if(oldX==-1 && oldy==-1) {
-                        v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                        v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                        v.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                        v.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
                     }
                     else
                     {
-                        v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                        v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                        v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                        v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
                     }
                     return false;
@@ -678,11 +673,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                     setxInContainer(oldX);
                                     setyInContainer(oldy);
                                     if (oldX == -1 && oldy == -1) {
-                                        v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                                        v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                                        v.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                                        v.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
                                     } else {
-                                        v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                                        v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                                        v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                                        v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
                                     }
                                     return false;
@@ -694,9 +689,9 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
             }
             else
             {
-                for (int i = 0; i < CargoTablePage.buttons.size(); i++) {
+                for (int i = 0; i < ContainerInfo.buttons.size(); i++) {
 
-                    b = CargoTablePage.buttons.get(i);
+                    b = ContainerInfo.buttons.get(i);
                     if (v != b) {
                         if (b.insideContainer == true) {
                             if (v.checkhooffeem(b) == true) {
@@ -707,11 +702,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                     setxInContainer(oldX);
                                     setyInContainer(oldy);
                                     if (oldX == -1 && oldy == -1) {
-                                        v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-                                        v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+                                        v.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+                                        v.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
                                     } else {
-                                        v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-                                        v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+                                        v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+                                        v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
                                     }
                                     return false;
@@ -725,13 +720,13 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         setxInContainer(oldX);
         setyInContainer(oldy);
         if(oldX==-1 && oldy==-1) {
-            v.setX(MainActivity.MainInfo.screenWidth * MainActivity.MainInfo.buttonWidthPercentage);
-            v.setY(MainActivity.MainInfo.screenHeight * MainActivity.MainInfo.buttonHeightPercentage);
+            v.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
+            v.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
         }
         else
         {
-            v.setX(CargoTablePage.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
-            v.setY(CargoTablePage.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * MainActivity.MainInfo.CargoPercentagecontainer));
+            v.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(v.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+            v.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(v.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
 
         }
         return false;

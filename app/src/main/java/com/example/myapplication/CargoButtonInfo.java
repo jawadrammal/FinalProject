@@ -3,7 +3,7 @@ package com.example.myapplication;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CargoButtonInfoForSolution implements Serializable {
+public class CargoButtonInfo implements Serializable {
     int r,g,b;
     String objectId;
     float xInContainer, yInContainer;
@@ -12,12 +12,12 @@ public class CargoButtonInfoForSolution implements Serializable {
     ArrayList<String> upIds;
     int widthInCm, lengthInCm;
     boolean insideContainer;
-    CargoButtonInfoForSolution()
+    CargoButtonInfo()
     {
 
     }
 
-    CargoButtonInfoForSolution(CargoButton button)
+    CargoButtonInfo(CargoButton button)
     {
         this.objectId=String.copyValueOf(button.objectId.toCharArray());
         this.xInContainer=button.xInContainer;

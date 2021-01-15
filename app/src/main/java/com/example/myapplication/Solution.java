@@ -7,7 +7,7 @@ public class Solution implements Serializable {
     public ArrayList<Cargo> CargoList = new ArrayList<Cargo>();
     public InfoHolder MainInfo = new InfoHolder();
    // public ArrayList<CargoButton> buttons = new ArrayList<>();
-    public ArrayList<CargoButtonInfoForSolution> buttonsInfo;
+    public ArrayList<CargoButtonInfo> buttonsInfo;
     public double totalWeight;
     public double totalCost;
     public double totalTime;
@@ -19,17 +19,17 @@ public class Solution implements Serializable {
     }
     Solution()
     {
-        totalWeight = MainActivity.MainInfo.totalWeight;
-        totalCost   = MainActivity.MainInfo.totalCost;
-        totalTime = MainActivity.MainInfo.totalTime;
+        totalWeight = com.example.myapplication.CargoList.MainInfo.totalWeight;
+        totalCost   = com.example.myapplication.CargoList.MainInfo.totalCost;
+        totalTime = com.example.myapplication.CargoList.MainInfo.totalTime;
         buttonsInfo=new ArrayList<>();
-        for (Cargo c:MainActivity.CargoList
+        for (Cargo c: com.example.myapplication.CargoList.CargoList
              ) {
             CargoList.add(new Cargo(c));
         }
-        for (CargoButton b : CargoTablePage.buttons)
+        for (CargoButton b : ContainerInfo.buttons)
         {
-            buttonsInfo.add(new CargoButtonInfoForSolution(b));
+            buttonsInfo.add(new CargoButtonInfo(b));
         }
 
     }
