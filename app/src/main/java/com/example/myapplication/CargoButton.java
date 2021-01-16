@@ -526,8 +526,8 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         CargoButton b, v = this;
         int cnt = 0;
         boolean inOkPlace = true;
-        float numericX = (((this.getX() - ContainerInfo.containerX) / ContainerInfo.containerWidth) * 234);
-        float numericY = (((this.getY() - ContainerInfo.containerY) / ContainerInfo.containerLength) * 586);
+        float numericX = (float) (((this.getX() - ContainerInfo.containerX) / ContainerInfo.containerWidth) * 234.8);
+        float numericY = (float) (((this.getY() - ContainerInfo.containerY) / ContainerInfo.containerLength) * 589.74);
 
         float oldX = v.xInContainer;
         float oldy = v.yInContainer;
