@@ -1046,10 +1046,10 @@ public class ContainerPage extends AppCompatActivity {
 
     public void moveToNearest(CargoButton c) {
         boolean flag = false;
-        double minXLeft = c.xInContainer, minXRight = 234.8 - (c.xInContainer + c.widthInCm), minYUp = c.yInContainer, minYDown = 589.74 - (c.yInContainer + c.lengthInCm);
+        double minXLeft = c.xInContainer, minXRight = 234 - (c.xInContainer + c.widthInCm), minYUp = c.yInContainer, minYDown = 589 - (c.yInContainer + c.lengthInCm);
         double xLeft, xRight, yUp, yDown;
         double temp=(c.xInContainer + c.widthInCm);
-        minXRight = (234.8 - temp);
+        minXRight = (234 - temp);
         boolean noHoffemXCargoToYUp = true, noHoffemXCargoToYDown = true, noHoffemYCargoToXRight = true, noHoffemYCargoToXLeft = true;
         if (c.insideContainer == true && c.up.isEmpty()==true) {
 
