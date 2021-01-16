@@ -547,14 +547,16 @@ public class ContainerPage extends AppCompatActivity {
                             }
                         }
                     }
+                    else
+                        canRotate=false;
                     if(canRotate==false)
                     {
-                        CargoList.MainInfo.Dialogbox.setText("You can't rotate this object!");
+                        CargoList.MainInfo.Dialogbox.setText("\n\n\n  You can't rotate this object!");
                     }
 
                 }
                 else
-                    CargoList.MainInfo.Dialogbox.setText("Alert!:You are trying to rotate an  object which has objects on top of it!");
+                    CargoList.MainInfo.Dialogbox.setText("\n\n\n  Alert!:You are trying to rotate an  object which has objects on top of it!");
             }
         }
     }

@@ -466,7 +466,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
                         }
                         else
-                            CargoList.MainInfo.Dialogbox.setText("Alert!: You are trying to move an object that cannot be moved");
+                            CargoList.MainInfo.Dialogbox.setText("\n\n\n Alert!: You are trying to move an object that cannot be moved");
                         break;
                 }
 
