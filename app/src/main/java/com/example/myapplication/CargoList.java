@@ -42,8 +42,8 @@ public class CargoList extends AppCompatActivity {
 
     int CargoListIndex=0;
     Intent myFileIntent;
-    String ExcelFilePath;
-    String newpath;
+    String ExcelFilePath;//holds the path for importing the excel file which contains the input data
+    String newpath; //completes the path to the storage for importing the excel file
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -54,15 +54,12 @@ public class CargoList extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       /* Intent intent = new Intent(getApplicationContext(), ContainerPage.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        intent.putExtra("AddToContainer?",false);
-        startActivity(intent);*/
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //requests permissions to storage from the user.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
@@ -101,6 +98,7 @@ public class CargoList extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Intent intent = getIntent();
+        //rebuilds the table incase a solution is being imported.
         boolean importSolution = intent.getBooleanExtra("importSolution", false);
         if (importSolution==true) {
             RebuildTable(this.findViewById(android.R.id.content).getRootView());
@@ -127,7 +125,7 @@ public class CargoList extends AppCompatActivity {
     int xDelta;
     int yDelta;
     @SuppressLint("ClickableViewAccessibility")
-    public void DrawObject(View view) {
+    public void DrawObject(View view) { //moves to ContainerPage and tells it to create object via the intent extra boolean parameter
         com.example.myapplication.CargoList.MainInfo.mytable=findViewById(R.id.maintable);
 
         Intent intent = new Intent(getApplicationContext(), ContainerPage.class);
@@ -180,7 +178,7 @@ public class CargoList extends AppCompatActivity {
             }
     }
 
-    public void EditData(View view)
+    public void EditData(View view)//displays the current data and changes it according to the user's desires
     {
         if(isTextEmpty((EditText)findViewById(R.id.ObjectIDTxt1)) || isTextEmpty((EditText)findViewById(R.id.HeightTxt1)) || isTextEmpty((EditText)findViewById(R.id.WidthTxt))|| isTextEmpty((EditText)findViewById(R.id.WeightTxt))|| isTextEmpty((EditText)findViewById(R.id.LengthTxt1))|| isTextEmpty((EditText)findViewById(R.id.ThreshHoldTxt)))
         {
@@ -209,7 +207,7 @@ public class CargoList extends AppCompatActivity {
 
         }
     }
-    public void AddCargo(View view) {
+    public void AddCargo(View view) {//creates a new cargo object with the inserted input and adds it to the cargolist
         Cargo newCargo = new Cargo();
          if(isTextEmpty((EditText)findViewById(R.id.ObjectIDTxt)) || isTextEmpty((EditText)findViewById(R.id.HeightTxt)) || isTextEmpty((EditText)findViewById(R.id.WidthTxt))|| isTextEmpty((EditText)findViewById(R.id.WeightTxt))|| isTextEmpty((EditText)findViewById(R.id.LengthTxt))|| isTextEmpty((EditText)findViewById(R.id.ThreshHoldTxt)))
          {
@@ -236,7 +234,7 @@ public class CargoList extends AppCompatActivity {
          }
     }
 
-    public void AddCargoToTable(View view, Cargo newCargo){
+    public void AddCargoToTable(View view, Cargo newCargo){ //adds cargo to cargolist table
         int i=0;
         CargoListIndex++;
         setContentView(R.layout.cargotable);
@@ -247,7 +245,7 @@ public class CargoList extends AppCompatActivity {
 
     }
 
-    public void uploadDataFile(View view){
+    public void uploadDataFile(View view){ //starts intent for uploading an excel data input file
         myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
         myFileIntent.setType("*/*");
         startActivityForResult(myFileIntent,10);
@@ -361,7 +359,7 @@ public class CargoList extends AppCompatActivity {
         }
     }
 
-    public void DeleteRows(View view){
+    public void DeleteRows(View view){//deletes selected rows from the cargo list table
         TableLayout tb = findViewById(R.id.maintable);
         TableRow tr;
         int colorCode = Color.TRANSPARENT;
@@ -390,7 +388,7 @@ public class CargoList extends AppCompatActivity {
         RebuildTable(view);
 
     }
-    public TableRow Createrow(Cargo newCargo)
+    public TableRow Createrow(Cargo newCargo) //called when new cargo is added to create a row in the cargolist table
     {
         int i;
         TableRow row = new TableRow(this);
@@ -432,14 +430,14 @@ public class CargoList extends AppCompatActivity {
         row.setOnClickListener(tablerowOnClickListener);
         return row;
     }
-    public static String fmt(double d)
+    public static String fmt(double d)//format converter
     {
         if(d == (long) d)
             return String.format("%d",(long)d);
         else
             return String.format("%s",d);
     }
-
+//listener to table rows, updates rows when selected or unselected accordingly.
     private View.OnClickListener tablerowOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
 
@@ -466,7 +464,7 @@ public class CargoList extends AppCompatActivity {
             ContainerPage.saveSolution();
         }
     };
-    public void RebuildTable(View view){
+    public void RebuildTable(View view){//rebuilds the table, used when we want to refresh or rebuild the table using the cargo we have
         int i=0;
         setContentView(R.layout.cargotable);
         com.example.myapplication.CargoList.MainInfo.mytable=findViewById(R.id.maintable);
@@ -476,10 +474,10 @@ public class CargoList extends AppCompatActivity {
         updateClickableButtons();
         ContainerPage.saveSolution();
     }
-    private boolean isTextEmpty(EditText myeditText) {
+    private boolean isTextEmpty(EditText myeditText) {//checks if text is empty
         return myeditText.getText().toString().trim().length() == 0;
     }
-    public void updateClickableButtons()
+    public void updateClickableButtons() //updates the delete and edit and addtocontainer buttons according to whether we selected a proper row to edit/delete (one row)
     {
         Cargo.selectedCnt=0;
         for (Cargo c:CargoList) {

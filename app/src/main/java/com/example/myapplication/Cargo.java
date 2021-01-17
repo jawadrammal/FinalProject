@@ -12,7 +12,7 @@ public class Cargo implements Serializable
     boolean Selected;
     boolean inCargoPage=false;
 
-    public Cargo(Cargo c) {
+    public Cargo(Cargo c) { //constructor of cargo
         this.objectid=String.copyValueOf(c.objectid.toCharArray());
         this.height=c.height;
         width=c.width;

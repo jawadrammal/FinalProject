@@ -4,7 +4,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.Serializable;
-
+// holds relevant information and pre calculated values of the program
 public class InfoHolder implements Serializable {
     TableLayout mytable;
     double totalWeight=2290;//holds the total weight of the container excluding the container's weight

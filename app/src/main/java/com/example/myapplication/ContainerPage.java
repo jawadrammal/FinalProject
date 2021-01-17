@@ -53,7 +53,7 @@ public class ContainerPage extends AppCompatActivity {
     public static TextView totalTimeText;
     public static TextView totalWorkers;
     public static Solution trySolution;
-    public String ExportString;
+    public String ExportString; //string that stores the input of the exported file name from the user
     public static boolean ifImportSolution;
     public static View containerView;
     Intent myFileIntent;
@@ -62,7 +62,7 @@ public class ContainerPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
+         // get storage permissions from user
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
@@ -71,9 +71,10 @@ public class ContainerPage extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics); //to get width and height in pixels of the screen (so that the app can run according to the screen)
         CargoList.MainInfo.screenHeight = displayMetrics.heightPixels;
         CargoList.MainInfo.screenWidth = displayMetrics.widthPixels;
+        // the next few lines are pre calculated values that help us get an approximate percentage of where to place things according to the phone screen's pixels - so it runs on different screens correctly.
         CargoList.MainInfo.buttonWidthPercentage= (float) (674.0/1080.0);//px
         CargoList.MainInfo.buttonHeightPercentage= (float) (927.0/2040.0);//px
         CargoList.MainInfo.CargoPercentagecontainer = (float) (200.0/234.8); //200 dp - 234.8cm
@@ -99,15 +100,16 @@ public class ContainerPage extends AppCompatActivity {
         RotateButton.setVisibility(View.INVISIBLE);
         MoveToNearestBtn = (Button) findViewById(R.id.button7);
         MoveToNearestBtn.setVisibility(View.INVISIBLE);
-        ((TextView) findViewById(R.id.DialogView)).setMovementMethod(new ScrollingMovementMethod());
+        ((TextView) findViewById(R.id.DialogView)).setMovementMethod(new ScrollingMovementMethod()); //make the dialogbox scrollable
         CargoList.MainInfo.Dialogbox = ((TextView) findViewById(R.id.DialogView));
         ContainerInfo.containerWidth = dpToPx(200, this.getApplicationContext());
-        ContainerInfo.containerLength = dpToPx(502, this.getApplicationContext());
+        ContainerInfo.containerLength = dpToPx(502, this.getApplicationContext());//get container width and length in pixels
         totalWeightText = ((TextView) findViewById((R.id.TotalWeight)));
         totalCostText = ((TextView) findViewById((R.id.TotalCost)));
         totalTimeText =  ((TextView) findViewById((R.id.TotalTime)));
         totalWorkers =  ((TextView) findViewById((R.id.TotalWorkers)));
-        totalWorkers.setText("Total Workers : " + CargoList.MainInfo.totalWorkers);
+        totalWorkers.setText("Total Workers : " + CargoList.MainInfo.totalWorkers); //starting total workers
+        totalWeightText.setText("Container weight: " + "2290" +"(kg)"); //staring container weight
 
 
         containerView = (View)findViewById((R.id.Container));
@@ -117,7 +119,8 @@ public class ContainerPage extends AppCompatActivity {
                 ContainerInfo.containerX=containerView.getX();
                 ContainerInfo.containerY=containerView.getY();
                 String path= "/storage/emulated/0/MySolution.txt";
-                File file = new File ( path );
+                File file = new File ( path );  //check if the user was already working on a solution before the current run session,
+                //// if so then import the solution so he can continue working from where he stopped.
                 if ( file.exists() )
                 {
                     try {
@@ -146,7 +149,7 @@ public class ContainerPage extends AppCompatActivity {
             deleteButton.setVisibility(View.INVISIBLE);
 
             cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
-
+//we reach this point after choosing to add objects to the container, mark them with blue color and update the necessary fields+create the object button shape according to the measures.
             for (int i = 0; i < CargoList.CargoList.size(); i++) {
                 Cargo tempCr = CargoList.CargoList.get(i);
                 if (tempCr.Selected == true) {
@@ -178,7 +181,7 @@ public class ContainerPage extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);
     }
-    public void ChangeWorkersAmount(View view)
+    public void ChangeWorkersAmount(View view)//changes the worker's amount and adjusts the necessary values accordingly
     {
         final String[] m_Text = {""};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -215,7 +218,7 @@ public class ContainerPage extends AppCompatActivity {
 
         builder.show();
     }
-    public void deleteAll(View view)
+    public void deleteAll(View view) //activated when delete all button is clicked, if confirmed deletes all objects from the continer and saves the solution.
     {
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -239,7 +242,7 @@ public class ContainerPage extends AppCompatActivity {
     }
 
 
-    public void SaveSol(View view) throws IOException {
+    public void SaveSol(View view) throws IOException {  //activated once clicked upon save, if confirmed saves the solution up until now.
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -259,7 +262,7 @@ public class ContainerPage extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-    public static void saveSolution()
+    public static void saveSolution() //saves the solution in default file. activated after important actions or manually by the user
     {
         Solution s1=  new Solution();
         String file="MySolution.txt";
@@ -289,7 +292,7 @@ public class ContainerPage extends AppCompatActivity {
         }
     }
 
-    public void deleteAllButtons()
+    public void deleteAllButtons() //deletes all buttons, adjusting the values accordingly. does not remove them from the cargo list, only from the container
     {
         TableLayout cargoTable = CargoList.MainInfo.mytable;
         for (int i = 0; i< ContainerInfo.buttons.size(); i++)
@@ -328,6 +331,13 @@ public class ContainerPage extends AppCompatActivity {
         deleteButton.setVisibility(View.INVISIBLE);
         RotateButton.setVisibility(View.INVISIBLE);
         MoveToNearestBtn.setVisibility(View.INVISIBLE);
+        CargoList.MainInfo.totalWeight = 2290;
+        ((TextView) findViewById((R.id.TotalWeight))).setText("Container weight: " + (int) CargoList.MainInfo.totalWeight + "(kg)");
+        CargoList.MainInfo.totalCost = 0;
+        ((TextView) findViewById((R.id.TotalCost))).setText("Container cost: " + (int) CargoList.MainInfo.totalCost +"(NIS)");
+        CargoList.MainInfo.totalTime = 0;
+        ContainerPage.totalTimeText.setText("Approximate Time: " + String.format("%.2f", CargoList.MainInfo.totalTime) +"(H)");
+
     }
     public void OpenCargoPage(View view) {
         Intent intent = new Intent(getApplicationContext(), CargoList.class);
@@ -344,7 +354,7 @@ public class ContainerPage extends AppCompatActivity {
         }
         startActivity(intent);
     }
-    public void ProduceReport(View view) {
+    public void ProduceReport(View view) { //produces a report containing the most important information about the container's arrangement and cargo.
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet("Container Report"); //Creating a sheet
         Solution s1 = new Solution();
@@ -444,7 +454,7 @@ public class ContainerPage extends AppCompatActivity {
                 });
         alertDialog.show();
     }
-    public void deleteCargoButton(View view) {
+    public void deleteCargoButton(View view) { //deletes a selected cargo object , if confirmed, deletes the view and adjusts the relevant values accordingly.
         TableLayout cargoTable = CargoList.MainInfo.mytable;
         int flaggy=0;
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -515,7 +525,7 @@ public class ContainerPage extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-    public void rotate(View view) {
+    public void rotate(View view) { // rotates the object by swapping a certain object's width and length. alongside checks that it is physically possible.
         CargoButton cargoButton = null;
         boolean canRotate=true;
 
@@ -562,7 +572,7 @@ public class ContainerPage extends AppCompatActivity {
     }
 
     //numeric
-    public void randomSolution(View view)
+    public void randomSolution(View view) //creates a randomized order of the container using the available cargo.
     {
         deleteAllButtons();
         float x1, y1;
@@ -603,7 +613,7 @@ public class ContainerPage extends AppCompatActivity {
         }
         saveSolution();
     }
-    public void automaticSolution(View view) {
+    public void automaticSolution(View view) { //tries to arrange the available cargo to the next available fitting spot, runs over the available sports on the ground and then moves up if necessary untill the correct spot is found
         float x1, y1;
 
         x1 = ((View) findViewById(R.id.Container)).getX();
@@ -643,7 +653,7 @@ public class ContainerPage extends AppCompatActivity {
     }
 
 
-    void autoMoveButton(CargoButton newButton) {
+    void autoMoveButton(CargoButton newButton) { //moves a select object to the first available spot in the container going by ground spaces then upwards, if rotating helps, it rotates
         float minY = 0, minZ = 0;
         float x = 0, y = 0, x1, y1;
         boolean hooffem = false, first = true, rotated = false, onFloor = false, inOkPlace = false;
@@ -787,12 +797,12 @@ public class ContainerPage extends AppCompatActivity {
             newButton.insideContainer = true;
     }
 
-    public static int dpToPx(float dp, Context context) {
+    public static int dpToPx(float dp, Context context) { //convert dp to px
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
 
-    public void ImportSolution(View view) throws IOException, ClassNotFoundException {
+    public void ImportSolution(View view) throws IOException, ClassNotFoundException { //import a selected solution from available files
             myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
             myFileIntent.setType("*/*");
              startActivityForResult(myFileIntent,10);
@@ -889,7 +899,7 @@ public class ContainerPage extends AppCompatActivity {
 
 
 
-    public void ImportSolutionOnStart(String FileName) throws IOException, ClassNotFoundException {
+    public void ImportSolutionOnStart(String FileName) throws IOException, ClassNotFoundException { // if a default solution was being worked on, loads it up
         cL = (ConstraintLayout) findViewById(R.id.constraintLayout);
         cL.setVisibility(View.VISIBLE);
         View container = ((View) findViewById(R.id.Container));
@@ -968,7 +978,7 @@ public class ContainerPage extends AppCompatActivity {
 
 
 
-    void recursiveBringToFront(CargoButton b)
+    void recursiveBringToFront(CargoButton b) //recursivly arranges buttons/objects on top of each other correctly according to values and user's selections
     {
         b.bringToFront();
         CargoButton c=b;
@@ -980,7 +990,7 @@ public class ContainerPage extends AppCompatActivity {
         }
     }
 
-    public void ExportSolution(View view) throws IOException {
+    public void ExportSolution(View view) throws IOException { //creates a solution file containing all relevant information and container arrangement.
 
         this.trySolution = new Solution();
         Solution s1= trySolution;
@@ -1037,7 +1047,7 @@ public class ContainerPage extends AppCompatActivity {
 
         }
 
-    public void moveToNearest(View view)
+    public void moveToNearest(View view)//moves a select object to the nearest boundary (wall or another object)
     {
         for (CargoButton c: ContainerInfo.buttons) {
             if(c.objectId.equals(CargoButton.selected))
@@ -1046,7 +1056,7 @@ public class ContainerPage extends AppCompatActivity {
         saveSolution();
     }
 
-    public void moveToNearest(CargoButton c) {
+    public void moveToNearest(CargoButton c) {//moves a select object to the nearest boundary (wall or another object) helps users place the objects without losing and space
         boolean flag = false;
         double minXLeft = c.xInContainer, minXRight = 234 - (c.xInContainer + c.widthInCm), minYUp = c.yInContainer, minYDown = 589 - (c.yInContainer + c.lengthInCm);
         double xLeft, xRight, yUp, yDown;

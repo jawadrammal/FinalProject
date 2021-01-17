@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ContainerInfo {
 
-    public static ArrayList<CargoButton> buttons = new ArrayList<>();
+    public static ArrayList<CargoButton> buttons = new ArrayList<>(); //represents the objects based on the cargo which are in the container page
     public static float containerX ;
     public static float containerY ;
     public static float containerWidth ;
