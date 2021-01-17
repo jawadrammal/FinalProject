@@ -16,21 +16,21 @@ import java.util.Random;
 
 public class CargoButton extends androidx.appcompat.widget.AppCompatButton implements Serializable {
 
-    static String selected = null;
+    static String selected = null; //tells us if it is selected
 
     String objectId;
-    Cargo cargo;
-    int width1, length1;
-    int widthInCm, lengthInCm;
-    float xInContainer, yInContainer;
-    double z = 0;
+    Cargo cargo; //which cargo it represents
+    int width1, length1; //measures on the screen
+    int widthInCm, lengthInCm; //measures in cm
+    float xInContainer, yInContainer; // x and y of placement inside the container (top left corner is 0,0)
+    double z = 0; //how high is it placed (if placed on top of other objects)
 
     double upWeight;
     ArrayList<CargoButton> up;
     CargoButton down;
     boolean insideContainer = false;
 
-    int r = 0, g = 0, b = 0;
+    int r = 0, g = 0, b = 0; //defines the rgb values of the color of the button
     Random rand;
     PopupWindow popUp;
     boolean click = true;
@@ -40,7 +40,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         setTouchListener();
     }
 
-    public CargoButton(Context context, String objectId, float xInContainer, float yInContainer) {
+    public CargoButton(Context context, String objectId, float xInContainer, float yInContainer) { //CargoButton consutrctor
         super(context);
 
         this.objectId = objectId;
@@ -49,11 +49,11 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         this.yInContainer = yInContainer;
         if (xInContainer==-1&&yInContainer==-1)
         {
-            this.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage);
-            this.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);
+            this.setX(CargoList.MainInfo.screenWidth * CargoList.MainInfo.buttonWidthPercentage); //starting x
+            this.setY(CargoList.MainInfo.screenHeight * CargoList.MainInfo.buttonHeightPercentage);//starting y
         }
         else {
-            this.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
+            this.setX(ContainerInfo.containerX + (int) Math.ceil(dpToPx(this.xInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));//conversion x and y to the starting points in cm
             this.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
         }
         //popUp = new PopupWindow();
@@ -133,7 +133,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
     }
     //numeric
-    public boolean canPutOnOther(CargoButton other) {
+    public boolean canPutOnOther(CargoButton other) {//used to check if we are able to place this object on top of another object
         CargoButton temp=other;boolean flag=true;
         if (((this.widthInCm * this.lengthInCm) <= (other.lengthInCm * other.widthInCm)) && (other.z + other.cargo.height + this.cargo.height) < InfoHolder.containerHeight)
             if (this.widthInCm <= other.widthInCm && this.lengthInCm <= other.lengthInCm && other.insideContainer == true) {
@@ -153,7 +153,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         return false;
     }
 
-    double calculateOtherUpWeight(CargoButton other)
+    double calculateOtherUpWeight(CargoButton other)//used to calculate the weight on top of the object
     {
         double weightUpOther=0;
         for (CargoButton c : other.up) {
@@ -163,7 +163,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
     }
 
     //numeric
-    public boolean putItOnOther(CargoButton other) {
+    public boolean putItOnOther(CargoButton other) {//tries to place this object on top of another object while maintaing the correct physics and limitations
         boolean hoffeem = false;
 
         if (checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, other.xInContainer, other.yInContainer, other.widthInCm, other.lengthInCm) == true && (other.z + other.cargo.height + this.cargo.height) < InfoHolder.containerHeight) {
@@ -186,7 +186,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
             return false;
         }
     }
-
+    //activated during automatic solution, if possible puts it on top of another object.
     public boolean AutoPutOnOther(CargoButton other) {
         boolean hoffeem = false;
         float minY = 0, minZ = 0;
@@ -230,8 +230,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                 this.setY(ContainerInfo.containerY + (int) Math.ceil(dpToPx(this.yInContainer, getContext()) * CargoList.MainInfo.CargoPercentagecontainer));
                 for (int i1 = 0; i1 < size; i1++) {
                     cargoButton1 = other.up.get(i1);
-                    //  if (cargoButton1.objectId.equals(newButton.objectId)==false) {
-                    //  if (cargoButton1.objectId!=newButton.objectId){
+
 
                     if (cargoButton1 != this) {
                         if (cargoButton1.insideContainer==true) {
@@ -289,7 +288,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
 
 
 
-    //numeric
+    //checks if the x and y of the object coincide with the x and y of another object
     public boolean checkhooffeem(CargoButton other) {
         boolean hoffemY, hoffemX;
         double xright, xleft, viewXright, viewXLeft;
@@ -345,14 +344,14 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
     boolean ifInContainer() {
         return checkIfInContainer(this.xInContainer, this.yInContainer, this.widthInCm, this.lengthInCm, ContainerInfo.containerX, ContainerInfo.containerWidth, ContainerInfo.containerY, ContainerInfo.containerLength);
     }
-
+      //checks to see if the object is within the container's walls and limitations or if object is on top of another checks if its within the object below's limitations
     static boolean checkIfInContainer(float x, float y, float width, float length, float containerX, float containerY, float containerWidth, float containerLength) {
         if ((x >= containerX) && ((x + width) <= (containerX + containerWidth)) && (y >= containerY) && ((y + length) <= (containerY + containerLength))) {
             return true;
         } else return false;
     }
 
-    public void rotate() {
+    public void rotate() { // rotates the object by swapping the width and height of the object
         ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(this.getLayoutParams().height, this.getLayoutParams().width);
 
         this.setLayoutParams(lp);
@@ -366,7 +365,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
     }
 
 
-    public void setTouchListener() {
+    public void setTouchListener() { //controls the movement of the object and offers other functions that are available once the object is pressed
         this.setOnTouchListener(new View.OnTouchListener() {
             int xDelta;
             int yDelta;
@@ -377,7 +376,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
             public boolean onTouch(View view, MotionEvent event) {
                 CargoButton c = ((CargoButton) view);
                 flag = 0;
-                if (c.up.isEmpty()) {
+                if (c.up.isEmpty()) { //if the object doesnt have anyone on top of it, brings view to front
                     view.bringToFront();
                 } else {
                     flag = 1;
@@ -387,7 +386,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                 hoffeem = false;
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
-                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_DOWN: //once clicked , shows available options for the object and the relevant information in the dialogbox
                         moved = false;
 
                         xDelta = (int) (x - view.getX());
@@ -406,7 +405,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                         if (moved == true) {
 
 
-
+                             //checks if the object is inside the container
                             if (checkIfInContainer(view.getX(), view.getY(), view.getWidth(), view.getHeight(), ContainerInfo.containerX, ContainerInfo.containerY, ContainerInfo.containerWidth, ContainerInfo.containerLength) == true) {
 
 
@@ -414,7 +413,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
                                     insideContainer = true;
                                 }
                             } else {
-
+                                // if object is moved out of the container, reduce the relevant values accordingly and display appropriate message
                                 Toast.makeText(getContext(),
                                         "out of the container", Toast.LENGTH_SHORT)
                                         .show();
@@ -495,7 +494,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
         rand = new Random();
         return rand.nextInt(num);
     }
-
+    //checks if two object conicide , using the x and y values of the two objects
     public static boolean checkHoffemAxis(double a, double b, double c, double d) {
         boolean flag = false;
 
@@ -519,7 +518,7 @@ public class CargoButton extends androidx.appcompat.widget.AppCompatButton imple
     public static int dpToPx(float dp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
-
+    //checks if its okay to place a certain object in the provided position taking into account all the limitations.
     public boolean tryToPutHere(CargoButton other) {
 
 
